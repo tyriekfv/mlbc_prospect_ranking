@@ -653,7 +653,7 @@ function runModel() {
 
       // Score all prospects
       const ranked = prospects.map(r => scoreProspect(r)).filter(Boolean);
-      ranked.sort((a,b) => b.overall - a.overall);
+      ranked.sort((a,b) => b.sortOverall - a.sortOverall || b.overall - a.overall || (b.stuff||0) - (a.stuff||0));
       ranked.forEach((r,i) => r.rank = i+1);
       allRanked = ranked;
 
@@ -778,13 +778,25 @@ function scoreHitter(r) {
   // B_H=155 is genuinely bad (10th pct); the old -1 was far too lenient
   const htPen = bH>=170?0 : bH>=160?-1 : bH>=150?-3 : bH>=140?-5 : -8;
 
-  const overall = Math.min(80, hit*.90 + fld*.10 + posBonus + powBonus + loBonus + batBonus + htPen);
+  const rawOverall = hit*.90 + fld*.10 + posBonus + powBonus + loBonus + batBonus + htPen;
+  const overall = Math.min(80, rawOverall);
+
+  // sortOverall: score WITHOUT the 1.07 multiplier so pitchers who reach 80 only
+  // via the multiplier don't leapfrog hitters who earned a natural 79+
+  const stuffNatural = Math.min(80, stuff);
+  const atCeilNat    = stuffNatural >= 80;
+  const spBonusNat   = (!atCeilNat && isSP)
+    ? (stuffNatural >= 75 ? 3.0 : stuffNatural >= 70 ? 2.0 : stuffNatural >= 65 ? 1.5 : stuffNatural >= 60 ? 1.0 : 0)
+    : 0;
+  const endBonusNat  = (isSP && stuffNatural >= 55)
+    ? (end >= 8.0 ? 2.0 : end >= 7.5 ? 1.0 : 0) : 0;
+  const sortOverall  = Math.min(80, stuffNatural + endMod + bbPen + eliteCloserBonus + eliteBPBonus + eliteKBBBonus + spBonusNat + endBonusNat);
 
   return {
     rank:0, name:`${r.Last}, ${r.First}`, first:r.First, last:r.Last,
     type:'H', pos, bat, throw:throw_, team:r.Team, level:r.Level,
     age:+r.Age||0, isSP:false,
-    overall, hit, fld, stuff:null,
+    overall, rawOverall, sortOverall:rawOverall, hit, fld, stuff:null,
     obpG, xbhG, kbbG, gbG, pullG, runG, armG, fldG,
     obp, ops, hr:+r.B_HR||0, bb:+r.B_BB||0, so:+r.B_SO||0, run:+r.Run||0,
     posBonus, powBonus, loBonus, batBonus, htPen,
@@ -880,19 +892,42 @@ function scorePitcher(r) {
     ? (end >= 8.0 ? 2.0 : end >= 7.5 ? 1.0 : 0)
     : 0;
 
-  const overall = Math.min(80, stuffCapped + endMod + bbPen + eliteCloserBonus + eliteBPBonus + eliteKBBBonus + spBonus + endBonus);
+  // GB% bonus: groundball specialists are undervalued by W_OPS alone
+  // W_OPS captures OBP/SLG against but not the type of contact —
+  // a 65% GB pitcher prevents HR and XBH that a fly ball pitcher with the
+  // same W_OPS would allow. Quality gate (STUFF≥55) prevents rewarding bad pitchers.
+  const p_gb_val = +(r.P_GB||0);
+  const gbBonus = (isSP && stuffCapped >= 55)
+    ? (p_gb_val > 60 ? 1.5 : p_gb_val > 55 ? 1.0 : 0)
+    : 0;
+
+  const rawOverall = stuffCapped + endMod + bbPen + eliteCloserBonus + eliteBPBonus + eliteKBBBonus + spBonus + endBonus + gbBonus;
+  const overall = Math.min(80, rawOverall);
+
+  // sortOverall: score WITHOUT the 1.07 multiplier so pitchers who reach 80 only
+  // via the multiplier don't leapfrog hitters who earned a natural 79+
+  const stuffNatural = Math.min(80, stuff);
+  const atCeilNat    = stuffNatural >= 80;
+  const spBonusNat   = (!atCeilNat && isSP)
+    ? (stuffNatural >= 75 ? 3.0 : stuffNatural >= 70 ? 2.0 : stuffNatural >= 65 ? 1.5 : stuffNatural >= 60 ? 1.0 : 0)
+    : 0;
+  const endBonusNat  = (isSP && stuffNatural >= 55)
+    ? (end >= 8.0 ? 2.0 : end >= 7.5 ? 1.0 : 0) : 0;
+  const gbBonusNat   = (isSP && stuffNatural >= 55)
+    ? (p_gb_val > 60 ? 1.5 : p_gb_val > 55 ? 1.0 : 0) : 0;
+  const sortOverall  = Math.min(80, stuffNatural + endMod + bbPen + eliteCloserBonus + eliteBPBonus + eliteKBBBonus + spBonusNat + endBonusNat + gbBonusNat);
 
   return {
     rank:0, name:`${r.Last}, ${r.First}`, first:r.First, last:r.Last,
     type:'P', pos:'P', bat:throw_, throw:throw_, team:r.Team, level:r.Level,
     age:+r.Age||0, isSP,
-    overall, hit:null, fld:null, stuff,
+    overall, rawOverall, sortOverall, hit:null, fld:null, stuff,
     obpG:null, xbhG:null, kbbG:null, gbG:null, pullG:null,
     runG:null, armG:null, fldG:null,
     obp:null, ops:null, hr:null, bb:null, so:null, run:null,
     posBonus:null, powBonus:null, loBonus:null, batBonus:null, htPen:null,
     wops:wOpsAvg, end, kbb, isSP, p_bb,
-    eliteCloserBonus, eliteBPBonus, eliteKBBBonus, bbPen, spBonus, endBonus,
+    eliteCloserBonus, eliteBPBonus, eliteKBBBonus, bbPen, spBonus, endBonus, gbBonus,
     p_so:+(r.P_SO||0), p_bb:+(r.P_BB||0), p_gb:+(r.P_GB||0)
   };
 }
@@ -1049,6 +1084,8 @@ function renderTable() {
         bonuses += `<span class="pill pill-sp" title="SP quality bonus: elite workhorse starter">ACE+${r.spBonus.toFixed(0)}</span>`;
       if (r.endBonus > 0)
         bonuses += `<span class="pill pill-sp" title="Endurance bonus: workhorse SP (END≥7.5, STUFF≥55)">END+${r.endBonus.toFixed(0)}</span>`;
+      if (r.gbBonus > 0)
+        bonuses += `<span class="pill pill-lo" title="GB% bonus: groundball specialist (GB%>${r.p_gb > 60 ? '60' : '55'}%, STUFF≥55)">GB+${r.gbBonus.toFixed(1)}</span>`;
       if (r.eliteCloserBonus > 0)
         bonuses += `<span class="pill pill-pow" title="Elite closer: W_OPS<.660 + K/BB>3.0">CLOSER+2</span>`;
       if (r.eliteBPBonus > 0)

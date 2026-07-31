@@ -249,6 +249,17 @@ A workhorse starter who can go deep into games has roster value beyond pitch qua
 | END ≥ 8.0 + STUFF ≥ 55 | +2.0 |
 | END ≥ 7.5 + STUFF ≥ 55 | +1.0 |
 
+**GB% Bonus (SP only):**
+
+Groundball pitchers are systematically undervalued by W_OPS alone. W_OPS captures OBP and SLG against but not the *type* of contact — a pitcher allowing 65% grounders prevents the extra-base hits and home runs that a fly-ball pitcher with the same W_OPS would give up. Requires a quality gate (STUFF ≥ 55) so a poor pitcher doesn't benefit just from weak contact:
+
+| Condition | Bonus |
+|-----------|-------|
+| GB% > 60% + STUFF ≥ 55 | +1.5 |
+| GB% > 55% + STUFF ≥ 55 | +1.0 |
+
+Only ~10-15 SP prospects qualify at the top tier, keeping it a meaningful differentiator rather than a broad inflation. Directly addresses the concern from experienced owners that control/groundball arms were being undervalued relative to strikeout pitchers with similar W_OPS.
+
 **Why these adjustments exist:** Analysis showed pitchers represented only 14% of the top 50 despite being 43% of the prospect pool. Hitters stack up to +10 points in bonuses (positional premium + power + leadoff + bat hand) while pitchers had no equivalent. The 1.07 multiplier + bonuses bring pitchers to ~28% of the top 50 and ~35% of the top 100. The multiplier of 1.07 was chosen specifically to avoid overcorrection — higher values pushed average pitchers ahead of genuinely elite hitters.
 - END ≥ 5.0 → Starter-eligible, no adjustment
 - END < 5.0 → Reliever penalty (−3 points)
