@@ -653,7 +653,15 @@ function runModel() {
 
       // Score all prospects
       const ranked = prospects.map(r => scoreProspect(r)).filter(Boolean);
-      ranked.sort((a,b) => b.sortOverall - a.sortOverall || b.overall - a.overall || (b.stuff||0) - (a.stuff||0));
+      ranked.sort((a,b) => {
+        if (b.overall !== a.overall) return b.overall - a.overall;
+        // At the 80 cap: hitters first (earned naturally), then by raw, then stuff
+        if (a.overall === 80 && b.overall === 80) {
+          if (a.type !== b.type) return a.type === 'H' ? -1 : 1;
+          if (a.type === 'P') return (b.stuff||0) - (a.stuff||0);
+        }
+        return b.rawOverall - a.rawOverall;
+      });
       ranked.forEach((r,i) => r.rank = i+1);
       allRanked = ranked;
 
@@ -781,17 +789,6 @@ function scoreHitter(r) {
   const rawOverall = hit*.90 + fld*.10 + posBonus + powBonus + loBonus + batBonus + htPen;
   const overall = Math.min(80, rawOverall);
 
-  // sortOverall: score WITHOUT the 1.07 multiplier so pitchers who reach 80 only
-  // via the multiplier don't leapfrog hitters who earned a natural 79+
-  const stuffNatural = Math.min(80, stuff);
-  const atCeilNat    = stuffNatural >= 80;
-  const spBonusNat   = (!atCeilNat && isSP)
-    ? (stuffNatural >= 75 ? 3.0 : stuffNatural >= 70 ? 2.0 : stuffNatural >= 65 ? 1.5 : stuffNatural >= 60 ? 1.0 : 0)
-    : 0;
-  const endBonusNat  = (isSP && stuffNatural >= 55)
-    ? (end >= 8.0 ? 2.0 : end >= 7.5 ? 1.0 : 0) : 0;
-  const sortOverall  = Math.min(80, stuffNatural + endMod + bbPen + eliteCloserBonus + eliteBPBonus + eliteKBBBonus + spBonusNat + endBonusNat);
-
   return {
     rank:0, name:`${r.Last}, ${r.First}`, first:r.First, last:r.Last,
     type:'H', pos, bat, throw:throw_, team:r.Team, level:r.Level,
@@ -864,18 +861,16 @@ function scorePitcher(r) {
   // Elite BP arm: swingman tier (END 4.0-4.9) with quality stuff + command
   const eliteBPBonus = (!isSP && end >= 4.0 && wOpsAvg <= 0.680 && kbb > 2.5) ? 2.0 : 0;
 
-  // STUFF multiplier: pitcher grade is worth 7% more than face value because
-  // a starter affects more plate appearances per game than any position player.
-  // Cap at 80 — the multiplier lifts the scale, not beyond the ceiling.
-  const stuffScaled = Math.min(80, stuff * (isSP ? 1.07 : 1.0));
-  const stuffCapped = stuffScaled;
+  // No multiplier — use raw STUFF directly. Bonuses handle parity with hitters.
+  const stuffCapped = Math.min(80, stuff);
 
   // Bonuses lift pitchers whose raw STUFF undersells their value vs hitters.
+  // At the grade ceiling (STUFF=80), no upward bonus applies — penalties still do.
   // At the grade ceiling (STUFF=80), no upward bonus applies — penalties still do.
   const atCeiling = stuffCapped >= 80;
 
   // Elite K/BB bonus: outlier command (K/BB>4.0, top ~3% of pool)
-  const eliteKBBBonus = (!atCeiling && kbb > 4.0) ? 2.0 : 0;
+  const eliteKBBBonus = (!atCeiling && kbb > 4.5) ? 2.0 : 0;
 
   // SP quality bonus: elite starters deserve parity with bonus-stacking hitters
   const spBonus = (!atCeiling && isSP)
@@ -904,24 +899,11 @@ function scorePitcher(r) {
   const rawOverall = stuffCapped + endMod + bbPen + eliteCloserBonus + eliteBPBonus + eliteKBBBonus + spBonus + endBonus + gbBonus;
   const overall = Math.min(80, rawOverall);
 
-  // sortOverall: score WITHOUT the 1.07 multiplier so pitchers who reach 80 only
-  // via the multiplier don't leapfrog hitters who earned a natural 79+
-  const stuffNatural = Math.min(80, stuff);
-  const atCeilNat    = stuffNatural >= 80;
-  const spBonusNat   = (!atCeilNat && isSP)
-    ? (stuffNatural >= 75 ? 3.0 : stuffNatural >= 70 ? 2.0 : stuffNatural >= 65 ? 1.5 : stuffNatural >= 60 ? 1.0 : 0)
-    : 0;
-  const endBonusNat  = (isSP && stuffNatural >= 55)
-    ? (end >= 8.0 ? 2.0 : end >= 7.5 ? 1.0 : 0) : 0;
-  const gbBonusNat   = (isSP && stuffNatural >= 55)
-    ? (p_gb_val > 60 ? 1.5 : p_gb_val > 55 ? 1.0 : 0) : 0;
-  const sortOverall  = Math.min(80, stuffNatural + endMod + bbPen + eliteCloserBonus + eliteBPBonus + eliteKBBBonus + spBonusNat + endBonusNat + gbBonusNat);
-
   return {
     rank:0, name:`${r.Last}, ${r.First}`, first:r.First, last:r.Last,
     type:'P', pos:'P', bat:throw_, throw:throw_, team:r.Team, level:r.Level,
     age:+r.Age||0, isSP,
-    overall, rawOverall, sortOverall, hit:null, fld:null, stuff,
+    overall, rawOverall, sortOverall:overall, hit:null, fld:null, stuff,
     obpG:null, xbhG:null, kbbG:null, gbG:null, pullG:null,
     runG:null, armG:null, fldG:null,
     obp:null, ops:null, hr:null, bb:null, so:null, run:null,
@@ -1091,7 +1073,7 @@ function renderTable() {
       if (r.eliteBPBonus > 0)
         bonuses += `<span class="pill pill-lo" title="Elite BP arm: END 4-4.9, W_OPS≤.680, K/BB>2.5">BP+2</span>`;
       if (r.eliteKBBBonus > 0)
-        bonuses += `<span class="pill pill-bat" title="Elite command: K/BB>4.0 (top 3% of pool)">KBB+2</span>`;
+        bonuses += `<span class="pill pill-bat" title="Elite command: K/BB>4.5 (top 1% of pool)">KBB+2</span>`;
       if (r.bbPen < 0)
         bonuses += `<span class="pill pill-pen" title="Walk penalty (P_BB≥55)">BB${r.bbPen.toFixed(1)}</span>`;
     }
@@ -1132,7 +1114,7 @@ function renderTable() {
 // EXPORT
 // ═══════════════════════════════════════════════════════════════
 function exportCSV() {
-  const rows = [...filtered].sort((a,b) => b.overall - a.overall);
+  const rows = [...filtered].sort((a,b) => a.rank - b.rank);
   const cols = ['rank','last','first','type','pos','bat','team','level','age',
                 'overall','hit','stuff','fld',
                 'obp','ops','hr','bb','so',
