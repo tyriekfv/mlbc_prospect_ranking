@@ -852,8 +852,6 @@ function scorePitcher(r) {
   // Elite BP arm: swingman tier (END 4.0-4.9) with quality stuff + command
   const eliteBPBonus = (!isSP && end >= 4.0 && wOpsAvg <= 0.680 && kbb > 2.5) ? 2.0 : 0;
 
-  const eliteBPBonus = (!isSP && end >= 4.0 && wOpsAvg <= 0.680 && kbb > 2.5) ? 2.0 : 0;
-
   // STUFF multiplier: pitcher grade is worth 7% more than face value because
   // a starter affects more plate appearances per game than any position player.
   // Cap at 80 — the multiplier lifts the scale, not beyond the ceiling.
