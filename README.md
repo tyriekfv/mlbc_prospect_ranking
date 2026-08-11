@@ -1,8 +1,21 @@
-# MLBC Prospect Ranker
+# MLBC Prospect Ranker — Scranton fork
 
 A browser-based prospect ranking engine for the **Minor League Baseball Club (MLBC)** simulation game. Upload your league export files and get instant, data-driven prospect rankings — no server, no Python, no installs required.
 
-🔗 **Live app:** [https://ddecoen.github.io/mlbc_prospect_ranking](https://ddecoen.github.io/mlbc_prospect_ranking)
+This is [ScrantonGM](https://mlbcsimleague.com)'s fork of [ddecoen's original MLBC Prospect Ranker](https://github.com/ddecoen/mlbc_prospect_ranking) ([live app](https://ddecoen.github.io/mlbc_prospect_ranking)). The ranking engine itself (`index.html`) is unmodified — every formula, grade bin, and bonus documented below is ddecoen's original work. This fork adds three tools on top of it.
+
+🔗 **Live site:** [https://tyriekfv.github.io/mlbc_prospect_ranking](https://tyriekfv.github.io/mlbc_prospect_ranking)
+
+## Tools in this fork
+
+| Tool | Link | What it does |
+|---|---|---|
+| **Ranker** | [`index.html`](https://tyriekfv.github.io/mlbc_prospect_ranking/) | The original engine — upload League Roster + Pro Years Report, get instant prospect rankings. |
+| **Validation** | [`validate.html`](https://tyriekfv.github.io/mlbc_prospect_ranking/validate.html) | Loads the real, unmodified engine in a hidden iframe and checks it against a season's actual scraped site rankings — confirms the code is a faithful reproduction of the live site's algorithm (100% exact rank order, r=1.0000 correlation on every graded component, verified against season 2144). A one-time proof, not a per-season check — see the tool for why. |
+| **Progression Tracker** | [`progression.html`](https://tyriekfv.github.io/mlbc_prospect_ranking/progression.html) | Upload career/last-3/last-year/current performance exports (hitters & pitchers) alongside Roster + Pro Years, and it checks whether the engine's edited/projected performance actually matches what players did on the field — broken out by bat/throw hand, plus trending-up/trending-down tables for regression and trade-timing calls. |
+| **Draft Board** | [`draftboard.html`](https://tyriekfv.github.io/mlbc_prospect_ranking/draftboard.html) | Upload a draft pool export (the batch of newly-created players for one draft) plus Roster + Pro Years, and it ranks exactly that draft class through the real engine — with an optional hand tie-break (configurable, not hardcoded) for ranking otherwise-tied prospects. |
+
+All four are plain HTML/JS, no build step, matching the original's style. See each page for its own usage notes.
 
 ---
 
@@ -354,8 +367,14 @@ MIT License — see [LICENSE](LICENSE) for details. Free to use, modify, and sha
 
 ## Contributing
 
-Pull requests welcome. Key areas for improvement:
+This fork's changes are on the `progression-tracker` branch (the default branch here) — `main` stays byte-identical to upstream for easy diffing against ddecoen's future changes.
+
+From ddecoen's original wishlist, this fork has added:
+- ✅ Career trajectory tracking across seasons → [Progression Tracker](https://tyriekfv.github.io/mlbc_prospect_ranking/progression.html)
+- ✅ Draft board mode → [Draft Board](https://tyriekfv.github.io/mlbc_prospect_ranking/draftboard.html) (ranks any specific draft class, not just A-ball — pick-slot context comes from the draft's own results, not built into the tool)
+
+Still open:
 - Catcher framing bonus (arm data exists but framing grade does not)
 - Multi-position eligibility display
-- Career trajectory tracking across seasons
-- Draft board mode (A-ball only filter with pick slot context)
+
+Pull requests to [ddecoen's upstream repo](https://github.com/ddecoen/mlbc_prospect_ranking) are a separate matter from this fork — nothing here has been submitted upstream yet.
