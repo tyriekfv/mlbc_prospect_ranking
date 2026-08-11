@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MLBC Draft Board</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<style>
+  :root {
+    --bg: #0a0c0f; --surface: #111418; --surface2: #1a1f26; --border: #252b35;
+    --accent: #e8a020; --accent2: #4a9eff; --accent3: #3ddc84; --text: #e8ecf0;
+    --text2: #8a95a3; --text3: #4a5568; --danger: #ff4757; --pitcher: #4a9eff; --hitter: #3ddc84;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'IBM Plex Sans', sans-serif; font-size: 14px; padding: 32px; }
+  h1 { font-family: 'Bebas Neue', sans-serif; font-size: 34px; letter-spacing: 2px; margin-bottom: 4px; }
+  h1 span { color: var(--accent); }
+  .sub { color: var(--text2); margin-bottom: 24px; font-size: 13px; max-width: 900px; }
+  .subnav { display: flex; gap: 4px; margin-bottom: 16px; }
+  .subnav a {
+    color: var(--text2); text-decoration: none; font-size: 12px;
+    font-family: 'IBM Plex Mono', monospace; padding: 6px 10px; border-radius: 4px;
+    transition: all .15s;
+  }
+  .subnav a:hover { color: var(--text); background: var(--surface2); }
+  .subnav a.active { color: var(--accent); background: rgba(232,160,32,.1); }
+  .upload-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; max-width: 1100px; }
+  .upload-card { background: var(--surface); border: 1px dashed var(--border); border-radius: 8px; padding: 18px 14px; text-align: center; cursor: pointer; position: relative; }
+  .upload-card.loaded { border-color: var(--accent3); border-style: solid; }
+  .upload-card input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+  .upload-label { font-family: 'Bebas Neue', sans-serif; font-size: 14px; letter-spacing: .5px; margin-bottom: 4px; }
+  .upload-hint { color: var(--text2); font-size: 10px; }
+  .upload-status { font-size: 11px; margin-top: 6px; color: var(--accent3); font-family: 'IBM Plex Mono', monospace; }
+  .options-row { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; font-size: 13px; color: var(--text2); }
+  .options-row label { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+  .run-btn {
+    padding: 12px 24px; background: var(--accent); color: #000; border: none; border-radius: 6px;
+    font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 1px; cursor: pointer; margin-bottom: 24px; margin-right: 10px;
+  }
+  .run-btn:hover { background: #f5b030; }
+  .run-btn:disabled { background: var(--border); color: var(--text3); cursor: not-allowed; }
+  .export-btn {
+    padding: 12px 24px; background: transparent; border: 1px solid var(--accent); color: var(--accent);
+    border-radius: 6px; font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 1px; cursor: pointer;
+  }
+  .export-btn:hover { background: var(--accent); color: #000; }
+  .export-btn:disabled { border-color: var(--border); color: var(--text3); cursor: not-allowed; background: transparent; }
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 20px; max-width: 1100px; }
+  .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 14px; }
+  .stat-card .label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--text2); margin-bottom: 6px; }
+  .stat-card .value { font-family: 'IBM Plex Mono', monospace; font-size: 20px; font-weight: 600; }
+  .filter-row { display: flex; gap: 10px; align-items: center; margin-bottom: 12px; flex-wrap: wrap; }
+  select, input[type=text] {
+    background: var(--surface2); border: 1px solid var(--border); color: var(--text);
+    padding: 6px 10px; border-radius: 4px; font-family: 'IBM Plex Sans', sans-serif; font-size: 13px;
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; font-family: 'IBM Plex Mono', monospace; }
+  th, td { text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  th { color: var(--text2); font-weight: 600; font-size: 10px; text-transform: uppercase; cursor: pointer; }
+  th:hover { color: var(--accent); }
+  .type-badge { display: inline-block; padding: 1px 6px; border-radius: 3px; font-size: 10px; font-weight: 600; }
+  .type-H { background: rgba(61,220,132,.15); color: var(--hitter); }
+  .type-P { background: rgba(74,158,255,.15); color: var(--pitcher); }
+  .muted { color: var(--text3); }
+  .log { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 12px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--text2); white-space: pre-wrap; max-height: 200px; overflow-y: auto; }
+  section { margin-bottom: 24px; max-width: 1200px; }
+  section h2 { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 1px; margin-bottom: 4px; color: var(--text); }
+  #engineFrame { position: absolute; top: 0; left: -9999px; width: 1200px; height: 800px; border: 0; visibility: hidden; }
+</style>
+</head>
+<body>
+
+<nav class="subnav">
+  <a href="./index.html">Ranker</a>
+  <a href="./validate.html">Validation</a>
+  <a href="./progression.html">Progression Tracker</a>
+  <a href="./draftboard.html" class="active">Draft Board</a>
+</nav>
+
+<h1>MLBC <span>DRAFT BOARD</span></h1>
+<div class="sub">Ranks a specific draft class using the real ranking engine. Upload the draft pool export for that draft (the batch of newly-created players, Name column is all that's used from it), plus that season's League Roster and Pro Years Report so the engine has full stat lines to score against. Matches pool names to roster rows automatically — nothing needs to be pre-processed.</div>
+
+<div class="upload-grid">
+  <div class="upload-card" id="poolCard">
+    <input type="file" id="poolFile" accept=".csv">
+    <div class="upload-label">Draft Pool</div>
+    <div class="upload-hint">Pool_XXXX.csv (this draft's new players)</div>
+    <div class="upload-status" id="poolStatus"></div>
+  </div>
+  <div class="upload-card" id="rosterCard">
+    <input type="file" id="rosterFile" accept=".csv">
+    <div class="upload-label">League Roster</div>
+    <div class="upload-hint">League_Roster_XXXX.csv</div>
+    <div class="upload-status" id="rosterStatus"></div>
+  </div>
+  <div class="upload-card" id="proCard">
+    <input type="file" id="proFile" accept=".csv">
+    <div class="upload-label">Pro Years Report</div>
+    <div class="upload-hint">Pro_Years_Report_XXXX.csv</div>
+    <div class="upload-status" id="proStatus"></div>
+  </div>
+</div>
+
+<div class="options-row">
+  <label><input type="checkbox" id="handTiebreak" checked> Apply hand tie-break when OVR ties (hitters: Switch &gt; Left &gt; Right &nbsp;·&nbsp; pitchers: Right &gt; Left)</label>
+</div>
+
+<button class="run-btn" id="runBtn" onclick="buildBoard()" disabled>BUILD DRAFT BOARD</button>
+<button class="export-btn" id="exportBtn" onclick="exportCSV()" disabled>⬇ EXPORT CSV</button>
+
+<div id="results" style="display:none">
+  <div class="stat-grid" id="statGrid"></div>
+
+  <section>
+    <h2>Draft board</h2>
+    <div class="filter-row">
+      <select id="teamFilter" onchange="renderTable()"><option value="all">All Teams</option></select>
+      <select id="typeFilter" onchange="renderTable()">
+        <option value="all">All</option><option value="H">Hitters</option><option value="P">Pitchers</option>
+      </select>
+      <input type="text" id="searchBox" placeholder="Search name..." oninput="renderTable()">
+    </div>
+    <table id="boardTable"></table>
+  </section>
+</div>
+
+<section>
+  <h2>Log</h2>
+  <div class="log" id="log">Upload all 3 files, then click Build Draft Board.</div>
+</section>
+
+<iframe id="engineFrame" src="./index.html"></iframe>
+
+<script>
+let poolCSV = null, rosterCSV = null, proCSV = null;
+let boardRows = [];
+let sortCol = 'rank', sortDir = 1;
+
+function log(msg) {
+  const el = document.getElementById('log');
+  el.textContent += '\n' + msg;
+  el.scrollTop = el.scrollHeight;
+}
+
+function wireUpload(inputId, cardId, statusId, onLoaded) {
+  document.getElementById(inputId).addEventListener('change', function(e) {
+    const f = e.target.files[0]; if (!f) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      onLoaded(reader.result, f.name);
+      document.getElementById(statusId).textContent = `✓ ${f.name}`;
+      document.getElementById(cardId).classList.add('loaded');
+      checkReady();
+    };
+    reader.readAsText(f);
+  });
+}
+wireUpload('poolFile', 'poolCard', 'poolStatus', t => poolCSV = t);
+wireUpload('rosterFile', 'rosterCard', 'rosterStatus', t => rosterCSV = t);
+wireUpload('proFile', 'proCard', 'proStatus', t => proCSV = t);
+function checkReady() {
+  document.getElementById('runBtn').disabled = !(poolCSV && rosterCSV && proCSV);
+}
+
+function parseCSVRows(text) {
+  return Papa.parse(text, { header: true, skipEmptyLines: true }).data;
+}
+
+// Same name-resolution heuristic as the pool-matching script used earlier this project:
+// try first-token-as-first-name, then last-token-as-last-name (handles suffixes like "Jr").
+function resolvePoolName(poolName, rosterByKey) {
+  const parts = poolName.trim().split(/\s+/);
+  const candidates = [[parts[0], parts.slice(1).join(' ')]];
+  if (parts.length > 2) {
+    candidates.push([parts.slice(0, -1).join(' '), parts[parts.length - 1]]);
+    candidates.push([parts[0], parts.slice(1, -1).join(' ')]);
+  }
+  for (const [first, last] of candidates) {
+    const key = (first.trim() + '|' + last.trim()).toLowerCase();
+    if (rosterByKey[key]) return rosterByKey[key];
+  }
+  return null;
+}
+
+const HIT_HAND_RANK = { S: 0, L: 1, R: 2 };
+const PIT_HAND_RANK = { R: 0, L: 1 };
+
+async function buildBoard() {
+  const btn = document.getElementById('runBtn');
+  btn.disabled = true;
+  document.getElementById('log').textContent = '';
+  document.getElementById('results').style.display = 'none';
+  document.getElementById('exportBtn').disabled = true;
+
+  try {
+    log('Parsing draft pool CSV...');
+    const poolRows = parseCSVRows(poolCSV).filter(r => r.Name && r.Name.trim());
+    log(`Pool players: ${poolRows.length}`);
+
+    log('Waiting for engine iframe (real, unmodified index.html)...');
+    const frame = document.getElementById('engineFrame');
+    await new Promise(resolve => {
+      if (frame.contentDocument && frame.contentDocument.readyState === 'complete') resolve();
+      else frame.addEventListener('load', resolve, { once: true });
+    });
+    const win = frame.contentWindow, doc = frame.contentDocument;
+
+    log('Uploading roster/pro-years through the app\'s real code path...');
+    const rosterFile = new win.File([rosterCSV], 'roster.csv', { type: 'text/csv' });
+    const proFile = new win.File([proCSV], 'proyears.csv', { type: 'text/csv' });
+    const dt1 = new win.DataTransfer(); dt1.items.add(rosterFile);
+    doc.getElementById('rosterFile').files = dt1.files;
+    doc.getElementById('rosterFile').dispatchEvent(new win.Event('change'));
+    const dt2 = new win.DataTransfer(); dt2.items.add(proFile);
+    doc.getElementById('proFile').files = dt2.files;
+    doc.getElementById('proFile').dispatchEvent(new win.Event('change'));
+    await new Promise(r => setTimeout(r, 400));
+    if (doc.getElementById('runBtn').disabled) throw new Error('Engine did not accept both files.');
+
+    log('Running the real runModel()...');
+    win.runModel();
+    await new Promise(r => setTimeout(r, 600));
+
+    log('Matching pool names to roster rows, then scoring every match via the real scoreProspect()...');
+    // rosterData/scoreProspect live in index.html's own top-level scope — read via the
+    // iframe's own global (indirect eval), not window property access (let/function
+    // declarations from a classic <script> aren't exposed as window properties either way,
+    // and top-level let specifically never is regardless of same-origin status).
+    win.__poolNames = poolRows.map(r => r.Name.trim());
+    const resultJSON = win.eval(`
+      (function() {
+        const rosterByKey = {};
+        rosterData.forEach(r => {
+          const key = ((r.First||'').trim() + '|' + (r.Last||'').trim()).toLowerCase();
+          if (!rosterByKey[key]) rosterByKey[key] = r;
+        });
+        function resolve(poolName) {
+          const parts = poolName.trim().split(/\\s+/);
+          const candidates = [[parts[0], parts.slice(1).join(' ')]];
+          if (parts.length > 2) {
+            candidates.push([parts.slice(0, -1).join(' '), parts[parts.length - 1]]);
+            candidates.push([parts[0], parts.slice(1, -1).join(' ')]);
+          }
+          for (const [first, last] of candidates) {
+            const key = (first.trim() + '|' + last.trim()).toLowerCase();
+            if (rosterByKey[key]) return rosterByKey[key];
+          }
+          return null;
+        }
+        const num = v => (v===null||v===undefined||isNaN(v)) ? null : +(+v).toFixed(4);
+        const matched = [], unmatched = [];
+        __poolNames.forEach(poolName => {
+          const row = resolve(poolName);
+          if (!row) { unmatched.push(poolName); return; }
+          const s = scoreProspect(row);
+          if (!s) { unmatched.push(poolName); return; }
+          matched.push({
+            poolName, name: s.name, type: s.type, pos: s.pos, age: s.age, team: s.team, level: s.level,
+            bat: s.bat, throw: s.throw,
+            overall: num(s.overall), rawOverall: num(s.rawOverall),
+            hit: num(s.hit), fld: num(s.fld), stuff: num(s.stuff), end: num(s.end),
+            isSP: s.isSP || false
+          });
+        });
+        return JSON.stringify({ matched, unmatched });
+      })();
+    `);
+    const { matched, unmatched } = JSON.parse(resultJSON);
+    log(`Matched ${matched.length}/${poolRows.length} pool players to roster rows and scored them.`);
+    if (unmatched.length) log(`Unmatched (${unmatched.length}): ${unmatched.slice(0, 10).join(', ')}${unmatched.length > 10 ? ', ...' : ''}`);
+
+    // Sort: displayed OVR (1 decimal, matching what the app shows) desc, then hand tie-break
+    // if enabled, then exact rawOverall desc as the final tiebreak.
+    const useTiebreak = document.getElementById('handTiebreak').checked;
+    matched.sort((a, b) => {
+      const ovrA = Math.round(a.overall * 10) / 10, ovrB = Math.round(b.overall * 10) / 10;
+      if (ovrB !== ovrA) return ovrB - ovrA;
+      if (useTiebreak) {
+        const rankA = a.type === 'H' ? (HIT_HAND_RANK[a.bat] ?? 3) : (PIT_HAND_RANK[a.throw] ?? 2);
+        const rankB = b.type === 'H' ? (HIT_HAND_RANK[b.bat] ?? 3) : (PIT_HAND_RANK[b.throw] ?? 2);
+        if (rankA !== rankB) return rankA - rankB;
+      }
+      return b.rawOverall - a.rawOverall;
+    });
+    matched.forEach((r, i) => r.rank = i + 1);
+    boardRows = matched;
+
+    // populate team filter
+    const teams = [...new Set(matched.map(r => r.team))].sort();
+    const tf = document.getElementById('teamFilter');
+    tf.innerHTML = '<option value="all">All Teams</option>' + teams.map(t => `<option value="${t}">${t}</option>`).join('');
+
+    document.getElementById('statGrid').innerHTML = [
+      `<div class="stat-card"><div class="label">Pool players</div><div class="value">${poolRows.length}</div></div>`,
+      `<div class="stat-card"><div class="label">Matched &amp; scored</div><div class="value">${matched.length}</div></div>`,
+      `<div class="stat-card"><div class="label">Unmatched</div><div class="value">${unmatched.length}</div></div>`,
+      `<div class="stat-card"><div class="label">Hand tie-break</div><div class="value">${useTiebreak ? 'ON' : 'OFF'}</div></div>`,
+    ].join('');
+
+    sortCol = 'rank'; sortDir = 1;
+    renderTable();
+    document.getElementById('results').style.display = 'block';
+    document.getElementById('exportBtn').disabled = false;
+    log('Done.');
+  } catch (e) {
+    log('ERROR: ' + e.message);
+    console.error(e);
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function sortBy(col) {
+  if (sortCol === col) sortDir *= -1; else { sortCol = col; sortDir = 1; }
+  renderTable();
+}
+
+function renderTable() {
+  const team = document.getElementById('teamFilter').value;
+  const type = document.getElementById('typeFilter').value;
+  const search = document.getElementById('searchBox').value.toLowerCase();
+
+  let rows = boardRows.filter(r => {
+    if (team !== 'all' && r.team !== team) return false;
+    if (type !== 'all' && r.type !== type) return false;
+    if (search && !r.name.toLowerCase().includes(search)) return false;
+    return true;
+  });
+
+  const sortFn = {
+    rank: (a,b) => a.rank - b.rank,
+    name: (a,b) => a.name.localeCompare(b.name),
+    pos: (a,b) => a.pos.localeCompare(b.pos),
+    age: (a,b) => a.age - b.age,
+    team: (a,b) => a.team.localeCompare(b.team),
+    overall: (a,b) => a.overall - b.overall,
+  }[sortCol] || ((a,b) => a.rank - b.rank);
+  rows = [...rows].sort((a,b) => sortDir * sortFn(a,b));
+
+  const table = document.getElementById('boardTable');
+  table.innerHTML = `<tr>
+    <th onclick="sortBy('rank')">#</th>
+    <th onclick="sortBy('name')">Name</th>
+    <th>Type</th>
+    <th onclick="sortBy('pos')">Pos</th>
+    <th onclick="sortBy('age')">Age</th>
+    <th onclick="sortBy('team')">Team</th>
+    <th>Bat/Thr</th>
+    <th onclick="sortBy('overall')">OVR</th>
+    <th>Grades</th>
+  </tr>` + rows.map(r => {
+    const hand = r.type === 'H' ? r.bat : r.throw;
+    const grades = r.type === 'H'
+      ? `HIT:${r.hit?.toFixed(1) ?? '—'} FLD:${r.fld?.toFixed(1) ?? '—'}`
+      : `STF:${r.stuff?.toFixed(1) ?? '—'} END:${r.end?.toFixed(1) ?? '—'}`;
+    return `<tr>
+      <td>${r.rank}</td><td>${r.name}</td>
+      <td><span class="type-badge type-${r.type}">${r.type === 'P' ? 'PITCHER' : 'HITTER'}</span></td>
+      <td>${r.pos}</td><td>${r.age}</td><td>${r.team}</td><td>${hand || '-'}</td>
+      <td>${r.overall.toFixed(2)}</td><td class="muted">${grades}</td>
+    </tr>`;
+  }).join('');
+}
+
+function exportCSV() {
+  const cols = ['rank','name','type','pos','age','team','level','bat','throw','overall','rawOverall','hit','fld','stuff','end','isSP'];
+  const header = cols.join(',');
+  const body = boardRows.map(r => cols.map(c => {
+    const v = r[c];
+    return v === null || v === undefined ? '' : typeof v === 'number' ? v : `"${v}"`;
+  }).join(',')).join('\n');
+  const blob = new Blob([header + '\n' + body], { type: 'text/csv' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'draft_board.csv';
+  a.click();
+}
+</script>
+</body>
+</html>
