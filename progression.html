@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MLBC Progression Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<style>
+  :root {
+    --bg: #0a0c0f; --surface: #111418; --surface2: #1a1f26; --border: #252b35;
+    --accent: #e8a020; --accent2: #4a9eff; --accent3: #3ddc84; --text: #e8ecf0;
+    --text2: #8a95a3; --text3: #4a5568; --danger: #ff4757; --pitcher: #4a9eff; --hitter: #3ddc84;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'IBM Plex Sans', sans-serif; font-size: 14px; padding: 32px; }
+  h1 { font-family: 'Bebas Neue', sans-serif; font-size: 34px; letter-spacing: 2px; margin-bottom: 4px; }
+  h1 span { color: var(--accent); }
+  .sub { color: var(--text2); margin-bottom: 24px; font-size: 13px; max-width: 900px; }
+  .upload-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; max-width: 1100px; }
+  .upload-card { background: var(--surface); border: 1px dashed var(--border); border-radius: 8px; padding: 18px 14px; text-align: center; cursor: pointer; position: relative; }
+  .upload-card.loaded { border-color: var(--accent3); border-style: solid; }
+  .upload-card input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+  .upload-label { font-family: 'Bebas Neue', sans-serif; font-size: 14px; letter-spacing: .5px; margin-bottom: 4px; }
+  .upload-hint { color: var(--text2); font-size: 10px; }
+  .upload-status { font-size: 11px; margin-top: 6px; color: var(--accent3); font-family: 'IBM Plex Mono', monospace; }
+  .run-btn {
+    padding: 12px 24px; background: var(--accent); color: #000; border: none; border-radius: 6px;
+    font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 1px; cursor: pointer; margin-bottom: 24px;
+  }
+  .run-btn:hover { background: #f5b030; }
+  .run-btn:disabled { background: var(--border); color: var(--text3); cursor: not-allowed; }
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 12px; max-width: 1100px; }
+  .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 14px; }
+  .stat-card .label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--text2); margin-bottom: 6px; }
+  .stat-card .value { font-family: 'IBM Plex Mono', monospace; font-size: 20px; font-weight: 600; }
+  section { margin-bottom: 32px; max-width: 1200px; }
+  section h2 { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 1px; margin-bottom: 4px; color: var(--text); }
+  section .desc { color: var(--text2); font-size: 12px; margin-bottom: 10px; max-width: 900px; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; font-family: 'IBM Plex Mono', monospace; }
+  th, td { text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  th { color: var(--text2); font-weight: 600; font-size: 10px; text-transform: uppercase; }
+  .pos { color: var(--accent3); } .neg { color: var(--danger); }
+  .muted { color: var(--text3); }
+  .log { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 12px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--text2); white-space: pre-wrap; max-height: 200px; overflow-y: auto; }
+  #engineFrame { position: absolute; top: 0; left: -9999px; width: 1200px; height: 800px; border: 0; visibility: hidden; }
+  .badge { display:inline-block; padding: 1px 6px; border-radius: 3px; font-size: 10px; font-weight: 600; }
+  .badge-h { background: rgba(61,220,132,.15); color: var(--hitter); }
+  .badge-p { background: rgba(74,158,255,.15); color: var(--pitcher); }
+</style>
+</head>
+<body>
+
+<h1>MLBC <span>PROGRESSION TRACKER</span></h1>
+<div class="sub">Compares each player's edited/projected performance (from the roster export, run through the real ranking engine) against what they actually did on the field, across career / last-3-years / last-year / current. Re-run this every season as new performance exports come in — it's the empirical check on whether the ranker's assumptions hold up, and it surfaces who's trending up or down for trade purposes. Does not modify the ranking engine itself — this is a read-only analysis layer on top of it.</div>
+
+<div class="upload-grid">
+  <div class="upload-card" id="rosterCard">
+    <input type="file" id="rosterFile" accept=".csv">
+    <div class="upload-label">League Roster</div>
+    <div class="upload-hint">League_Roster_XXXX.csv</div>
+    <div class="upload-status" id="rosterStatus"></div>
+  </div>
+  <div class="upload-card" id="proCard">
+    <input type="file" id="proFile" accept=".csv">
+    <div class="upload-label">Pro Years Report</div>
+    <div class="upload-hint">Pro_Years_Report_XXXX.csv</div>
+    <div class="upload-status" id="proStatus"></div>
+  </div>
+  <div class="upload-card" id="hittersPerfCard">
+    <input type="file" id="hittersPerfFile" accept=".csv">
+    <div class="upload-label">Hitters Performance</div>
+    <div class="upload-hint">Period,Name,Team,...AVG,OBP,SLG,AB...</div>
+    <div class="upload-status" id="hittersPerfStatus"></div>
+  </div>
+  <div class="upload-card" id="pitchersPerfCard">
+    <input type="file" id="pitchersPerfFile" accept=".csv">
+    <div class="upload-label">Pitchers Performance</div>
+    <div class="upload-hint">Period,Name,Team,...ERA,IP,K,BB...</div>
+    <div class="upload-status" id="pitchersPerfStatus"></div>
+  </div>
+</div>
+
+<button class="run-btn" id="runBtn" onclick="runAnalysis()" disabled>RUN ANALYSIS</button>
+
+<div id="results" style="display:none">
+  <div class="stat-grid" id="statGrid"></div>
+
+  <section>
+    <h2>Hitter hand reliability</h2>
+    <div class="desc">actual OPS minus the roster export's edited/projected OPS (25% vL + 75% vR blend), grouped by bat hand. A more negative number means the edits overrate that group relative to what they actually produce. Minimum sample size per period shown in parentheses.</div>
+    <table id="handTable"></table>
+  </section>
+
+  <section>
+    <h2>Pitcher hand reliability</h2>
+    <div class="desc">actual (OBP+SLG allowed) minus the engine's projected W_OPS, grouped by throwing hand. Same idea as above, for pitchers.</div>
+    <table id="pitchHandTable"></table>
+  </section>
+
+  <section>
+    <h2>Trending down (regression / possible sell candidates)</h2>
+    <div class="desc">Last Year performance well below Career baseline, min. sample size in both windows.</div>
+    <table id="downTable"></table>
+  </section>
+
+  <section>
+    <h2>Trending up (possible buy-low / breakout)</h2>
+    <div class="desc">Last Year performance well above Career baseline, min. sample size in both windows.</div>
+    <table id="upTable"></table>
+  </section>
+</div>
+
+<section>
+  <h2>Log</h2>
+  <div class="log" id="log">Upload all 4 files, then click Run Analysis.</div>
+</section>
+
+<iframe id="engineFrame" src="./index.html"></iframe>
+
+<script>
+let rosterCSV = null, proCSV = null, hittersPerfCSV = null, pitchersPerfCSV = null;
+
+function log(msg) {
+  const el = document.getElementById('log');
+  el.textContent += '\n' + msg;
+  el.scrollTop = el.scrollHeight;
+}
+
+function wireUpload(inputId, cardId, statusId, onLoaded) {
+  document.getElementById(inputId).addEventListener('change', function(e) {
+    const f = e.target.files[0]; if (!f) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      onLoaded(reader.result, f.name);
+      document.getElementById(statusId).textContent = `✓ ${f.name}`;
+      document.getElementById(cardId).classList.add('loaded');
+      checkReady();
+    };
+    reader.readAsText(f);
+  });
+}
+wireUpload('rosterFile', 'rosterCard', 'rosterStatus', t => rosterCSV = t);
+wireUpload('proFile', 'proCard', 'proStatus', t => proCSV = t);
+wireUpload('hittersPerfFile', 'hittersPerfCard', 'hittersPerfStatus', t => hittersPerfCSV = t);
+wireUpload('pitchersPerfFile', 'pitchersPerfCard', 'pitchersPerfStatus', t => pitchersPerfCSV = t);
+function checkReady() {
+  document.getElementById('runBtn').disabled = !(rosterCSV && proCSV && hittersPerfCSV && pitchersPerfCSV);
+}
+
+function parseCSVRows(text) {
+  const parsed = Papa.parse(text, { header: true, skipEmptyLines: true });
+  return parsed.data;
+}
+
+function mean(arr) { return arr.reduce((a,b)=>a+b,0) / arr.length; }
+function stdev(arr) {
+  const m = mean(arr);
+  return Math.sqrt(arr.reduce((a,b)=>a+(b-m)**2,0) / (arr.length-1));
+}
+
+async function runAnalysis() {
+  const btn = document.getElementById('runBtn');
+  btn.disabled = true;
+  document.getElementById('log').textContent = '';
+  document.getElementById('results').style.display = 'none';
+
+  try {
+    log('Parsing uploaded CSVs...');
+    const hittersPerf = parseCSVRows(hittersPerfCSV);
+    const pitchersPerf = parseCSVRows(pitchersPerfCSV);
+    log(`Hitters performance rows: ${hittersPerf.length}, Pitchers performance rows: ${pitchersPerf.length}`);
+
+    log('Waiting for engine iframe (real, unmodified index.html)...');
+    const frame = document.getElementById('engineFrame');
+    await new Promise(resolve => {
+      if (frame.contentDocument && frame.contentDocument.readyState === 'complete') resolve();
+      else frame.addEventListener('load', resolve, { once: true });
+    });
+    const win = frame.contentWindow, doc = frame.contentDocument;
+
+    log('Uploading roster/pro-years through the app\'s real code path...');
+    const rosterFile = new win.File([rosterCSV], 'roster.csv', { type: 'text/csv' });
+    const proFile = new win.File([proCSV], 'proyears.csv', { type: 'text/csv' });
+    const dt1 = new win.DataTransfer(); dt1.items.add(rosterFile);
+    doc.getElementById('rosterFile').files = dt1.files;
+    doc.getElementById('rosterFile').dispatchEvent(new win.Event('change'));
+    const dt2 = new win.DataTransfer(); dt2.items.add(proFile);
+    doc.getElementById('proFile').files = dt2.files;
+    doc.getElementById('proFile').dispatchEvent(new win.Event('change'));
+    await new Promise(r => setTimeout(r, 400));
+    if (doc.getElementById('runBtn').disabled) throw new Error('Engine did not accept both files.');
+
+    log('Running the real runModel() (populates position-range stats the FLD grade needs)...');
+    win.runModel();
+    await new Promise(r => setTimeout(r, 600));
+
+    // rosterData/scoreProspect are top-level `let`/function declarations inside index.html's
+    // own script — not exposed as window properties, so read them via the iframe's own
+    // global scope (indirect eval), same technique validate.html uses.
+    log('Scoring every matched player directly via the real scoreProspect() (not just prospects)...');
+    const hitterNames = [...new Set(hittersPerf.map(r => r.Name))];
+    const pitcherNames = [...new Set(pitchersPerf.map(r => r.Name))];
+    win.__hitterNames = hitterNames;
+    win.__pitcherNames = pitcherNames;
+    const scoresJSON = win.eval(`
+      (function() {
+        const byName = {};
+        rosterData.forEach(r => { byName[(r.Last||'').trim()+', '+(r.First||'').trim()] = r; });
+        const num = v => (v===null||v===undefined||isNaN(v)) ? null : +(+v).toFixed(4);
+        function scoreOne(name) {
+          const row = byName[name];
+          if (!row) return null;
+          const s = scoreProspect(row);
+          if (!s) return null;
+          return { name, type: s.type, bat: s.bat, throw: s.throw, age: s.age,
+            overall: num(s.overall), hit: num(s.hit), fld: num(s.fld),
+            stuff: num(s.stuff), end: num(s.end), obp: num(s.obp), ops: num(s.ops), wops: num(s.wops) };
+        }
+        const h = __hitterNames.map(scoreOne).filter(Boolean);
+        const p = __pitcherNames.map(scoreOne).filter(Boolean);
+        return JSON.stringify({h,p});
+      })();
+    `);
+    const { h: hitterScores, p: pitcherScores } = JSON.parse(scoresJSON);
+    log(`Scored ${hitterScores.length}/${hitterNames.length} hitters, ${pitcherScores.length}/${pitcherNames.length} pitchers.`);
+
+    const hitterScoreByName = {}; hitterScores.forEach(s => hitterScoreByName[s.name] = s);
+    const pitcherScoreByName = {}; pitcherScores.forEach(s => pitcherScoreByName[s.name] = s);
+
+    // Build per-player, per-period performance maps
+    const hitterPerfByName = {};
+    hittersPerf.forEach(r => {
+      if (!r.Name) return;
+      (hitterPerfByName[r.Name] ??= {})[r.Period] = {
+        AB: +r.AB||0, AVG: +r.AVG||0, OBP: +r.OBP||0, SLG: +r.SLG||0, HR: +r.HR||0, G: +r.G||0
+      };
+    });
+    const pitcherPerfByName = {};
+    pitchersPerf.forEach(r => {
+      if (!r.Name) return;
+      (pitcherPerfByName[r.Name] ??= {})[r.Period] = {
+        IP: +r.IP||0, ERA: +r.ERA||0, AVG: +r.AVG||0, OBP: +r.OBP||0, SLG: +r.SLG||0, K: +r.K||0, BB: +r.BB||0
+      };
+    });
+
+    // ── Hand reliability: hitters ──
+    const periods = [['Career',400],['Last3',100],['LastYear',50],['Current',10]];
+    let handRows = '<tr><th>Period</th><th>Switch</th><th>Left</th><th>Right</th></tr>';
+    periods.forEach(([period, minAB]) => {
+      const byHand = {S:[], L:[], R:[]};
+      Object.keys(hitterScoreByName).forEach(name => {
+        const sc = hitterScoreByName[name];
+        const perf = (hitterPerfByName[name]||{})[period];
+        if (!perf || perf.AB < minAB || sc.ops === null) return;
+        const resid = (perf.OBP + perf.SLG) - sc.ops;
+        if (byHand[sc.bat]) byHand[sc.bat].push(resid);
+      });
+      const cell = hand => {
+        const v = byHand[hand];
+        if (!v.length) return '<td class="muted">n/a</td>';
+        const m = mean(v);
+        return `<td class="${m>=0?'pos':'neg'}">${m>=0?'+':''}${m.toFixed(4)} (n=${v.length})</td>`;
+      };
+      handRows += `<tr><td>${period}</td>${cell('S')}${cell('L')}${cell('R')}</tr>`;
+    });
+    document.getElementById('handTable').innerHTML = handRows;
+
+    // ── Hand reliability: pitchers ──
+    let pitchHandRows = '<tr><th>Period</th><th>Right</th><th>Left</th></tr>';
+    const pperiods = [['Career',100],['Last3',40],['LastYear',20],['Current',5]];
+    pperiods.forEach(([period, minIP]) => {
+      const byHand = {R:[], L:[]};
+      Object.keys(pitcherScoreByName).forEach(name => {
+        const sc = pitcherScoreByName[name];
+        const perf = (pitcherPerfByName[name]||{})[period];
+        if (!perf || perf.IP < minIP || sc.wops === null) return;
+        const resid = (perf.OBP + perf.SLG) - sc.wops;
+        if (byHand[sc.throw]) byHand[sc.throw].push(resid);
+      });
+      const cell = hand => {
+        const v = byHand[hand];
+        if (!v.length) return '<td class="muted">n/a</td>';
+        const m = mean(v);
+        return `<td class="${m>=0?'pos':'neg'}">${m>=0?'+':''}${m.toFixed(4)} (n=${v.length})</td>`;
+      };
+      pitchHandRows += `<tr><td>${period}</td>${cell('R')}${cell('L')}</tr>`;
+    });
+    document.getElementById('pitchHandTable').innerHTML = pitchHandRows;
+
+    // ── Trending up/down: hitters, LastYear OPS vs Career OPS ──
+    const trend = [];
+    Object.keys(hitterPerfByName).forEach(name => {
+      const perf = hitterPerfByName[name];
+      const career = perf['Career'], lastYear = perf['LastYear'];
+      if (!career || !lastYear || career.AB < 400 || lastYear.AB < 150) return;
+      const careerOps = career.OBP + career.SLG, lyOps = lastYear.OBP + lastYear.SLG;
+      const sc = hitterScoreByName[name];
+      trend.push({ name, careerOps, lyOps, delta: lyOps - careerOps, age: sc ? sc.age : null, bat: sc ? sc.bat : null });
+    });
+    trend.sort((a,b) => a.delta - b.delta);
+    const down = trend.slice(0, 15);
+    const up = [...trend].sort((a,b) => b.delta - a.delta).slice(0, 15);
+
+    const trendRow = t => `<tr><td>${t.name}</td><td>${t.bat||'-'}</td><td>${t.age||'-'}</td><td>${t.careerOps.toFixed(3)}</td><td>${t.lyOps.toFixed(3)}</td><td class="${t.delta>=0?'pos':'neg'}">${t.delta>=0?'+':''}${t.delta.toFixed(3)}</td></tr>`;
+    document.getElementById('downTable').innerHTML =
+      '<tr><th>Name</th><th>Bat</th><th>Age</th><th>Career OPS</th><th>Last Yr OPS</th><th>Delta</th></tr>' + down.map(trendRow).join('');
+    document.getElementById('upTable').innerHTML =
+      '<tr><th>Name</th><th>Bat</th><th>Age</th><th>Career OPS</th><th>Last Yr OPS</th><th>Delta</th></tr>' + up.map(trendRow).join('');
+
+    document.getElementById('statGrid').innerHTML = [
+      `<div class="stat-card"><div class="label">Hitters scored</div><div class="value">${hitterScores.length}</div></div>`,
+      `<div class="stat-card"><div class="label">Pitchers scored</div><div class="value">${pitcherScores.length}</div></div>`,
+      `<div class="stat-card"><div class="label">Trend-eligible hitters</div><div class="value">${trend.length}</div></div>`,
+    ].join('');
+
+    log('Done.');
+    document.getElementById('results').style.display = 'block';
+  } catch (e) {
+    log('ERROR: ' + e.message);
+    console.error(e);
+  } finally {
+    btn.disabled = false;
+  }
+}
+</script>
+</body>
+</html>
