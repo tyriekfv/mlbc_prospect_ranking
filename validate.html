@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MLBC Prospect Ranker — Regression Test</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0c0f; --surface: #111418; --surface2: #1a1f26; --border: #252b35;
+    --accent: #e8a020; --accent2: #4a9eff; --accent3: #3ddc84; --text: #e8ecf0;
+    --text2: #8a95a3; --text3: #4a5568; --danger: #ff4757;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'IBM Plex Sans', sans-serif; font-size: 14px; padding: 32px; }
+  h1 { font-family: 'Bebas Neue', sans-serif; font-size: 34px; letter-spacing: 2px; margin-bottom: 4px; }
+  h1 span { color: var(--accent); }
+  .sub { color: var(--text2); margin-bottom: 24px; font-size: 13px; }
+  .run-btn {
+    padding: 12px 24px; background: var(--accent); color: #000; border: none; border-radius: 6px;
+    font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 1px; cursor: pointer; margin-bottom: 24px;
+  }
+  .run-btn:hover { background: #f5b030; }
+  .run-btn:disabled { background: var(--border); color: var(--text3); cursor: not-allowed; }
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 24px; max-width: 1100px; }
+  .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 16px; }
+  .stat-card .label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text2); margin-bottom: 6px; }
+  .stat-card .value { font-family: 'IBM Plex Mono', monospace; font-size: 24px; font-weight: 600; }
+  .stat-card .value.pass { color: var(--accent3); }
+  .stat-card .value.warn { color: var(--accent); }
+  .stat-card .value.fail { color: var(--danger); }
+  section { margin-bottom: 28px; max-width: 1100px; }
+  section h2 { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 1px; margin-bottom: 10px; color: var(--text2); }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; font-family: 'IBM Plex Mono', monospace; }
+  th, td { text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  th { color: var(--text2); font-weight: 600; font-size: 11px; text-transform: uppercase; }
+  .muted { color: var(--text3); }
+  .log { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 12px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--text2); white-space: pre-wrap; max-height: 200px; overflow-y: auto; }
+  #engineFrame { position: absolute; top: 0; left: -9999px; width: 1200px; height: 800px; border: 0; visibility: hidden; }
+</style>
+</head>
+<body>
+
+<h1>PROSPECT RANKER <span>REGRESSION TEST</span></h1>
+<div class="sub">Runs the real, unmodified <code>index.html</code> ranking engine (via hidden iframe) against fixture data and checks it against the site's known top-300 rank order &amp; hidden grade-bar values. This is the harness described in the README's contributing notes — run it before and after any formula change.</div>
+
+<button class="run-btn" id="runBtn" onclick="runValidation()">RUN VALIDATION</button>
+
+<div id="results" style="display:none">
+  <div class="stat-grid" id="statGrid"></div>
+
+  <section id="missingSection">
+    <h2>Ground-truth players not in the fixture roster</h2>
+    <div class="sub" style="margin-bottom:8px">Not a model bug — these named players don't appear anywhere in <code>League_Roster_2144.csv</code> (checked by exact name and by last name alone), most likely a timing gap between the site scrape and the roster export.</div>
+    <table id="missingTable"></table>
+  </section>
+
+  <section id="worstSection">
+    <h2>Largest rank discrepancies (real rank compressed to the matched set)</h2>
+    <table id="worstTable"></table>
+  </section>
+
+  <section id="top20Section">
+    <h2>Top 20 — real vs. computed</h2>
+    <table id="top20Table"></table>
+  </section>
+</div>
+
+<section>
+  <h2>Log</h2>
+  <div class="log" id="log">Idle. Click "Run Validation" to start.</div>
+</section>
+
+<iframe id="engineFrame" src="./index.html"></iframe>
+
+<script>
+function log(msg) {
+  const el = document.getElementById('log');
+  el.textContent += '\n' + msg;
+  el.scrollTop = el.scrollHeight;
+}
+
+function parseCSV(text) {
+  // Minimal RFC4180-ish parser (quoted fields, embedded commas) — no external deps needed for fixtures.
+  const rows = [];
+  let row = [], field = '', inQuotes = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (inQuotes) {
+      if (c === '"') {
+        if (text[i+1] === '"') { field += '"'; i++; } else { inQuotes = false; }
+      } else field += c;
+    } else {
+      if (c === '"') inQuotes = true;
+      else if (c === ',') { row.push(field); field = ''; }
+      else if (c === '\r') { /* skip */ }
+      else if (c === '\n') { row.push(field); rows.push(row); row = []; field = ''; }
+      else field += c;
+    }
+  }
+  if (field.length || row.length) { row.push(field); rows.push(row); }
+  const header = rows.shift();
+  return rows.filter(r => r.length > 1 || r[0] !== '').map(r => {
+    const obj = {};
+    header.forEach((h, i) => obj[h] = r[i] !== undefined ? r[i] : '');
+    return obj;
+  });
+}
+
+function pearson(xs, ys) {
+  const n = xs.length;
+  const mx = xs.reduce((a,b)=>a+b,0)/n, my = ys.reduce((a,b)=>a+b,0)/n;
+  let cov = 0, vx = 0, vy = 0;
+  for (let i = 0; i < n; i++) {
+    cov += (xs[i]-mx)*(ys[i]-my);
+    vx += (xs[i]-mx)**2;
+    vy += (ys[i]-my)**2;
+  }
+  return (vx > 0 && vy > 0) ? cov / Math.sqrt(vx*vy) : NaN;
+}
+
+function statCard(label, value, cls) {
+  return `<div class="stat-card"><div class="label">${label}</div><div class="value ${cls||''}">${value}</div></div>`;
+}
+
+async function runValidation() {
+  const btn = document.getElementById('runBtn');
+  btn.disabled = true;
+  document.getElementById('log').textContent = '';
+  document.getElementById('results').style.display = 'none';
+
+  try {
+    log('Loading fixtures...');
+    const [rosterText, proText, hittersText, pitchersText] = await Promise.all([
+      fetch('./validate/fixtures/League_Roster_2144.csv').then(r => { if(!r.ok) throw new Error('League_Roster_2144.csv: '+r.status); return r.text(); }),
+      fetch('./validate/fixtures/Pro_Years_Report_2144.csv').then(r => { if(!r.ok) throw new Error('Pro_Years_Report_2144.csv: '+r.status); return r.text(); }),
+      fetch('./validate/fixtures/hitters_final.csv').then(r => { if(!r.ok) throw new Error('hitters_final.csv: '+r.status); return r.text(); }),
+      fetch('./validate/fixtures/pitchers_final.csv').then(r => { if(!r.ok) throw new Error('pitchers_final.csv: '+r.status); return r.text(); }),
+    ]);
+
+    // Ground truth: real site rank / OVR / bar values, keyed by "Last, First" (ConvName)
+    const truth = {};
+    parseCSV(hittersText).forEach(r => truth[r.ConvName.trim()] = { rank:+r.Rank, ovr:+r.OVR, bar1:+r.Bar1, bar2:+r.Bar2, type:'H' });
+    parseCSV(pitchersText).forEach(r => truth[r.ConvName.trim()] = { rank:+r.Rank, ovr:+r.OVR, bar1:+r.Bar1, bar2:+r.Bar2, type:'P' });
+    log(`Ground truth loaded: ${Object.keys(truth).length} known players.`);
+
+    log('Waiting for engine iframe (real, unmodified index.html)...');
+    const frame = document.getElementById('engineFrame');
+    await new Promise(resolve => {
+      if (frame.contentDocument && frame.contentDocument.readyState === 'complete') resolve();
+      else frame.addEventListener('load', resolve, { once: true });
+    });
+    const win = frame.contentWindow, doc = frame.contentDocument;
+
+    log('Simulating real file upload through the app\'s own change-listener code path...');
+    const rosterFile = new win.File([rosterText], 'League_Roster_2144.csv', { type: 'text/csv' });
+    const proFile = new win.File([proText], 'Pro_Years_Report_2144.csv', { type: 'text/csv' });
+    const dt1 = new win.DataTransfer(); dt1.items.add(rosterFile);
+    doc.getElementById('rosterFile').files = dt1.files;
+    doc.getElementById('rosterFile').dispatchEvent(new win.Event('change'));
+    const dt2 = new win.DataTransfer(); dt2.items.add(proFile);
+    doc.getElementById('proFile').files = dt2.files;
+    doc.getElementById('proFile').dispatchEvent(new win.Event('change'));
+    await new Promise(r => setTimeout(r, 400));
+
+    if (doc.getElementById('runBtn').disabled) throw new Error('Engine did not accept both files (run button still disabled).');
+
+    log('Calling the real runModel()...');
+    win.runModel();
+    await new Promise(r => setTimeout(r, 600));
+
+    // `allRanked` is a top-level `let` inside index.html's own <script> — it is never a
+    // property of the iframe's window object (true of any let/const, regardless of origin),
+    // so it can't be read via win.allRanked. Reading it via the iframe's own global scope
+    // (indirect eval) instead, which resolves against the same lexical environment index.html's
+    // script actually populated.
+    let allRanked;
+    try {
+      allRanked = JSON.parse(win.eval(
+        "JSON.stringify(allRanked.map(r => ({name:r.name, type:r.type, overall:r.overall, hit:r.hit, fld:r.fld, stuff:r.stuff, end:r.end})))"
+      ));
+    } catch (evalErr) {
+      throw new Error('Could not read allRanked from the engine iframe: ' + evalErr.message);
+    }
+    if (!allRanked || !allRanked.length) throw new Error('allRanked is empty after runModel() — engine may have thrown (check browser console for the iframe).');
+    log(`Engine produced ${allRanked.length} ranked prospects.`);
+
+    // ── Compare ──
+    const oursByName = {};
+    allRanked.forEach(r => oursByName[r.name] = r);
+
+    const matched = [], missing = [];
+    Object.keys(truth).forEach(name => {
+      if (oursByName[name]) matched.push([name, truth[name], oursByName[name]]);
+      else missing.push([name, truth[name]]);
+    });
+
+    // Compress real ranks to just the matched subset so removed/absent players don't
+    // create phantom offset errors, then re-rank our output the same way.
+    const byReal = [...matched].sort((a,b) => a[1].rank - b[1].rank);
+    byReal.forEach(([name,t,o], i) => t.adjRealRank = i+1);
+    const byOurs = [...matched].sort((a,b) => b[2].overall - a[2].overall);
+    byOurs.forEach(([name,t,o], i) => o.localRank = i+1);
+
+    const errors = matched.map(([name,t,o]) => Math.abs(o.localRank - t.adjRealRank));
+    const exact = errors.filter(e => e === 0).length;
+    const meanErr = errors.reduce((a,b)=>a+b,0) / errors.length;
+
+    const hitters = matched.filter(([n,t]) => t.type === 'H');
+    const pitchers = matched.filter(([n,t]) => t.type === 'P');
+    const rHitOvr = hitters.length ? pearson(hitters.map(([n,t])=>t.ovr), hitters.map(([n,t,o])=>o.overall)) : NaN;
+    const rHitHit = hitters.length ? pearson(hitters.map(([n,t])=>t.bar2), hitters.map(([n,t,o])=>o.hit)) : NaN;
+    const rHitFld = hitters.length ? pearson(hitters.map(([n,t])=>t.bar1), hitters.map(([n,t,o])=>o.fld)) : NaN;
+    const rPitOvr = pitchers.length ? pearson(pitchers.map(([n,t])=>t.ovr), pitchers.map(([n,t,o])=>o.overall)) : NaN;
+    const rPitStf = pitchers.length ? pearson(pitchers.map(([n,t])=>t.bar2), pitchers.map(([n,t,o])=>o.stuff)) : NaN;
+    const rPitEnd = pitchers.length ? pearson(pitchers.map(([n,t])=>t.bar1), pitchers.map(([n,t,o])=>o.end)) : NaN;
+
+    log(`Matched ${matched.length}/${Object.keys(truth).length}. Exact rank matches (compressed): ${exact}/${matched.length}.`);
+    log('Done.');
+
+    // ── Render ──
+    const exactPct = 100*exact/matched.length;
+    document.getElementById('statGrid').innerHTML = [
+      statCard('Matched players', `${matched.length}/${Object.keys(truth).length}`, matched.length===Object.keys(truth).length?'pass':'warn'),
+      statCard('Exact rank matches', `${exact}/${matched.length} (${exactPct.toFixed(1)}%)`, exactPct===100?'pass':exactPct>=90?'warn':'fail'),
+      statCard('Mean rank error', meanErr.toFixed(2), meanErr===0?'pass':meanErr<=1?'warn':'fail'),
+      statCard('Hitter OVR r', rHitOvr.toFixed(4), rHitOvr>=0.99?'pass':rHitOvr>=0.9?'warn':'fail'),
+      statCard('Pitcher OVR r', rPitOvr.toFixed(4), rPitOvr>=0.99?'pass':rPitOvr>=0.9?'warn':'fail'),
+      statCard('Hitter HIT/FLD r', `${rHitHit.toFixed(3)} / ${rHitFld.toFixed(3)}`, (rHitHit>=0.99&&rHitFld>=0.99)?'pass':'warn'),
+      statCard('Pitcher STF/END r', `${rPitStf.toFixed(3)} / ${rPitEnd.toFixed(3)}`, (rPitStf>=0.99&&rPitEnd>=0.99)?'pass':'warn'),
+    ].join('');
+
+    document.getElementById('missingTable').innerHTML =
+      '<tr><th>Name</th><th>Real Rank</th><th>Type</th></tr>' +
+      (missing.length ? missing.sort((a,b)=>a[1].rank-b[1].rank).map(([name,t]) =>
+        `<tr><td>${name}</td><td>${t.rank}</td><td>${t.type}</td></tr>`).join('')
+        : '<tr><td colspan="3" class="muted">None — every ground-truth player matched.</td></tr>');
+
+    const worst = [...matched].sort((a,b) => Math.abs(b[2].localRank-b[1].adjRealRank) - Math.abs(a[2].localRank-a[1].adjRealRank)).slice(0,15);
+    document.getElementById('worstTable').innerHTML =
+      '<tr><th>Name</th><th>Real Rank</th><th>Our Rank</th><th>Err</th><th>Real OVR</th><th>Our OVR</th><th>Type</th></tr>' +
+      worst.map(([name,t,o]) => `<tr><td>${name}</td><td>${t.adjRealRank}</td><td>${o.localRank}</td><td>${Math.abs(o.localRank-t.adjRealRank)}</td><td>${t.ovr.toFixed(2)}</td><td>${o.overall.toFixed(2)}</td><td>${t.type}</td></tr>`).join('');
+
+    const top20 = [...matched].sort((a,b) => a[1].rank - b[1].rank).slice(0,20);
+    document.getElementById('top20Table').innerHTML =
+      '<tr><th>Name</th><th>Real Rank</th><th>Our Rank</th><th>Real OVR</th><th>Our OVR</th></tr>' +
+      top20.map(([name,t,o]) => `<tr><td>${name}</td><td>${t.rank}</td><td>${o.localRank}</td><td>${t.ovr.toFixed(2)}</td><td>${o.overall.toFixed(2)}</td></tr>`).join('');
+
+    document.getElementById('results').style.display = 'block';
+  } catch (e) {
+    log('ERROR: ' + e.message);
+    console.error(e);
+  } finally {
+    btn.disabled = false;
+  }
+}
+</script>
+</body>
+</html>

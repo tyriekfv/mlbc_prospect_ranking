@@ -1,0 +1,3210 @@
+Firstname,Lastname,Pos,Team,Level,Pro Years
+Bob,Havens,1B,AUCK,AAA,0
+Matt,Williams,C,IDA,A,0
+Howard,Hensley,C,Free Agent,A,0
+Antoine,Haug,C,LOUI,AA,0
+Sydney,Lueckenhoff,RF,WISC,AAA,0
+Jesse,Ryder,1B,AUCK,ML,6
+Royce,Patrick,RF,SCRN,AAA,1
+Matt,Porter,1B,SCRN,A,0
+Wendell,Linsey,RF,MAHO,ML,0
+John,Pfeifer,2B,IDA,A,0
+Glenn,Clisham,3B,MAIN,A,0
+Eddie,Hessel,C,CHES,ML,5
+Carl,Evans,SS,OMA,A,0
+Kyle,Matthew,2B,Free Agent,A,0
+George,Pennant,SS,NORW,ML,1
+Alphonso,Taylor,3B,Free Agent,A,0
+Ali,Haefner,LF,Free Agent,A,0
+Brendan,Rusk,RF,CHES,AAA,0
+Cookie,Reynolds,CF,OMA,A,0
+Alejandro,Anderson,RF,Free Agent,A,0
+Willie,Thompson Jr,RF,Free Agent,A,0
+Curtis,Gallegos,P,RICH,AAA,0
+Teddy,Frack,CF,HILL,AAA,0
+Spooky,Mulder,SS,Free Agent,A,13
+Scut,Farkus,P,CASP,ML,3
+Lawrence,Clark,CF,ELP,AA,0
+Sean,Bock,P,Free Agent,A,0
+Dave,McQuiston,P,MAHO,AAA,0
+Simeon,French,P,Free Agent,A,0
+Mario,Maddy,P,ELP,AAA,0
+Christoper,Jin,P,AUCK,AAA,3
+Rube,Webb,P,Free Agent,A,0
+Cotton,Coplon,P,LOUI,AA,0
+Don,Oakley,P,Free Agent,A,3
+Jordan,Klinner,P,OMA,A,0
+Lowell,Steptoe,P,HILL,AA,0
+Anthony,Monton,P,OMA,AAA,1
+Brad,Kalka,P,FRIS,ML,3
+Paul,Farrell,P,MAHO,AAA,1
+Jacob,Sabedra,P,PORT,A,0
+Trayvon,Wainright,P,FRIS,AAA,0
+Jesse,Schoolman,P,CASP,ML,1
+Eugene,Taylor,P,Free Agent,A,3
+Francisco,Bailey,P,TEX,A,10
+Calvin,Pelcher,P,Free Agent,A,0
+H.R.,Pufnstuf,RF,FRIS,ML,11
+John,Knight,P,HILL,A,0
+Leroy,Porter,P,HILL,A,0
+Adam,Uppen,P,Free Agent,A,0
+Roger,Perez,P,Free Agent,A,0
+Ken,Sparlin,P,ELP,AA,0
+Addie,Sa,P,ROME,A,0
+Jim,Bartel,P,OMA,A,0
+Paul,McCollester,P,BANG,A,0
+Ralph,Villines,P,SUGR,A,0
+Anthony,Kosa,P,MAIN,A,0
+Patrick,White,P,Free Agent,A,0
+John,Jabs,P,RICH,AA,0
+Douglas,Brown,P,OMA,A,0
+Norman,Tobin,P,OMA,AA,0
+Trevor,Treger,P,WISC,A,0
+Gilbert,Marshall,P,IDA,ML,3
+Kazuto,Kirigaya,P,AUCK,ML,11
+Truman,Kernan,P,ELP,AA,0
+Eli,Drake,SS,ROCK,ML,1
+Jon,Levy,3B,DAY,A,0
+Alvin,Vanpatten,RF,SCRN,A,0
+Andrew,Salton,P,Free Agent,A,0
+Dave,Royal,1B,CASP,A,0
+Jamie,Lapointe,C,Free Agent,A,0
+Walt,Lopez,3B,HILL,ML,0
+Anthony,Botts,RF,PEOR,AAA,0
+Fritz,Morton,C,CHES,AAA,0
+Kevin,Diaz,C,RICH,AA,0
+Matthew,Horn,C,Free Agent,A,0
+Clifton,Ryder,2B,Free Agent,A,0
+John,Calarco,2B,SCRN,A,0
+Mark,Hubbard,C,Free Agent,A,0
+Jason,Kristianson,SS,ROCK,AA,0
+Dan,Outlaw,CF,SCRN,A,5
+Devin,Lang,P,PEOR,AAA,0
+Ron,Biggs,C,Free Agent,A,0
+Brent,Chavez,RF,PEOR,AA,0
+John,Stoff,SS,SCRN,AAA,1
+Raymond,Dollar,3B,Free Agent,A,0
+Michael,Garron,CF,MAHO,ML,1
+Brian,Victorino,2B,NORW,AAA,0
+Michael,Lazar,2B,LAKE,A,0
+Muad,Dib,P,WISC,ML,9
+Fred,Briggs,2B,LAKE,AAA,0
+Eric,Wooten,SS,FRIS,AAA,0
+Patrick,Davis,3B,CASP,AAA,0
+Collin,Schiess,1B,PORT,AAA,0
+Marv,Komer,3B,AUCK,AA,0
+Keven,Williams,C,Free Agent,A,0
+Matt,Thurlow,3B,LOUI,AAA,0
+Charlie,Slattery,C,RICH,A,0
+Lucius,Luther,3B,BANG,AAA,0
+Leland,Khan,P,Free Agent,A,3
+Anthony,Vidalez,1B,Free Agent,A,0
+Joe,Northam,2B,MAIN,A,0
+Dave,Glass,2B,Free Agent,A,0
+Floyd,Pfisterer,3B,DAY,A,0
+Killian,Bailey,2B,LYNC,AAA,0
+Gary,Garibay,SS,NORW,A,0
+Eric,Lynch,SS,LAKE,AA,0
+Marlin,Studzinski,LF,Free Agent,A,0
+Justin,Lipka,CF,MIDL,AA,0
+Clarence,Williams,2B,WISC,AA,0
+Sadie,Sossamon,SS,EDMO,AAA,0
+Bill,Worsell,1B,ELP,A,5
+Felipe,Jones,CF,LYNC,A,0
+Jerry,Louissaint,C,SF,ML,3
+Roger,Weir,C,BANG,AA,0
+Joe,Padilla,1B,SCRN,ML,2
+Travis,Iwanski,1B,MAHO,ML,5
+Jonathan,Jones,P,PORT,AAA,1
+Gerardo,Dery,RF,HILL,AAA,0
+Chad,Darensbourg,2B,EDMO,ML,5
+Willie,Milloway,P,Free Agent,A,0
+Brad,Childress,RF,NORW,A,0
+Brenton,Pendry,1B,WISC,ML,15
+Frye,Cook,RF,OMA,ML,0
+Johnathon,Hart,P,Free Agent,A,0
+Heston,Kjerstad,RF,CASP,ML,8
+Jonathan,Bowell,LF,SCRN,AA,0
+Kieth,Hopkins,P,WISC,A,0
+Walt,Levell,P,OMA,AA,0
+Ferdie,Crump,P,IDA,AA,0
+Merlin,Dizon,P,Free Agent,A,0
+Encyclopedia,Brown,SS,Free Agent,A,6
+Paul,Ricker,P,AUCK,AA,0
+Ken,Munsen,P,CASP,ML,3
+Otis,Milliron,P,LAKE,ML,0
+Jack,Chew,P,PEOR,A,0
+Dan,Carr,SS,Free Agent,A,0
+Nicolas,Morris,P,MAIN,AAA,0
+Shawn,Yates,SS,LAKE,A,10
+Billy,Dimiceli,P,SUGR,A,0
+Jesse,Klonoski,LF,ELP,AAA,0
+Morris,Buttermaker,P,CASP,ML,3
+Mac,Morgan,P,PORT,A,10
+Randy,Takeuchi,P,Free Agent,AA,0
+Bret,Bailey,P,SUGR,A,0
+King,Moore,1B,ROME,AAA,0
+Harold,O'Hara,P,CHES,AAA,0
+Murray,Miller,P,IDA,A,0
+Don,McCarty,P,Free Agent,A,0
+Cody,Arens,P,Free Agent,A,0
+Rich,George,P,Free Agent,A,0
+Jason,Hermanstorfer,P,WISC,ML,14
+Micheal,Diaz,SS,ALTO,AA,0
+Dan,Deville,P,MIDL,A,0
+Mike,Lemoine,P,Free Agent,A,0
+John,Valeri,P,TEX,AAA,0
+Marcus,Figueredo,P,MAHO,ML,1
+Delmar,Schwering,P,WISC,AAA,0
+Marco,Dawson,P,OMA,AA,0
+Dave,Kuthe,RF,FRIS,ML,0
+Dale,Sebek,P,SF,ML,8
+Bob,Todd,P,MAHO,AA,0
+Emmanuel,Schaufelberge,RF,Free Agent,A,0
+Mike,Howman,P,MIDL,AA,0
+Ronald,James,P,SUGR,A,0
+Brian,Stein,CF,PEOR,AA,0
+Armando,Caccavale,P,ALTO,ML,3
+Ken,Rice,SS,Free Agent,A,0
+Dave,Sidelinger,P,LAKE,AA,0
+Ed,Reed,P,IDA,AA,0
+Gary,Schnautz,P,IDA,AAA,0
+Jim,Lipton,SS,NORW,AA,0
+Anthony,Riso,2B,FRIS,AAA,0
+Joe,Nicholson,LF,Free Agent,A,0
+George,Spates,P,RICH,A,0
+Joel,Lasch,CF,NORW,ML,7
+Jason,Frank,P,FRIS,A,0
+Mike,Jhones,P,OMA,A,0
+Leo,Courson,P,ROME,A,9
+Chad,Bowen,LF,SCRN,AA,0
+Irv,Tat,P,IDA,ML,9
+Arthur,Jackson,P,CASP,ML,3
+Ron,Milteer,P,Free Agent,A,0
+Don,Miller,2B,Free Agent,A,0
+Larry,Welschmeyer,P,LYNC,A,11
+Gene,Kapp,3B,Free Agent,A,0
+Whitney,Plante,3B,Free Agent,A,0
+Tuck,Madden,3B,LAKE,AA,0
+Johnny,Hockey,C,OKC,ML,6
+Arthur,Durrani,CF,Free Agent,A,0
+Ron,Singer,2B,ALTO,AAA,0
+Ali,Ensing,P,HILL,A,0
+George,Ellison,SS,MAHO,A,0
+Isaiah,Aiken,1B,OMA,AA,0
+Micheal,Holtzlander,P,AUCK,AA,0
+Joshua,Browne,P,TEX,AA,0
+Carlos,Jeter,P,PEOR,AA,0
+Andrew,Newell,RF,OMA,AA,0
+Joe,Deponte,P,Free Agent,A,0
+Tom,Hustead,P,Free Agent,A,0
+Samson,Brown,P,Free Agent,A,0
+Charles,Crawford,C,IDA,AAA,0
+Erick,Borkoski,3B,Free Agent,A,0
+Jeffrey,Tapia,P,SUGR,AAA,0
+George,Halat,3B,MIDL,A,5
+Walter,Picha,P,PEOR,AA,0
+Timothy,McClafferty,3B,WISC,ML,1
+Lance,Cassaro,P,WISC,AA,0
+Willard,Tibbs,SS,ELP,ML,2
+Bryant,Aly,LF,SF,ML,1
+Fredrick,Brashear,P,ELP,AA,0
+Curtis,Chatman,P,ALTO,AA,0
+Curly,Taylor,P,Free Agent,A,0
+Lew,Cronic,P,TEX,A,4
+Shawn,Harris,P,Free Agent,A,0
+Keaton,Abendroth,P,ROME,A,0
+Isosceles,Kramer,P,PEOR,AAA,0
+Potsie,Weber,3B,MAIN,ML,1
+Jadon,Frutos,P,Free Agent,A,0
+Steve,Bush,P,OMA,AA,0
+Merle,Amsden,SS,Free Agent,A,0
+Owen,Hart,2B,ROCK,ML,4
+Marshall,Law,C,Free Agent,A,0
+Martin,Atari,P,OKC,ML,7
+Bill,Wdowiak,LF,Free Agent,A,0
+Garry,Wertz,3B,NORW,AA,0
+Overton,Brakeman,P,SUGR,AAA,0
+Braulio,Young,3B,OMA,AAA,0
+Chad,Zuidema,LF,Free Agent,A,0
+Jeffery,Chatman,3B,MAIN,AA,0
+Anthony,London,C,CASP,A,0
+Mario,Wells,LF,Free Agent,A,0
+Jason,Parson,C,LOUI,A,0
+David,Henery,C,Free Agent,A,0
+Archie,Martin,C,Free Agent,A,0
+Casey,Johnsrud,P,FRIS,AAA,0
+Ron,Tansil,P,SUGR,AAA,0
+Darren,Hazelip,1B,PEOR,AA,0
+Frank,Rhymes,2B,Free Agent,A,0
+Damon,Silcox,LF,PORT,A,0
+James,Westcott,3B,Free Agent,A,0
+Wyatt,Taylor,2B,CHES,AA,0
+Darryl,Glover Jr,2B,PEOR,A,0
+John,Throne,SS,Free Agent,A,0
+Warren,Bult,SS,PORT,AAA,0
+Samuel,Ruelas,LF,TEX,ML,8
+Leslie,Citrino,LF,Free Agent,A,0
+Shane,Grondahl,CF,Free Agent,A,0
+Alejandro,Kibodeaux,P,Free Agent,A,4
+Hack,Baldivia,RF,Free Agent,A,0
+Don,Reither,SS,LAKE,AA,0
+Joseph,Guy,P,Free Agent,A,0
+Teodoro,Dalleva,P,PEOR,ML,2
+Francis,Niederhaus,1B,CASP,AA,0
+Harold,James,P,EDMO,AA,0
+Virgil,Goh,RF,CHES,AAA,0
+Louis,Greene,C,CHES,ML,1
+Bob,Roberson,2B,PORT,A,0
+Paul,Fernandez,LF,LOUI,ML,1
+Tico,Torres,P,NORW,AA,0
+Vincent,Garrett,P,TEX,A,6
+Tom,Evans,C,Free Agent,A,0
+Harold,Neifer,1B,SCRN,AAA,0
+Mario,Tabisula,P,Free Agent,A,0
+Vincent,Potts,1B,ELP,AAA,0
+Roger,Ownby,P,Free Agent,A,0
+Herman,Kiffer,P,HILL,AA,0
+Mathew,Barton,CF,ELP,ML,5
+Barry,Irby,CF,Free Agent,A,0
+Bradley,Jankauskas,P,RICH,A,5
+Jimmy,Roybal Jr,P,Free Agent,A,0
+Delbert,Deacon,LF,SUGR,ML,3
+Mike,Carroll,P,BANG,ML,4
+Omar,Little,P,LOUI,ML,12
+Ron,Lewis,1B,NORW,A,0
+Jon,Jackson,2B,PORT,A,0
+Keith,Modlin,P,MAHO,AA,0
+Harry,Chan,1B,CHES,ML,2
+Mario,Ashby,P,CASP,AAA,0
+Steve,Gentry,2B,SCRN,AA,0
+Brian,Lower,P,Free Agent,A,0
+George,McIntyre,3B,FRIS,ML,3
+Boyd,Chester,CF,MAHO,ML,3
+Kermit,Bynum,CF,PORT,AAA,0
+Damien,Key,P,OMA,AA,0
+Arthur,Spoon,P,Free Agent,A,0
+Gary,Briggs,P,Free Agent,A,0
+Lloyd,Johns,P,Free Agent,A,0
+Lonnie,Milnor,3B,Free Agent,A,0
+Jaime,Selzer,2B,Free Agent,A,0
+Richard,Bryant,3B,LOUI,A,0
+Michael,Dupree,CF,Free Agent,A,0
+Ken,Holey,P,AUCK,ML,8
+Aoi,Todo,SS,ELP,AAA,0
+Red,Foreman,3B,MAIN,A,16
+Robert,Holder,SS,CHES,A,0
+Tracy,McCay,SS,NORW,AA,0
+Kevin,McDougal,C,Free Agent,A,0
+Jorge,Craig,RF,SCRN,AA,0
+Derrell,Sitzes,LF,LOUI,AA,0
+Don,Bhatti,P,EDMO,AAA,0
+Jose,Wright,LF,NORW,A,0
+Brandon,Fox,CF,Free Agent,A,0
+Oscar,Pacheco,LF,CASP,AA,0
+Maximilian,Murray,C,ELP,ML,2
+Moises,Haist,3B,LAKE,AA,0
+Steve,Dressen,RF,LAKE,A,0
+Loren,Christion,1B,Free Agent,A,0
+Scott,Pryor,P,ALTO,ML,5
+Bill,Sublett,P,CHES,A,0
+Don,Stinnette,CF,MAHO,AA,0
+Billy,Clubb,CF,Free Agent,A,0
+Gene,Walker,2B,SCRN,AAA,0
+George,Morgan,P,AUCK,A,0
+Val,Dimon,P,CHES,A,0
+Jayson,Fasy,P,CHES,AAA,0
+Quincy,Shearn,P,PEOR,AA,0
+Paul,Heuman,LF,TEX,A,13
+Walter,Pena,P,MAHO,ML,4
+John,Bordwell,P,AUCK,A,5
+Sam,Sautter,P,ALTO,A,0
+Rich,Peoples,P,Free Agent,A,0
+Ferric,Turner,P,TEX,A,6
+Blackout,Gatling,P,CHES,ML,9
+Leo,Boisse,P,SUGR,ML,4
+Eric,Newsome,P,FRIS,A,0
+Harris,Mendez,P,CHES,AA,0
+Richard,Williamson,P,Free Agent,A,0
+Jon,Boddy,P,Free Agent,A,0
+Samuel,Garrick,P,WISC,A,0
+Don,Tatham,P,Free Agent,A,0
+Luther,Briggs,P,Free Agent,A,0
+Guyton,Willis,RF,SCRN,AA,0
+Bob,Bazemore,LF,HILL,ML,14
+Will,Halas,RF,ELP,AAA,0
+Jose,Bluth,P,AUCK,AA,0
+Tim,Irvine,P,ROCK,AAA,0
+Reuben,Crisp,SS,ELP,ML,2
+Samuel,Teasdale,P,MIDL,A,0
+Lawrence,Magana,P,LYNC,AA,0
+Louis,Tinstman,P,Free Agent,A,0
+Jim,Lima,C,Free Agent,A,0
+Johnny,Jaconski,3B,Free Agent,A,0
+Dan,Green,3B,Free Agent,A,0
+Tim,Neel,1B,Free Agent,A,0
+Cy,Moran,P,OMA,A,0
+Paul,Barrington,LF,Free Agent,A,0
+Kristopher,Duckworth,P,AUCK,A,0
+Leroy,Bowman,P,TEX,AAA,0
+Anthony,Wilkerson,3B,Free Agent,A,0
+Gilbert,Ashley,C,ROCK,ML,5
+Louis,Gardley,C,Free Agent,A,0
+Rich,Pareja,P,PEOR,A,0
+Christian,Homesley,P,WISC,AAA,0
+Burton,Guster,SS,SF,AAA,0
+Elmer,Deacon,3B,Free Agent,A,0
+Rupert,Brawer,SS,Free Agent,A,0
+Joe,Moore,1B,PORT,AA,0
+Mike,Wallace,LF,ROCK,AA,0
+Nathaniel,Epps,3B,CASP,AA,0
+Roy,Munson,P,Free Agent,A,0
+John,McLeod,P,WISC,AA,0
+Michael,Choate,P,Free Agent,A,0
+Sean,Packer,P,MIDL,AA,0
+Marsh,Quinto,C,CASP,ML,3
+Doug,Jordan,P,Free Agent,A,0
+Steve,Adoor,CF,ROCK,AA,0
+John,Ramsey,P,WISC,ML,7
+Carmen,Beck,CF,Free Agent,A,0
+Dale,Hicks,1B,MAIN,ML,4
+Bernard,Williams,P,OMA,AAA,0
+Jim,Lemmond,1B,Free Agent,A,7
+Kristopher,Maune,P,PORT,AA,0
+Ed,Edison,P,IDA,AAA,0
+Ernest,Strano,P,Free Agent,A,0
+Bill,Bell,P,SUGR,A,8
+Jerry,Alavi,CF,LOUI,A,0
+Tim,Seaholm,CF,PORT,A,0
+Juan,Lambert,P,OMA,AA,0
+Jim,Budnick,CF,CASP,AA,0
+Joe,Fambro,P,Free Agent,A,0
+Jim,Davis,SS,ROME,A,0
+George,Pelletier,P,CHES,AAA,0
+Bill,Burstein,C,FRIS,A,0
+Johnny,Lopez,3B,Free Agent,A,2
+Pete,Blad,SS,NORW,AA,0
+Chester,Taylor,2B,SF,A,0
+Treat,Rice,3B,SF,A,0
+Dominic,Palmer,C,Free Agent,A,0
+Robert,Ford,1B,SCRN,A,0
+John,McQuaid,2B,Free Agent,A,0
+Bill,Redmond,CF,CHES,ML,3
+Mike,Vanscooter,3B,ELP,A,0
+Ernest,Bass,2B,SCRN,AAA,0
+Lionel,Winsky,C,ELP,AA,0
+Chance,Guadalupe,C,IDA,AA,0
+Luther,Powless,2B,MIDL,AA,0
+Butch,Diluzio,LF,Free Agent,A,0
+Carlton,Massingill,3B,Free Agent,A,0
+Joe,Posner,SS,OKC,A,0
+Wart,McHorse,C,BANG,AA,0
+John,Coleman,2B,Free Agent,A,0
+Steve,Joris,3B,NORW,AA,0
+Moe,Pumphrey,LF,Free Agent,A,0
+Seth,Haller,LF,Free Agent,A,0
+Michael,Sulit,CF,SCRN,A,0
+Dave,Portero,LF,CHES,AAA,0
+Jonathan,Ivy,RF,RICH,A,0
+Billy,Bigbee,1B,MAHO,ML,1
+Justin,Andrews,LF,Free Agent,A,0
+Pat,Bailey,SS,ROME,AA,0
+Randall,Rowan,RF,DAY,AA,0
+Don,Kriger,3B,SCRN,AAA,0
+Andrew,Kunzler,P,ROME,AA,0
+Luis,Howell,P,Free Agent,A,0
+William,Barrow,P,SF,A,0
+Alfred,Randolf,3B,LOUI,AAA,0
+Ronnie,Martin,P,Free Agent,A,0
+Carlos,Helsel,P,Free Agent,A,0
+Lino,Moorman,P,Free Agent,A,0
+Charlie,Blanco,P,IDA,AA,0
+Francis,Marriott,SS,LOUI,ML,1
+Willie,Coleman,P,Free Agent,A,0
+Otha,Stone,P,SCRN,ML,3
+Brooks,Hall,3B,CHES,ML,4
+John,Reinschmidt,P,ROCK,A,0
+Felipe,Ellis,P,Free Agent,A,0
+Bob,Hunt,P,Free Agent,A,0
+Dave,Rood,CF,SF,AA,0
+Albert,Lobato,3B,Free Agent,A,0
+Justin,Etchison,1B,SF,AA,0
+L.A.,Knight,LF,ROCK,AAA,0
+George,Burgdorf,2B,CASP,AA,0
+Eduardo,Jenson,C,Free Agent,A,0
+Santos,Gregerson,SS,NORW,AA,0
+Chris,Hakes,P,FRIS,A,0
+Jordan,Rivers,CF,Free Agent,A,0
+Charlie,Seiple,RF,CASP,AA,0
+Barry,Ouimet,CF,LOUI,AAA,0
+Gary,McDonell,C,Free Agent,A,0
+Lawrence,Lefton,LF,CHES,AAA,0
+Alex,McManus,1B,Free Agent,A,0
+Douglas,Lacognata,2B,Free Agent,A,0
+Jesse,Slaght,P,FRIS,AAA,0
+August,Youssef,3B,MIDL,AA,0
+Beau,Dinh,SS,Free Agent,A,0
+Dylan,Garnett,C,EDMO,AAA,0
+Anthony,Larmore,P,WISC,AAA,0
+Ro,Davis,RF,MIDL,AA,0
+Elliott,Pulsifer,CF,Free Agent,A,0
+Christopher,Dalton,RF,Free Agent,A,0
+Ed,Desilva,P,WISC,A,0
+Al,Salazar,P,OKC,A,0
+Sidney,Blankenship,P,Free Agent,A,0
+Oscar,France,P,OMA,AAA,0
+Russell,Nishiyama,P,Free Agent,A,0
+Fletcher,Deforge,LF,SF,AA,0
+Manuel,Lebsack,P,PORT,A,0
+Dan,Wagner,P,ALTO,A,0
+Darryl,Brittain,1B,LOUI,ML,2
+Jacob,Smolik,P,MAHO,AA,0
+Salomon,Kasserman,P,RICH,A,0
+John,Flis,P,WISC,AAA,0
+Jonathan,Loper,P,MIDL,AA,0
+Ed,McCranie,P,WISC,ML,6
+Kelly,Ripperger,P,ELP,AAA,0
+Donovan,Peterson,P,Free Agent,A,0
+Wilburn,McNamara,P,Free Agent,A,0
+Walt,O'Neal,P,MAHO,AAA,0
+Rufus,Klopf,P,Free Agent,A,0
+Morris,Borjon,P,AUCK,AA,0
+Fernando,Caudle,1B,ELP,AA,0
+Andre,Neel,SS,FRIS,AAA,0
+George,Bergdoll,P,OMA,AA,0
+Jacob,Dockery,P,LAKE,A,0
+Grant,Hershenson,P,Free Agent,A,0
+Vernon,Ryzinski,CF,LAKE,AA,0
+Norris,Ward,SS,Free Agent,A,0
+Josh,Stoneham,RF,Free Agent,A,0
+Jason,Black,P,HILL,A,0
+Shawn,Biley,1B,Free Agent,A,0
+Stevie,Dunomes,CF,AUCK,AA,0
+Carmelo,Howard,SS,LAKE,AA,0
+Danny,Evans,1B,CASP,AAA,0
+Santo,Rodgers,P,CHES,A,0
+Seth,Cote,1B,EDMO,AA,0
+Nathan,Blick,P,SUGR,A,0
+Moshe,Eggers,C,CASP,A,0
+Matthew,Murray,P,IDA,ML,1
+Clarence,Kampen,P,SF,ML,2
+Ezekiel,Gibson,P,FRIS,AAA,0
+Parker,Carr,3B,MAHO,AA,0
+Greg,Higby,1B,WISC,AA,0
+Ralph,Smoot,2B,Free Agent,A,0
+Eugene,Turnbaugh,RF,Free Agent,A,0
+Tom,Barocio,3B,DAY,A,0
+Linwood,Pullis,3B,Free Agent,A,0
+Steve,Mechem,P,IDA,AAA,0
+Dwight,Morin,P,TEX,AAA,0
+Chris,Huesing,SS,Free Agent,A,0
+Anthony,Pasha,RF,LYNC,AA,0
+Dave,Hinostroza,3B,PORT,AA,0
+Grady,Coates,RF,LAKE,AA,0
+Rogers,Hutcherson,SS,ROCK,AAA,0
+Charlie,Ramotar,CF,CASP,A,0
+Robert,Jones,SS,IDA,AA,0
+Jean,Sohl,P,FRIS,AA,0
+Guillermo,Golay,P,Free Agent,A,0
+Dennis,Torres,RF,ROCK,ML,3
+Hubert,Coe,P,Free Agent,A,0
+Tom,Lecleir,P,Free Agent,A,0
+Tomas,Hirsch,RF,Free Agent,A,4
+Willie,Grob,P,Free Agent,A,0
+Rudy,Doheny,P,OMA,AA,0
+Paul,Pekar,2B,SF,AA,0
+Dewey,Robinson,P,IDA,AA,0
+Jeffrey,Hernandez,RF,SF,AA,0
+Brandon,Garcia,SS,SCRN,AA,0
+Joseph,Rogers,CF,MAHO,AAA,1
+Dave,Thomas,LF,BANG,A,0
+John,McEnroe,RF,LAKE,AA,0
+Leo,Louis,RF,CASP,A,0
+Tom,Bullington,P,Free Agent,A,0
+Theodore,Cunningham,P,ALTO,AA,0
+Jeffery,Folks,CF,Free Agent,A,0
+Dick,Vasquez,SS,OKC,ML,7
+Ray,Jack,3B,IDA,A,8
+Van,Pullam,2B,FRIS,AA,0
+Martin,Dileo,1B,NORW,AA,0
+Jose,Vandenboom,LF,Free Agent,A,0
+Joseph,Babbs,SS,Free Agent,A,0
+Todd,Smitley,C,ALTO,A,0
+Chris,Sturkie,3B,ROCK,AAA,0
+Bob,Faulkner,P,EDMO,ML,2
+Zachariah,Stewart,1B,RICH,A,0
+Michael,Sultzer,CF,Free Agent,A,0
+Darin,Cichowski,P,PORT,AA,0
+Mark,Hart,C,Free Agent,A,0
+Jim,McCarry,2B,WISC,AA,0
+Dave,Gardino,LF,SCRN,AA,0
+Fennis,Dembo,2B,Free Agent,A,0
+Johnny,Dickshot,1B,RICH,AA,0
+Troy,Ripp,2B,ELP,A,0
+Tom,Kraft,LF,Free Agent,A,0
+Roberto,Stolze,LF,LAKE,AA,0
+Andy,Calderon,3B,PEOR,A,0
+Dave,Fader,P,Free Agent,A,0
+Dale,Schumacher,P,Free Agent,A,0
+George,Carter,P,Free Agent,A,0
+Leroy,McPherson,C,SCRN,ML,2
+Matt,Powell,P,Free Agent,A,0
+Bruno,Wade,1B,ELP,ML,1
+Pat,McCargo,P,Free Agent,A,0
+Jonathan,Whelpley,P,Free Agent,A,0
+Carey,Dean,CF,MIDL,ML,2
+Bryan,Newman,C,TEX,AAA,0
+Ron,Maynard,P,Free Agent,A,0
+Terry,Clara,P,RICH,A,5
+Clifton,Hank,P,Free Agent,A,0
+Mike,Ries,P,OMA,AA,0
+Joel,Awad,P,Free Agent,A,0
+Nelson,Heinz,SS,Free Agent,A,0
+Nicolas,Peterson,P,MAIN,AA,0
+Clay,Orlowski,3B,Free Agent,A,0
+Henry,Martinez,RF,RICH,AA,0
+Jean-Yves,Roy,P,MAIN,ML,6
+Vaughn,Ray,P,MAHO,ML,11
+Lester,Lawless,P,TEX,A,9
+Stuart,Johns,RF,Free Agent,A,0
+Mike,Lofton,2B,Free Agent,A,0
+Michael,Senegal,LF,CASP,AA,0
+Wilson,Gutierrez,CF,MAHO,ML,2
+Russell,Gowins,CF,Free Agent,A,0
+Antonio,Cheatham,RF,MAHO,AAA,0
+Whitey,Gray,P,Free Agent,A,7
+Rowdy,Roddy,P,PORT,AAA,0
+Blaine,Briz,SS,SF,A,0
+Jan,Gardner,LF,ROME,A,0
+Neal,Gonzales,1B,Free Agent,A,0
+Tyler,Chavaria,C,ROCK,AAA,0
+Dan,Rhoderick,CF,DAY,A,0
+Gustavo,Godbolt,2B,Free Agent,A,0
+Joe,Wolk,3B,Free Agent,A,0
+Tim,Boddie,P,FRIS,AA,0
+Ed,Knudtson,SS,Free Agent,A,0
+Louis,Driver,RF,MAIN,A,0
+William,Spagnola,P,MIDL,A,0
+Jerry,Bemis,CF,Free Agent,A,0
+Ozzie,Owens,LF,NORW,AA,0
+Kevin,Mais,RF,IDA,AA,0
+Ernesto,Marquez,P,Free Agent,A,0
+Larry,Chauhan,P,Free Agent,A,0
+Frank,Lubic,P,WISC,AA,0
+Dave,Moody,P,ELP,ML,1
+Darryl,Gregory,P,MIDL,AA,0
+Jim,Freeman,P,Free Agent,A,0
+Storm Bird,Pamola,P,MAIN,AA,0
+Terrence,Hundley,P,Free Agent,A,0
+Fermin,Adamyan,P,Free Agent,A,0
+Anthony,Johnson,P,MIDL,AA,0
+Steve,Riden,P,Free Agent,A,0
+Ozzie,McBride,P,PORT,AA,0
+Lucas,Collins,C,DAY,AA,0
+Rube,Baker,C,ALTO,ML,13
+Lorenzo,Lee,SS,Free Agent,A,0
+Brian,Rice,P,AUCK,A,0
+Scott,Mengel,2B,NORW,AA,0
+Joe,Darnley,SS,WISC,A,6
+Andre,Nunnelley,P,BANG,A,0
+Derek,Garth,3B,WISC,AA,0
+Glenallen,Wilczewski,SS,NORW,AA,0
+Wayan,Dunn,SS,Free Agent,A,0
+Ivan,Shasteen,P,SUGR,A,0
+Otto,Trailor,P,MAHO,A,0
+Eric,Cangelosi Jr,1B,CASP,AA,0
+Sterling,Adams,P,MAHO,A,0
+Mason,Cottrill,3B,Free Agent,A,0
+Jose,Bolster,SS,Free Agent,A,0
+Richard,Rudel,RF,ROCK,ML,3
+Danny,Dyer,LF,NORW,AA,0
+Alejandro,Threats,CF,ROCK,ML,1
+Moses,Gosse,CF,NORW,AA,0
+Bob,Alber,P,RICH,A,0
+Pete,Eskin,P,FRIS,A,0
+Laurence,Dixon,P,ROCK,A,0
+Dennis,McCrossen,P,Free Agent,A,0
+Will,Martinez,P,MIDL,A,8
+Grant,Robertson,2B,TEX,AAA,0
+Roger,Worley,P,HILL,A,0
+Edgar,Wolfe,P,MAIN,AA,0
+Daniel,Rioseco,P,Free Agent,A,0
+Erik,Redd,P,Free Agent,A,0
+Jarrod,Carswell,P,OMA,AA,0
+Ralph,Perl,P,Free Agent,A,0
+Rich,Wilder,SS,MAIN,AAA,0
+Cliff,Castellanos,P,Free Agent,A,0
+Joseph,Sabourin,3B,ELP,A,0
+Bill,Marquez,1B,MAIN,A,0
+Bernard,Berry,C,Free Agent,A,0
+Larry,Alsip,LF,Free Agent,A,0
+Bart,Evans,LF,Free Agent,A,0
+John,Oldham,C,IDA,A,0
+Gary,Day,SS,MAHO,AAA,1
+Bill,Gering,2B,Free Agent,A,0
+Jim,Calderon,CF,ELP,A,0
+Ed,Knapp,CF,ALTO,ML,0
+Juan,Hebert,LF,IDA,AA,0
+Morris,Thorton,C,LOUI,AA,0
+William,Victor,C,ROCK,A,0
+Jonathon,Cerulli,P,CASP,A,12
+Joe,Lanter,3B,Free Agent,A,0
+Carlos,Ring,C,Free Agent,A,0
+Elisha,Keppler,1B,SUGR,A,0
+Ralph,Warren,3B,RICH,A,0
+Fleet,Cowell,LF,WISC,AA,0
+Thomas,Sanders,C,ELP,A,0
+Joel,Rumfelt,2B,ROCK,A,0
+Mays,McCarter,SS,LYNC,AA,0
+Murray,Haas,P,LYNC,ML,10
+Bill,Say,1B,SCRN,A,0
+Jay,Harelson,2B,ELP,A,0
+George,Moreno,3B,Free Agent,A,0
+Aurelio,Nouri,RF,WISC,AA,0
+Walt,Michaux,P,Free Agent,A,0
+Clay,Williams,P,Free Agent,A,1
+Jeffrey,Pudlinski,RF,CASP,AAA,0
+Anthony,Lee,SS,SCRN,A,0
+Louis,Polston,LF,MAIN,A,0
+Ken,Trefry,P,ALTO,AA,0
+Anthony,Andrews,P,ELP,AA,0
+Rene,Templeton,P,Free Agent,A,0
+Bill,Poole,P,Free Agent,A,0
+Ernie,Diaz,P,MAIN,AAA,0
+Jorge,Wenrich,P,AUCK,AA,0
+Ozzie,Holland,P,Free Agent,A,0
+Hack,Adauto,P,Free Agent,A,0
+Klondike,Nelson,P,Free Agent,A,0
+Nickolas,Varona,CF,ROME,A,0
+Ira,Tipton,C,SCRN,AA,0
+Gerard,Coda,CF,TEX,AA,0
+Bill,Mennie,3B,ALTO,AA,0
+Arthur,Evans,3B,Free Agent,A,0
+Ray,Clark,SS,Free Agent,A,0
+John,Reddin,CF,Free Agent,A,0
+Bill,Cooper,P,MAHO,AAA,1
+Leo,Harris,C,Free Agent,A,0
+Anthony,Schmal,P,LOUI,AAA,0
+Craig,Simmons,C,Free Agent,A,0
+Vernon,Trull,RF,SCRN,A,0
+Andrew,Varvaro,P,RICH,A,0
+Jerald,Fuentes,P,ROME,A,0
+Corey,Willette,P,OKC,A,0
+Timothy,Duran,CF,NORW,AA,0
+John,Lawson,P,MAHO,ML,3
+Brandon,Jorgenson,CF,Free Agent,A,0
+Will,Latham,P,OMA,A,0
+George,Napp,2B,SCRN,AA,0
+Bill,Garcia,1B,ALTO,ML,2
+Matt,Henry,P,Free Agent,A,0
+Matty,Rhodes,P,Free Agent,A,0
+Kent,Tekulve,P,LYNC,AA,0
+Alexander,Juarez,P,Free Agent,A,0
+Derrick,Payson,P,CHES,A,0
+Fernando,Majcher,P,Free Agent,A,0
+Greg,Berling,P,Free Agent,A,0
+Ted,Struthers,P,Free Agent,A,0
+Rob,Scott,P,Free Agent,A,0
+Bryan,Whitt,P,SCRN,AA,0
+Carl,Leitz,P,SUGR,A,0
+Jeremy,Dase,P,OKC,A,0
+Bob,Vallejo,RF,Free Agent,A,0
+Bob,Robinson,RF,Free Agent,A,0
+Josh,Goodwin,RF,CASP,AA,0
+Stewart,Castrellon,P,BANG,A,0
+Mark,Wells,CF,CASP,AA,0
+Merlin,Singler,CF,Free Agent,A,0
+Dave,Askew,P,ROME,A,0
+Trace,Galvez,P,SCRN,A,0
+Clint,Benson,P,WISC,AAA,0
+Jim,Rogers,1B,IDA,AA,0
+Bill,Lafontant,RF,CASP,A,0
+Tormund,Giantsbane,SS,NORW,AA,0
+Harold,Rouleau,3B,Free Agent,A,0
+Hanley,Lyon,CF,CASP,AA,0
+Jim,Beckner,1B,Free Agent,A,0
+Muddy,Ruel,3B,ROCK,ML,8
+Tommy,Humphrey,CF,EDMO,AA,0
+Clifford,Thomas,P,Free Agent,A,0
+Joseph,Reeds,LF,SF,A,0
+Clifford,Veres,P,Free Agent,A,0
+Monk,Simmons,P,OMA,AA,0
+George,Goggin,LF,MAIN,A,0
+Jim,Tate,P,Free Agent,A,0
+Daryl,Brutger,P,Free Agent,A,0
+Will,Leone,1B,ROCK,A,0
+Christopher,Mitchell,P,LOUI,AA,0
+Paco,Jacome,P,Free Agent,A,0
+Tom,Hunt,P,Free Agent,A,0
+Sam,Crews,P,PORT,A,5
+Norm,McDonnell,P,Free Agent,A,0
+Wayne,Kauffman,RF,Free Agent,A,0
+Danny,Jones,SS,Free Agent,A,0
+Martin,Binney,LF,IDA,AA,0
+Tito,Betts,C,Free Agent,A,0
+Mark,Thomas,CF,PORT,A,0
+Mort,Colburn,2B,Free Agent,A,0
+Bill,Amsden,SS,FRIS,A,0
+Jim,Mercado,C,MAHO,A,0
+Milt,Lynch,1B,Free Agent,A,0
+Clarence,Lopez,2B,Free Agent,A,0
+Rich,Pledger,C,MIDL,AA,0
+Benedict,Hartzell,SS,Free Agent,A,0
+Mark,Shea,P,Free Agent,A,7
+Bill,Vitti,1B,NORW,A,0
+Glenn,Mathison,2B,BANG,A,0
+Tex,Taylor,RF,Free Agent,A,0
+Shannon,Siwiec,P,ALTO,AA,0
+Ken,Day,P,Free Agent,A,0
+Sammy,Updike,P,Free Agent,A,0
+Oren,McLaughin,P,SF,AA,0
+Jack,Hall,3B,DAY,A,0
+Captain,Lou,P,PORT,ML,4
+Bob,Hodge,P,Free Agent,A,0
+Charley,Edmisten,P,Free Agent,A,0
+Jeffrey,Small,P,Free Agent,A,0
+Mike,Lampkin,P,Free Agent,A,0
+Felix,Chang,SS,IDA,A,0
+Grady,Pagan,P,Free Agent,A,0
+Arthur,Rodriguez,P,Free Agent,A,0
+Daquan,Wilson,P,TEX,AAA,0
+Clay,Wheatley,1B,Free Agent,A,0
+Stanley,Ponder,LF,RICH,A,0
+Frank,Bettis,CF,LAKE,A,0
+Johnny,Danesi,RF,LOUI,A,0
+Harry,Moore,P,FRIS,AA,0
+Darryl,Fair,SS,Free Agent,A,0
+Robert,Dorrough,2B,Free Agent,A,0
+Harris,Derobertis,C,Free Agent,A,0
+Larry,Au,3B,IDA,ML,2
+John,Hamm,2B,LYNC,AA,0
+Jeffery,Riggins,2B,Free Agent,A,0
+Bob,Dantzler,3B,Free Agent,A,0
+Mark,Moore,P,MAHO,A,0
+John,Shaub,3B,IDA,AA,0
+Carroll,Harrell,RF,RICH,AA,0
+Lew,Fail,P,ROME,A,0
+Randy,Lee,P,Free Agent,A,0
+Lonnie,Roehrich,P,ALTO,A,0
+Ricky,Marum,P,Free Agent,A,0
+Frank,Leibman,P,Free Agent,A,0
+John,Fiacco,P,Free Agent,A,0
+Randy,Tyler,P,MAHO,AA,0
+Vincent,McLaughin,P,Free Agent,A,0
+Dwight,Endo,P,Free Agent,A,0
+Amos,Bernett,LF,TEX,AAA,0
+Christopher,Crouser,CF,CASP,AAA,0
+Lum,Jones,P,Free Agent,A,0
+Kyle,Lacasse,P,Free Agent,A,0
+Herm,Wells,C,Free Agent,A,0
+Xavier,Roberts,P,LOUI,A,0
+Cotton,McKeag,P,CHES,A,0
+Walt,Mead,P,ELP,AAA,0
+Shawn,Pitts,C,Free Agent,A,0
+William,Holman,3B,Free Agent,A,0
+Darryl,Shipley,2B,Free Agent,A,0
+Will,Power,LF,NORW,AA,0
+Brandon,Vanvoorhis,C,Free Agent,A,0
+Neil,Dundee,1B,Free Agent,A,0
+Bryan,Romito,P,ROCK,A,0
+George,Hayes,SS,LYNC,AA,0
+Joe,Bolduc,P,ROME,A,0
+Bob,Fouhy,LF,Free Agent,A,0
+Francois,Lepaque,LF,EDMO,A,12
+Brian,Boose,C,LYNC,AA,0
+Elmer,Parker,P,HILL,A,0
+Luis,Naranja,P,MIDL,AA,0
+Johnnie,Gahl,CF,EDMO,AAA,1
+Mike,Hull,P,ROME,A,0
+Bill,Searcy,P,Free Agent,A,0
+Carl,Cheese,P,Free Agent,A,0
+Anthony,Madia,P,Free Agent,A,0
+Orval,Overall,P,LAKE,AA,0
+Duff,Trullinger,P,AUCK,AA,0
+Dennis,Taylor,CF,FRIS,AAA,0
+Mark,Vanruler,P,Free Agent,A,0
+Andrew,Hoell,P,Free Agent,A,0
+Anthony,Angalich,1B,EDMO,AAA,0
+Tom,Scott,P,Free Agent,A,0
+Don,Lavi,P,Free Agent,A,0
+Charlie,Monagan,C,Free Agent,A,0
+Greg,Blackman,P,FRIS,AAA,2
+Erv,Haataja,C,Free Agent,A,0
+Oscar,Daniel,C,Free Agent,A,0
+Louis,Privette,P,CHES,A,0
+Gene,Taylor,2B,ALTO,AAA,0
+Kurt,Boykin,P,MAHO,A,0
+Hardin,Ardon,CF,BANG,AA,0
+Dale,Inskeep,2B,LYNC,AA,0
+Randolph,English,P,IDA,A,6
+Dean,Cameron,1B,Free Agent,A,0
+Marty,Wright,C,IDA,AAA,0
+Cameron,Passey,2B,Free Agent,A,0
+Kevin,Tillman,2B,RICH,A,0
+Jim,Daniels,SS,Free Agent,A,0
+Paul,Matchette,2B,IDA,AAA,0
+Sergio,Farrare,LF,PEOR,AA,0
+Al,Watson,C,RICH,A,0
+Alfred,Hanson,C,CASP,AA,0
+Ken,Travillian,CF,IDA,AA,0
+Shane,Walker,RF,SF,A,0
+Francisco,Hoff,P,Free Agent,A,0
+Jamie,Cooke,P,Free Agent,A,0
+Robert,Arnold,P,Free Agent,A,0
+Jason,Coleman,P,IDA,AA,0
+Floyd,Woodell,P,PORT,AA,0
+Tommie,Grover,P,LOUI,AA,0
+Doyle,Burnette,P,Free Agent,A,0
+Cotton,Pickens,P,OKC,AA,0
+Miguel,Atchison,2B,ELP,A,0
+Phil,Hamsher,LF,Free Agent,A,0
+Ryan,Jacobson,P,PORT,AAA,0
+Joe,Blankenberg,3B,MIDL,A,0
+Mark,Depass,1B,PORT,AAA,0
+Joe,Holmes,2B,IDA,AA,0
+Billy,Perez,3B,Free Agent,A,0
+Teddy,Perez,SS,Free Agent,A,0
+Frederick,McKeon,SS,FRIS,A,0
+Steven,Arent,SS,Free Agent,A,0
+Michael,Mannon,LF,ROME,A,0
+Dave,Diercks,C,Free Agent,A,0
+Eric,Kess,C,ALTO,A,0
+Maximo,Reyes,1B,DAY,A,0
+Jose,Travers,3B,Free Agent,A,0
+Oscar,Gonzales,SS,Free Agent,A,0
+Christopher,Young,LF,NORW,AA,0
+Ted,Dolan,CF,Free Agent,A,0
+Marvin,Myers,2B,CHES,A,0
+Joe,Wright,P,Free Agent,A,0
+Michael,Boufford,3B,ELP,A,0
+Adam,Isom,P,Free Agent,A,0
+Joe,Taubman,P,Free Agent,A,0
+Mike,Fusco,P,Free Agent,A,0
+Kenneth,Salmeron,P,Free Agent,A,0
+Ferdinand,Bunk,P,Free Agent,A,0
+Mike,Stoessel,P,Free Agent,A,0
+Nelson,Caballero,SS,RICH,A,0
+Javier,Marcus,P,Free Agent,A,0
+Tom,Leandro,LF,TEX,AA,0
+Charles,Jordan,LF,OKC,A,0
+Dave,Rivard,1B,Free Agent,A,0
+Jules,Mallahan,CF,MIDL,AA,0
+Dwain,George,2B,PEOR,AA,0
+Otto,Pillard,RF,LOUI,AA,0
+Zachary,Kinney,CF,LOUI,A,0
+Kevin,Cooper,RF,ROME,A,0
+Roy,Rardin,LF,DAY,AA,0
+Billy,Tenuta,2B,Free Agent,A,0
+Elton,Bacha,P,ROME,A,0
+Babe,Rodabaugh,P,HILL,A,0
+Tyson,Krueger,LF,SCRN,A,0
+Miguel,Golphin,CF,CASP,AA,0
+Beau,Folger,RF,Free Agent,A,0
+Mike,Chirco,P,Free Agent,A,0
+Jerrick,Smythe,P,Free Agent,A,0
+Nicholas,Pfister,P,LOUI,AA,0
+Pedro,Washington,P,MAHO,AA,0
+Michael,Subido,P,Free Agent,A,0
+Mike,Diehl,P,Free Agent,A,0
+Andres,Jernstad,P,Free Agent,A,0
+Francis,Pitt,P,Free Agent,A,0
+Luther,Arnspiger,P,Free Agent,A,0
+Joe,Hayes,P,Free Agent,A,0
+Damien,Villarreal,1B,Free Agent,A,0
+Chad,Christopher,P,LOUI,A,0
+Jeremiah,Dickson,1B,RICH,AA,0
+Pete,Soller,SS,Free Agent,A,0
+Tim,Geisel,3B,ROME,AA,0
+Bob,McDonald,CF,RICH,AA,0
+Byron,Rogers,3B,Free Agent,A,0
+Noel,Henry,LF,FRIS,AAA,0
+Charlie,Padley,P,PORT,ML,2
+Tom,Kilkenny,P,WISC,A,0
+Bruce,Hutchinson,LF,ROME,AA,0
+Henry,Intveld,3B,Free Agent,A,0
+Reuben,Kauffman,3B,Free Agent,A,0
+Jose,Evans,3B,Free Agent,A,0
+Dana,Eatman,LF,DAY,AA,0
+Zachary,Leach,3B,PEOR,ML,0
+Gerald,Carroll,2B,LOUI,AA,0
+Steven,Davis,RF,Free Agent,A,0
+Dale,Mosley,RF,IDA,AA,0
+Dewey,Lesch,P,MIDL,AA,0
+Arthur,Cherry,P,Free Agent,A,0
+Jose,Noll,P,Free Agent,A,0
+Preston,Prichett,P,LAKE,AA,0
+Anthony,Lusco,P,Free Agent,A,0
+Dave,Edwards,P,Free Agent,A,0
+Cal,Simpkins,P,BANG,A,0
+Doug,Amster,P,CHES,AA,0
+Louis,Lochridge,P,Free Agent,A,0
+Isidro,Benak,P,Free Agent,A,0
+Bill,Hanrath,P,FRIS,AAA,0
+Matt,Locke,P,IDA,AA,0
+Tommy,Kim,P,FRIS,AA,0
+Eric,McHorse,P,Free Agent,A,0
+Eric,Kemerling,LF,Free Agent,A,0
+Willis,Haskins,P,PORT,A,0
+Charlie,Carr,LF,ROME,AA,0
+Gregorio,Gomez,2B,Free Agent,A,0
+Elbert,Bozzo,SS,MIDL,AA,0
+Syd,Lucas,P,LAKE,A,0
+Roy,Berrett,C,Free Agent,A,0
+Josh,Bromberg,1B,IDA,AA,0
+Sicnarf,Loopstok,C,RICH,AA,0
+Oscar,Medeiros,P,ELP,A,0
+Jim,Gunther,3B,Free Agent,A,0
+Ralph,Pratt,SS,Free Agent,A,0
+Jose,Renteria,P,HILL,A,0
+Keith,Burrows,CF,ALTO,AA,0
+Rusty,Hernandez,RF,SCRN,AA,0
+Sean,Jimenez,P,Free Agent,A,0
+Keith,Williams,P,OMA,A,0
+Erick,Green,P,Free Agent,A,0
+Rob,Leavins,P,Free Agent,A,0
+Carl,Matthies,P,IDA,AA,0
+Joe,Phillips,P,MIDL,A,0
+Dan,Springstead,P,Free Agent,A,0
+Billy,Killough,P,Free Agent,A,0
+Fidel,Sharp,RF,SCRN,A,0
+Joe,Haak,P,Free Agent,A,0
+Bryant,Edison,SS,Free Agent,A,0
+Rod,Ball,1B,CASP,AA,0
+Tom,Riley,2B,WISC,AA,0
+Jim,Crosno,3B,HILL,A,0
+Willie,Schanno,CF,Free Agent,A,0
+Wayne,Honeycut,CF,Free Agent,A,0
+Clarence,Lowe,1B,BANG,AA,0
+Dale,Townsend,C,Free Agent,A,0
+Jimmie,Powell,SS,OKC,A,0
+Felix,Hellmuth,2B,SCRN,AA,0
+Jean,Sumner,3B,Free Agent,A,0
+Ivan,Hobbs,SS,Free Agent,A,0
+Jerry,Grossnickle,LF,Free Agent,A,0
+Paul,Anderson,CF,FRIS,A,0
+Gene,Delmuro,C,Free Agent,A,0
+Ivan,Gregory,P,Free Agent,A,0
+Robert,Channing,P,Free Agent,A,6
+Billy,Graves,SS,SUGR,A,0
+Bernardo,Carpenter,P,Free Agent,A,0
+Ricardo,Carlson,P,HILL,AA,0
+Valentin,Wellard,P,FRIS,AA,0
+Luke,Johnson,P,Free Agent,A,0
+Curtis,Vang,P,Free Agent,A,0
+Garry,Waterer,P,MAIN,AA,0
+Tyrone,Resh,P,Free Agent,A,0
+Jarrett,Dickinson,CF,ELP,A,0
+Nathaniel,Canny,P,MIDL,AA,0
+Kevin,Kennedy,C,NORW,A,0
+Arden,Cole,3B,Free Agent,A,0
+Fred,Breske,1B,Free Agent,A,0
+Ed,Moten,2B,Free Agent,A,0
+Lawrence,Gigante,LF,Free Agent,A,0
+Dan,Feck,SS,Free Agent,A,0
+Charles,Griffin,RF,PORT,AAA,0
+Wayne,Becnel,SS,Free Agent,A,0
+Carlos,Mitchell,1B,ALTO,A,0
+Mike,Keator,2B,ELP,A,0
+Cecil,Cernohous,1B,Free Agent,A,0
+Paul,Walrus,RF,Free Agent,A,0
+Greg,Wood,1B,BANG,AA,0
+Buddy,Steinhaus,3B,PORT,A,0
+Curtis,Hunt,SS,Free Agent,A,0
+Billie,Bell,P,TEX,AAA,0
+Terry,Allen,LF,Free Agent,A,0
+Walker,Irrelevent,3B,ROCK,AA,0
+T.R.,Tappendorf,CF,ROME,AA,0
+Kyle,Stearns,P,Free Agent,A,0
+John,Jorge,P,Free Agent,A,0
+Dez,Sands,P,FRIS,AA,0
+Curly,Celli,P,Free Agent,A,0
+Michael,Gilio,P,Free Agent,A,0
+Gerald,Villamil,P,Free Agent,A,0
+Booker,Thomas,P,HILL,AA,0
+Miguel,Merfeld,P,Free Agent,A,0
+Carroll,Anderson,P,Free Agent,A,0
+Alfonso,McNary,P,Free Agent,A,0
+James,Garnette,P,Free Agent,A,0
+Clarence,Vector,LF,PORT,ML,0
+Carl,Dieken,3B,NORW,AA,0
+Ham,Porter,C,PORT,ML,4
+Henry,Horner,RF,IDA,AA,0
+Lawrence,Shelton,SS,IDA,ML,2
+Studley,Do-Right,RF,PORT,AAA,0
+Brian,Fernsler,SS,Free Agent,A,0
+Mathew,Kertis,SS,LOUI,A,0
+Andrew,Foster,LF,Free Agent,A,0
+Dorian,Sandoval,SS,ELP,AA,0
+David,Thorson,C,Free Agent,A,0
+Eddie,Worman,1B,NORW,AA,0
+Andrew,Wheeler,CF,FRIS,A,0
+Wilson,Lyalls,SS,Free Agent,A,0
+Peaches,Herbert,SS,MIDL,AA,0
+Dave,Davies,P,PORT,AAA,0
+Dan,Hicks,RF,SCRN,AA,0
+Tom,Manning,CF,Free Agent,A,0
+Bobby,Patterson,RF,Free Agent,A,0
+Paul,Scribner,P,Free Agent,A,0
+Hugo,Clevenger,P,Free Agent,A,0
+John,Ilacqua,P,Free Agent,A,0
+Terrence,Phillips,P,Free Agent,A,0
+Luis,Todd,P,IDA,AA,0
+Sam,Harger,3B,FRIS,AAA,0
+Nathan,Pontious,RF,CASP,A,0
+Russell,Tinker,P,NORW,A,0
+Jarrett,Gomez,2B,ALTO,AA,0
+Robert,Alaniz,2B,IDA,ML,2
+Henry,Walton,SS,ROME,AA,0
+Fernando,Shannon,P,PEOR,A,0
+Mike,Scott,P,IDA,A,0
+Larry,Pembroke,RF,MAHO,ML,1
+Francisco,Knight,P,ROCK,ML,4
+Mike,Herren,SS,PEOR,AA,0
+Errol,Bernier,P,Free Agent,A,0
+Javier,Oestreich,P,MAIN,ML,5
+Boyd,Pierce,P,Free Agent,A,0
+Murray,Delfuente,P,HILL,A,0
+Wendell,Green,P,MAHO,A,0
+Jeffrey,Ruffin,P,DAY,AAA,0
+Harold,Tony,P,Free Agent,A,1
+Tim,Turner,P,Free Agent,A,0
+Laurence,Brown,P,Free Agent,A,0
+Jack,Quinn,P,MAIN,ML,5
+Grady,Powell,P,ALTO,A,0
+Jim,Mulch,1B,Free Agent,A,0
+Dave,Bussell,P,FRIS,ML,3
+Curtis,Hubble,P,HILL,A,0
+Earl,Laseter,P,OMA,A,0
+Sterling,Mills,RF,AUCK,ML,2
+Kenneth,McGinnis,SS,Free Agent,A,0
+Benjamin,Koback,SS,Free Agent,A,0
+Mike,Purnell,LF,NORW,AAA,0
+Darrell,Harris,P,AUCK,A,0
+Joseph,McFann,C,PORT,A,0
+Mike,Talamante,2B,MAHO,A,0
+Stanley,Underwood,C,HILL,AAA,0
+Carlos,Pollard,3B,RICH,ML,3
+Byron,Moffitt,1B,CASP,A,0
+Leonel,Irvin,1B,EDMO,ML,4
+Tariq,Bacon,P,RICH,AAA,0
+Erick,Serb,LF,ALTO,AA,0
+Erik,Sims,3B,RICH,A,0
+Ivan,Richter,C,EDMO,AA,0
+Frederick,Calhoun,C,Free Agent,A,0
+Brian,Brook,RF,ROME,A,0
+Lew,Ramos,P,DAY,ML,13
+Jeff,Jones,CF,IDA,AA,0
+Wendell,Musick,LF,MAIN,A,0
+Bill,Cortez,LF,NORW,AA,0
+Steve,Swafford,P,MAIN,A,1
+Otto,Gallagher,1B,Free Agent,A,3
+Charlie,Paragas,P,SUGR,AAA,0
+Ed,Cata,P,MAIN,AAA,0
+Fred,Drake,P,MAIN,AAA,0
+Howard,Scott,2B,Free Agent,A,0
+Briley,Knight,LF,FRIS,ML,9
+Steve,Amicone,P,CHES,AAA,1
+Pat,Rueckert,P,DAY,AAA,0
+Erik,Pearson,P,CASP,ML,2
+Sidney,Perkowski,3B,Free Agent,A,0
+Roberto,Ennis,1B,MAHO,ML,0
+Long,Machey,1B,SCRN,A,0
+Jorge,Brevig,SS,Free Agent,A,0
+Shane,Beebe,C,ALTO,A,0
+Roger,Aldaco,P,LOUI,AAA,0
+Benjamin,Lopez,1B,Free Agent,A,0
+Dave,Buchert,2B,CASP,A,0
+Rube,McGee,3B,AUCK,A,0
+Matthew,Sullins,RF,Free Agent,A,0
+Irving,Jackson,P,Free Agent,A,0
+Mike,Schultz,P,Free Agent,A,0
+Antonio,Rice,3B,FRIS,ML,2
+Kelvin,Bonner,P,RICH,AA,0
+Lawrence,Jackson,P,MIDL,AAA,0
+Johnny,Billiot,SS,MAIN,ML,0
+Maximo,Scher,P,ELP,AA,0
+Gerald,Starkes,P,Free Agent,A,0
+Harry,Schloop,P,Free Agent,A,0
+Benito,Leider,P,FRIS,A,7
+Joe,Ahern,SS,MAIN,A,0
+Roland,Scarbrough,P,EDMO,AA,0
+Cody,Perry,P,OMA,ML,3
+Duane,McCaslin,P,Free Agent,A,0
+Greg,Williams,P,LYNC,ML,3
+Juan,Larrea,3B,SF,AA,0
+John,Kulp,P,ELP,AAA,0
+Jeffrey,Rider,3B,SUGR,AAA,1
+Brock,Sherretts,2B,AUCK,ML,7
+Wilton,Dazey,P,Free Agent,A,0
+Henry,Francis,P,CHES,AA,0
+Don,Montgomery,1B,PORT,AAA,0
+Carl,Bloom,LF,LOUI,A,0
+Gary,Somer,CF,SF,AAA,0
+Irvin,Trull,P,FRIS,AA,0
+Ed,Breunig,P,ELP,ML,1
+Fran,Hon,P,OMA,AA,0
+Dave,Downs,P,NORW,AA,0
+Bob,Hull,1B,PORT,AAA,0
+Jerry,McColl,C,Free Agent,A,1
+Jonathan,Laroque,2B,OMA,A,9
+Tomas,Press,RF,PORT,ML,0
+Frank,Craig,RF,SF,AAA,0
+Mark,Daffin,CF,SF,A,0
+Vincent,Jimerson,RF,SCRN,A,0
+H.E.,Pennypacker,P,WISC,A,11
+Tom,Burgess,LF,MAIN,ML,0
+Maz,Lippert,CF,ALTO,ML,11
+Bob,Curry,P,ROME,ML,1
+Carl,Brown,3B,ELP,AA,0
+Sean,McFadden,P,PEOR,A,0
+Rob,Bolden Jr,P,HILL,A,0
+Andrew,Carman,P,ROCK,A,0
+John,New,LF,Free Agent,A,0
+Antonio,Archibold,LF,Free Agent,A,0
+Duane,Sotello,RF,ALTO,AA,0
+Bill,Sheladia,1B,OMA,A,12
+Gary,Garlington,P,CHES,A,0
+Joe,Sith,P,CHES,A,0
+Ivan,Glassner,P,WISC,ML,5
+Ted,Canter,P,SF,A,0
+Curtis,McDowell,2B,RICH,AA,0
+Tom,Wayne,SS,WISC,AA,0
+Everett,Kirschner,P,DAY,A,0
+Floyd,Lemon,P,HILL,A,13
+John,Kruczek,CF,TEX,ML,21
+John,Lara,P,PORT,A,0
+Joe,Novinger,P,Free Agent,A,1
+Sean,Petty,3B,Free Agent,AAA,0
+Nicholas,Genis,P,PORT,ML,0
+Alton,Bartley,1B,SCRN,AAA,0
+Eduardo,Lindsey,P,AUCK,A,0
+Benjamin,Hornigold,3B,AUCK,ML,7
+Robert,Lagrant,SS,LYNC,AAA,0
+Perry,Englebrecht,LF,Free Agent,A,0
+Rich,Bonilla,P,NORW,A,0
+Joe,Fuentes,CF,FRIS,AAA,0
+Jeffrey,Aucoin,SS,Free Agent,A,2
+Cory,Mendoza,P,Free Agent,A,0
+Glen,Askew,P,Free Agent,A,3
+Juan,MacAri,C,NORW,AA,0
+Anthony,Micelli,2B,CHES,ML,3
+Ken,Hayes,SS,ROME,A,0
+Bill,Shortes,LF,CASP,A,0
+Stuart,Moir,3B,CASP,AAA,0
+Shane,Falco,P,LYNC,ML,6
+Emery,Pietz,2B,Free Agent,A,0
+Jackie,Locke,C,FRIS,A,0
+Marcus,Webb,LF,LOUI,A,9
+Nathan,Grant,P,SCRN,ML,3
+Hurley,Burley,P,Free Agent,A,14
+Anthony,Armstrong,1B,FRIS,A,0
+Matt,Paulson,P,ELP,AAA,0
+Hub,Sallie,SS,RICH,A,0
+Terry,Aberle,SS,Free Agent,A,0
+Jacques,Daughtridge,RF,Free Agent,A,0
+Jim,Seay,3B,AUCK,AAA,1
+Tyler,Singleton,P,ELP,AAA,0
+Larry,Baxter,C,CASP,A,0
+Roland,Burdette,CF,Free Agent,A,0
+Jeffrey,Holtgrewe,RF,Free Agent,A,0
+Frank,Lin,LF,ELP,ML,2
+Matt,Barron,2B,TEX,AAA,0
+Shon,Dennis,P,WISC,A,13
+Jim,Day,C,TEX,A,0
+Murray,Lewis,P,RICH,ML,12
+Wilburn,McGee,P,Free Agent,A,0
+Malik,Holtz,P,Free Agent,A,0
+Nathan,Struiksma,1B,IDA,A,0
+Sung,Peralto,SS,AUCK,ML,0
+Tomas,Peeling,2B,Free Agent,A,0
+Arnold,Ernstes,LF,PEOR,AA,2
+Cletus,Freeman,3B,LAKE,AA,0
+Tommy,Arnold,P,CHES,AAA,0
+Donald,Morgan,3B,SCRN,A,0
+Ken,Boynton,1B,MAHO,ML,2
+John,Alvelo,SS,ROCK,A,0
+John,Ganino,P,SCRN,ML,2
+Everette,Chavez,C,AUCK,AA,0
+Matthew,Swartz,CF,MIDL,ML,2
+John,Shimko,LF,LAKE,A,0
+Douglas,Staines,CF,ROME,A,0
+Randall,Murphy,LF,LYNC,AA,0
+Sam,Hill,P,Free Agent,A,0
+Juan,Murphy,RF,ALTO,A,0
+Tris,Bauer,P,PEOR,A,0
+Harold,Ogg,C,LAKE,AA,0
+Norm,Hassler,P,ROCK,AAA,0
+Douglas,Carson,1B,ALTO,ML,6
+Issac,Leonard,P,CHES,A,0
+Brian,Mauricio,RF,SUGR,ML,4
+Rodger,Whitfield,P,Free Agent,A,0
+Barry,Kemerling,P,PEOR,A,0
+Anthony,McPheron,C,ROME,ML,0
+Ivan,Cunningham,P,Free Agent,A,0
+Osvaldo,Law,P,MAIN,AA,0
+Craig,Guzy,P,Free Agent,A,0
+Al,Starbuck,P,SCRN,AA,0
+Frank,Howell,CF,FRIS,AAA,0
+Lyle,Hale,P,Free Agent,A,0
+Ed,Holzhauer,CF,RICH,AA,0
+Lionel,Buzbee,P,CHES,AAA,0
+Jose,Rudd,P,ELP,AAA,0
+Anthony,Rosenzweig,P,SUGR,AA,0
+Stefan,Stover,P,OMA,AA,0
+Donnie,Wollner,P,NORW,ML,2
+William,Riker,P,RICH,AAA,0
+Dwayne,Korpal,P,OMA,AAA,0
+Travis,Simmons,P,AUCK,A,0
+John,Kelly,2B,CASP,AA,0
+Miguel,Perez,LF,IDA,ML,0
+Mervin,Banks,P,ALTO,A,0
+Bernardo,Shrewsberry,C,Free Agent,A,0
+Michael,Westling,P,ROME,A,0
+Charles,Leblanc,CF,Free Agent,A,0
+George,Roth,1B,CASP,AA,0
+Bill,Dawdy,P,IDA,A,1
+Jaime,Dunn,P,ALTO,AAA,1
+Artemis,Falkmore,P,Free Agent,A,2
+Demetrius,Hanson,2B,TEX,AA,0
+Curtis,Robinson,SS,Free Agent,A,0
+Alejandro,Giacopelli,SS,SCRN,AA,0
+Erik,Johnson,P,OMA,A,0
+Nathan,Vessella,P,OMA,A,0
+John,Whitlock,SS,MAIN,AAA,0
+Bob,Keene,RF,Free Agent,A,11
+Bennett,Burge,1B,PEOR,AAA,0
+Bob,Pennel,P,PEOR,A,0
+Charlie,Xiong,SS,CASP,AA,0
+Scott,Lefevre,LF,CASP,AA,0
+Gary,Curley,P,FRIS,AAA,0
+Ruben,Hoffler,3B,NORW,AA,0
+Ken,Garland,3B,Free Agent,A,0
+Winston,Savini,1B,IDA,AAA,0
+Timmy,Foster,3B,MAHO,ML,5
+Daniel,Reyes,3B,OMA,AA,0
+Harry,Da Souza,LF,MAIN,ML,1
+Jason,Macchio,1B,ELP,A,0
+Ray,Lafoe,LF,Free Agent,A,0
+Jim,Stover,LF,PORT,A,0
+Jason,Williams,1B,CHES,AAA,0
+Bobby,Johnson,P,SCRN,AAA,0
+Stanley,Machlin,RF,SCRN,AA,0
+Adam,Conner,P,LOUI,ML,7
+Lazaro,Tuholski,P,Free Agent,A,0
+Jeffrey,Wentzell,CF,NORW,A,0
+Antione,Geary,CF,TEX,AAA,0
+Raymond,Holt,P,SF,ML,7
+Jerry,Wormington,P,Free Agent,A,0
+Roy,Vargas,1B,SCRN,ML,1
+Moxie,Battle,C,MIDL,AA,0
+Walt,Wallace,2B,WISC,A,0
+Ed,Torsiello,P,Free Agent,A,0
+Pedro,Mihaila,P,ROME,AA,0
+David,Blosser,P,ROCK,A,0
+Armand,Dean,P,Free Agent,A,0
+Randall,Murray,P,FRIS,AA,0
+Willie,Gallegos,P,NORW,A,5
+Charles,Vanorder,P,MAHO,AA,0
+Sammie,Pyanowski,2B,RICH,A,0
+Jackson,Bennett,RF,Free Agent,A,0
+Garrett,Jacques,P,IDA,AA,0
+Sean,Lockhart,P,Free Agent,A,6
+Buck,Scurvy,P,LAKE,AA,0
+Ernie,Ingram,P,Free Agent,A,0
+Tom,Dennison,SS,ROCK,A,0
+Ahmad,O'Connor,P,SCRN,AA,0
+Randy,Stewart,LF,Free Agent,A,0
+Ini,Kamoze,2B,ROME,AA,0
+John,Parrish,SS,CHES,AA,0
+Jim,Pederson,P,MIDL,ML,4
+Bryan,Dotson,P,AUCK,AA,0
+Nathan,Tang,P,OMA,ML,6
+Ben,Vanhaitsma,3B,Free Agent,A,9
+Tuan,Anders,RF,PORT,ML,0
+Don,Sieracki,P,MAIN,ML,0
+Elton,Bibian,C,Free Agent,A,0
+Rey,Gasca,1B,SF,A,0
+Winfred,Rouse,P,ELP,AAA,0
+Mal,Aarons,1B,DAY,ML,4
+Leon,Milley,2B,CASP,A,0
+Peter,Almeida,LF,Free Agent,A,0
+Richard,Wallick,3B,FRIS,A,0
+Rubin,Sieg,P,SCRN,AA,0
+Martin,Vayda,SS,Free Agent,A,0
+Bill,Dawson,LF,LYNC,A,0
+Luka,Diaz,P,IDA,A,7
+Damon,Cerecedes,RF,ROCK,ML,4
+Brian,Gagner,CF,ROME,A,0
+Toots,Colter,SS,MAHO,ML,3
+Orlando,Hill,RF,MAHO,A,0
+Ron,Gula,P,LAKE,A,0
+Jason,Phifer,3B,Free Agent,A,0
+Milt,Bond,SS,Free Agent,A,0
+Carlos,Croghan,RF,AUCK,AAA,0
+Andres,Goetsch,P,RICH,AA,0
+Jeromy,Wangler,P,AUCK,AAA,0
+Marvin,Hancock,LF,Free Agent,A,0
+Bob,Kaiser,SS,SCRN,AAA,0
+Andrew,Berry,CF,Free Agent,A,0
+Lew,Raetz,P,PORT,AA,0
+Jeffrey,Mrazek,P,DAY,A,11
+Carlos,Lopez,RF,Free Agent,A,0
+Duane,Black,LF,ALTO,ML,2
+Edwin,Greany,P,Free Agent,A,0
+Mike,Lutz,P,MIDL,A,0
+Joe,Johnson,P,HILL,A,0
+Merle,Pinto,P,LOUI,A,8
+Dave,Vicari,P,OKC,A,0
+Davy,Larose,1B,SUGR,ML,6
+Timothy,Swamp,P,BANG,AA,0
+Dennis,Howell,1B,MIDL,AA,0
+Michael,Sirin,RF,SF,ML,1
+Mark,Charles,P,HILL,AA,0
+Herschel,Talamantes,P,HILL,ML,0
+Marshall,Roberts,P,PEOR,A,0
+Steve,Minelli,P,Free Agent,A,0
+Rob,Spiva,P,TEX,AA,0
+Ray,Oberly,P,Free Agent,A,0
+Douglas,Howard,3B,LAKE,AAA,0
+Michel,Hakes,LF,FRIS,AAA,0
+Justin,Callaway,P,SUGR,A,0
+Aristotle,Kennedy,1B,SUGR,AA,0
+Clarence,Auiles,1B,FRIS,AAA,0
+Abel,Kim,1B,LOUI,AA,0
+Duncan,Idaho,1B,NORW,ML,11
+Charlie,Ontiveros,P,AUCK,A,0
+Jack,Younis,C,FRIS,AAA,0
+Don,Petch,P,EDMO,A,0
+Lee,Francis,P,MAHO,AA,0
+Rob,Basket,P,MIDL,A,0
+Mike,Fuss,P,Free Agent,A,0
+Dickie,Nimitz,P,Free Agent,A,13
+Heath,Colatruglio,P,LOUI,A,0
+Terry,Gonsalves,LF,HILL,AAA,0
+Jack,Nadeau,P,Free Agent,A,0
+Ugueth,Urbani,1B,Free Agent,A,0
+Joe,Jonas,C,EDMO,A,0
+George,Weaver,CF,ELP,AA,0
+Reginald,Jensen,SS,Free Agent,A,0
+Grady,Stokes,LF,DAY,ML,3
+Ryan,Kruse,C,WISC,A,14
+Gerald,Thurman,RF,SF,AAA,0
+Dan,Markert,CF,ROME,A,0
+Denver,Schley,P,Free Agent,A,2
+Willie,Cartegena,C,BANG,A,0
+Livan,Everton,P,MAIN,A,7
+Claude,Lott,3B,NORW,AA,0
+Rodger,Oertel,3B,Free Agent,A,0
+Mike,Coldren,SS,Free Agent,A,0
+Jackie,Newlan,CF,ELP,A,0
+Duane,Adkins,P,PORT,ML,6
+Darius,Pitstick,LF,Free Agent,A,0
+Scott,Weidemann,CF,ALTO,A,0
+Jonas,Downs,LF,IDA,A,0
+Donald,Santai,C,Free Agent,A,0
+Cayden,Dilauro,1B,SCRN,A,0
+Leonardo,Morrison,2B,PORT,A,0
+Everette,Pettey,3B,ROCK,A,0
+Vaughn,Rabenold,P,SCRN,AAA,0
+John,Storniolo,SS,DAY,A,0
+Paul,Guthrie,P,Free Agent,A,1
+Keegan,Schmierer,P,ROME,ML,1
+Don,Nimmons,P,TEX,ML,6
+Dagwood,Johnson,LF,WISC,A,0
+Brian,Brito,LF,MAIN,AA,0
+Jerry,Leal,CF,LYNC,A,0
+Raymond,Aquirre,RF,RICH,A,0
+Eric,Carlson,P,SF,A,0
+Joseph,Mabbott,P,TEX,AAA,0
+Hal,Moore,CF,SCRN,AA,0
+Tony,Weathers,3B,LYNC,AA,0
+Dwigt,Rortugal,P,MAHO,ML,1
+James,Reeder,P,ROME,A,0
+Ron,Stickney,P,SF,ML,1
+Chester,Thompson,P,LAKE,A,0
+Jamie,Means,P,NORW,A,0
+Eliseo,Duffield,1B,MAHO,AAA,1
+Randall,McGaughy,SS,TEX,ML,10
+Rumeal,Robinson,P,EDMO,AAA,0
+River,Ford,P,OKC,A,0
+Bryan,Bosa,P,MAHO,ML,2
+Darnell,Hayes,P,EDMO,AAA,0
+Otto,Morena,3B,TEX,A,7
+Jim,Hackney,P,DAY,ML,1
+Tom,Benedict,P,LAKE,A,0
+Clyde,Bruckman,P,CASP,AAA,0
+Rich,Rugg,P,FRIS,AA,0
+Ken,Miralles,P,MIDL,AA,0
+Nicholas,Erickson,2B,CASP,AAA,0
+Charles,Hunter,1B,NORW,ML,6
+Reginald,Serio,LF,LAKE,AAA,0
+Edison,Rijo,P,OKC,A,0
+Rodolfo,Sass,P,CHES,A,0
+Jonathon,Reid,P,AUCK,A,0
+Eric,Washington,P,ALTO,AA,0
+Mario,Anglemyer Jr,P,FRIS,AA,0
+Clifford,Myers,P,PEOR,A,0
+Stephen,Little,RF,ROCK,AAA,0
+Allan,Chance,P,SUGR,A,0
+Ralph,Curbow,C,TEX,A,5
+Juan,Zamora,LF,CASP,A,0
+Marv,Nicholson,SS,RICH,A,0
+Chad,Ellis,C,LAKE,A,0
+Dennis,Mackey,RF,NORW,A,0
+Randy,Gilmore,RF,MAIN,ML,0
+Johnny,Young,RF,SCRN,A,0
+Brad,Murray,SS,SCRN,A,0
+Demetrius,Davis,C,BANG,A,0
+Ken,Lee,1B,Free Agent,A,0
+George,Redpath,2B,ALTO,A,0
+Hollis,Reagor,3B,MAIN,A,0
+Les,Aiken,LF,LYNC,ML,0
+Jonathan,Norris,SS,MAIN,A,0
+Steve,Mattas,LF,AUCK,A,0
+Eugene,Hernandez,CF,BANG,A,0
+Randal,Shipmen,RF,MAHO,A,0
+Matt,Allison,C,NORW,AAA,0
+Frederic,Crawford,P,AUCK,A,0
+Ed,Clanton,P,ALTO,A,0
+Norm,Samek,P,OKC,A,0
+Hal,Carter,P,CASP,A,0
+Webster,Clark,SS,ROCK,AA,0
+Vincent,Husky,P,HILL,A,0
+Eugene,Perez,CF,FRIS,AAA,0
+Rogelio,Cleary,P,TEX,ML,9
+Carmen,SanDiego,P,PORT,ML,1
+Arturo,Heineman,RF,LAKE,AAA,0
+Shawn,Scharr,3B,SF,AA,0
+Edward,Kishel,P,OKC,A,0
+Robbie,Dowless,SS,ROME,AAA,0
+Bill,Tubbs,P,SUGR,A,0
+Maxx,Moxie,3B,SUGR,ML,1
+Zachary,Brown,P,WISC,A,0
+Domingo,Ruiz,P,AUCK,A,0
+Steve,Brahney,RF,LYNC,AA,0
+Roger,Aboud,CF,Free Agent,A,5
+Bradley,Chellis,LF,Free Agent,A,6
+Griffin,Phoenix,3B,LAKE,AA,0
+Geoff,Heineman,2B,NORW,AA,0
+Lucien,Morris,SS,LYNC,ML,3
+Dixie,Leckie,P,MIDL,A,0
+Earl,Harris,P,MIDL,A,0
+Eugene,Slaughter,CF,MAHO,AAA,0
+Nathaniel,Ortiz,C,Free Agent,A,0
+Mario,Hendry,1B,LYNC,AA,0
+Clifford,Chan,C,LOUI,ML,0
+Kyle,Capulong,C,PEOR,A,0
+Ryan,Campos,2B,IDA,A,0
+Frank,Kurtzman,1B,IDA,A,0
+Jeffery,Olson,C,MAIN,A,0
+Mike,Beckstrand,1B,SCRN,ML,6
+Will,McCreadie,2B,ROME,A,0
+Eric,Luna,P,SUGR,AAA,0
+Devin,Daniel,SS,SF,AAA,0
+Edgar,Daniels,P,LAKE,AAA,4
+Scott,Lowery,P,OMA,ML,3
+Josh,Sikora Jr,C,Free Agent,A,0
+Stu,Hammond,1B,ELP,A,0
+Dominic,Guadeloupe,2B,Free Agent,A,0
+Brent,Johnson,3B,NORW,A,0
+Lee,Motamedi,SS,LAKE,A,0
+Larry,Legend,LF,CASP,A,0
+Lamar,Mazurkiewicz,CF,MAIN,A,0
+Harold,Trembley,RF,MAIN,A,0
+John,Swarthout,P,PORT,A,0
+Charlie,Levitt,P,WISC,A,0
+Jim,Murphy,P,PORT,AA,0
+Jose,Blasengame,P,PEOR,A,0
+Walter,Winn,P,MIDL,A,0
+Scott,Kilday,P,PORT,AA,0
+Verle,Fiumara,P,MIDL,A,0
+Richard,Graves,P,PORT,AA,0
+Johnny,Bee,P,BANG,A,0
+Jesse,Addams,P,TEX,AAA,0
+Mike,Nawrocki,P,AUCK,A,0
+Augie,Holt,P,TEX,AAA,0
+Toby,Clay,P,CHES,A,0
+John,Blint,P,SCRN,AA,0
+Clifford,Barnes,1B,RICH,ML,0
+Clarence,Rivenberg,P,SCRN,A,0
+Woody,Kham,P,OMA,A,0
+Richard,Jones,P,PEOR,AA,0
+Clay,Perkins,RF,WISC,AAA,0
+Joseph,Carbonneau,P,Free Agent,A,7
+Greg,Lopez,P,SF,A,0
+Bruce,Tawwater,RF,Free Agent,A,0
+Craig,Hamilton,P,FRIS,ML,0
+Bob,Horton,C,MAIN,AA,0
+Gary,Zadora,CF,RICH,A,0
+Carr,Parker,C,CASP,A,0
+Sparrow,Mimbs,3B,SF,A,0
+John,Correa,1B,PEOR,AAA,0
+Milt,Filpo,RF,FRIS,A,0
+Denver,Culp,SS,MAHO,A,0
+Coleman,Hall,C,LOUI,A,0
+Jeffrey,Howdyshell,1B,SCRN,A,0
+Jeffrey,Bush,LF,ALTO,ML,1
+Anthony,Simmoms,P,MAHO,AAA,1
+Jose,Brickhouse,SS,CHES,AA,0
+Mikey,Edie,CF,IDA,ML,9
+Johnny,Seymor,P,PEOR,AAA,0
+Rob,Dietrich,2B,SF,A,0
+Joshua,Galeana,3B,DAY,A,0
+Ronny,Johnson,SS,LAKE,A,0
+Kyle,Wilson,LF,DAY,A,0
+Florentino,Harris,CF,BANG,A,0
+Mose,Braden,RF,LYNC,A,0
+Jason,Friese,C,MAIN,ML,0
+John,Pugh,P,MIDL,A,0
+Reuben,Greene,P,WISC,ML,1
+Larry,Politte,P,MAHO,AAA,0
+Paul,Olivas,P,SF,AA,0
+Terrence,Griffin,P,AUCK,A,0
+Lester,Nelson,P,WISC,A,0
+Louie,Harris,P,MIDL,A,0
+Jacob,Cobb,P,TEX,A,12
+Paul,Barribeau,P,LAKE,A,0
+Bryce,Cope,P,ELP,AAA,0
+Jim,Echevaria,P,HILL,A,0
+Jonathan,McTigue,P,OKC,A,0
+Phil,Horwath,P,Free Agent,A,6
+Jake,Vanderlinden,P,SF,A,0
+Ryan,Veil,P,HILL,A,4
+Gary,Gonzalez,P,OKC,A,0
+Rich,Fournier,P,OKC,ML,7
+Mikel,Marin,P,Free Agent,A,2
+Duke,Olney,P,CHES,A,0
+Dennis,Puckett,P,RICH,A,0
+Lawrence,McFarland,C,LAKE,A,0
+Rob,Boynton,RF,MAIN,A,0
+Elbie,Mari,1B,CASP,A,0
+Stan,Cochran,C,MAIN,A,0
+Johnny,Officer,3B,CHES,AAA,0
+Chris,Echeverri,LF,LOUI,ML,1
+Devon,Buzzelli,P,MAIN,ML,1
+Forest,Murphy,LF,DAY,A,0
+Mike,Gevorkyan,RF,Free Agent,A,0
+Lewis,Skalicky,C,Free Agent,A,0
+Alvin,Lopez,1B,ELP,A,0
+Cal,Hunter,2B,ROME,A,0
+Jeffrey,Leone,3B,NORW,A,0
+Adam,McBath,SS,ROCK,A,0
+Marcos,Vandenburgh,LF,MAIN,A,0
+Dave,Krebs,C,CHES,AAA,0
+Rodney,Doyle,C,OMA,ML,1
+Rory,Kelly,P,MAIN,A,7
+Jeffrey,Horsley,C,CASP,AAA,1
+Bobby,Gaskin,P,CHES,AAA,0
+Dorian,Widmayer,CF,AUCK,A,0
+Ray,Galstad,RF,DAY,A,0
+Torii,Koch,RF,LAKE,A,7
+Frank,Hampton,P,ELP,ML,6
+Ken,Roybal,C,Free Agent,A,0
+Greg,Altenhofen,P,SF,A,0
+Eugene,Brockman,P,MAHO,A,0
+Jamie,Long,RF,LAKE,AAA,0
+Emmanuel,Gray,P,EDMO,A,0
+Jordan,Harvey,P,PEOR,A,0
+Micheal,Ready,P,Free Agent,A,0
+Jose,Fletcher,P,ROCK,A,0
+Jerry,Blair,RF,MAIN,ML,6
+Fred,Morrison,P,LYNC,AA,0
+Clifford,Silva,P,AUCK,A,0
+Ivory,Malik,P,LOUI,A,0
+Terrance,Stewart,P,PEOR,A,0
+Walter,Jaime,2B,ELP,AAA,0
+Barry,Allen,1B,AUCK,ML,5
+Todd,Frazier,P,LYNC,AAA,0
+Irvin,Paradise,C,ELP,AAA,0
+Angelo,Seelig,LF,WISC,AAA,0
+Daron,Creson,2B,LYNC,AAA,0
+Dan,Studler,SS,ROCK,AAA,0
+Dave,Hensley,P,OMA,A,0
+Rich,Lane,P,LOUI,A,0
+Tom,Griffin,1B,EDMO,A,0
+Terry,Skuse,CF,LAKE,A,0
+Sherman,Nachor,SS,LOUI,A,0
+Joe,McCallon,P,Free Agent,A,0
+Hosken,Enriquez,C,MAIN,A,0
+Joe,Henry,3B,FRIS,A,0
+Bill,Stroble,CF,ROCK,A,0
+Glen,Lohden,P,PORT,AA,0
+Jonathan,Molenda,LF,SUGR,AAA,0
+Milo,Hilfiger,P,CHES,AA,0
+Jason,Delapena,C,RICH,A,0
+Hipp,Shooter,P,LOUI,ML,5
+Mario,O'Donald,1B,NORW,A,0
+Ken,Prucnal,2B,DAY,A,0
+Roy,Joyner,3B,DAY,A,0
+Ray,McElwee,SS,PEOR,A,0
+Donovan,Rivas,LF,LYNC,A,0
+Ryan,Miranda,CF,DAY,A,0
+Enrique,White,RF,DAY,A,0
+Roger,McKinney,P,NORW,A,0
+Alfred,Stillions,3B,WISC,AAA,0
+Moshe,Rainford,P,ALTO,AA,0
+Jim,Davenport,P,ALTO,A,0
+Elijah,Prisbrey,P,IDA,ML,4
+Clarence,Peek,P,FRIS,AA,0
+Bob,Gullion,P,BANG,A,0
+Thaddeus,Reynolds,P,WISC,A,0
+Jesus,Perrins,P,SF,ML,2
+Roy,Perazzo,P,MIDL,A,0
+Tim,Turne,P,CHES,A,0
+Jarvis,Amoruso,P,Free Agent,A,0
+Kenton,Jones,P,MIDL,A,0
+DeMorris,Throop,P,ELP,AAA,1
+Jason,Larson,LF,MAHO,AAA,0
+Kristopher,Davis,P,AUCK,A,0
+Henry,Le,P,IDA,A,0
+Frank,Prater,C,SF,AA,0
+Dave,Frees,P,WISC,A,0
+Andrew,Bliss,P,ROCK,ML,0
+Mike,Water,SS,RICH,A,0
+Bob,Fuller,P,WISC,AAA,0
+Scott,Brown,3B,LOUI,A,0
+Bill,Miles,2B,SCRN,A,0
+Sean,Horton,3B,OMA,A,0
+Luther,Wells,LF,MAIN,AA,0
+Jeff,Jahns,C,CASP,A,0
+Justin,Benton,2B,ELP,A,0
+Marco,Ruiz,2B,WISC,ML,0
+Kent,Echols,P,DAY,ML,3
+Jeff,Placko,3B,ELP,AA,0
+Bill,Doak,C,TEX,A,0
+Charlie,Japp,P,WISC,AA,0
+Edwin,Shimer,1B,FRIS,A,0
+Foster,McGill,2B,SCRN,A,0
+Salvador,Crider,3B,LAKE,A,0
+Joe,Jorgensen,SS,ROCK,A,0
+Larry,Besemer,LF,LOUI,A,0
+Ben,Gehling,CF,BANG,A,0
+Bruce,Degirolamo,RF,DAY,A,0
+Ron,Caruthers,P,WISC,A,0
+Rickey,Brown,2B,TEX,AAA,0
+Anthony,Dorsey,LF,SCRN,AAA,0
+Jeremiah,Daley,C,SF,AA,0
+Dennis,Martinez,P,PEOR,A,0
+Lupe,Neely,P,OMA,A,0
+Cody,Breidenstein,P,SUGR,A,0
+Wilber,Walker,P,OKC,A,0
+Mathew,Luna,P,NORW,A,0
+Jerry,Skaggs,P,OKC,A,0
+Frank,Burton,P,ROCK,A,0
+Jim,Mizell,P,OMA,A,0
+Andy,Ertel,P,CHES,A,0
+Simon,Williams,P,LAKE,A,0
+River,Cruz,2B,Free Agent,A,0
+Stewart,Hoerner,1B,ELP,A,0
+Gordon,Booser,3B,MIDL,A,0
+Andrew,Sugai,2B,Free Agent,A,0
+Aden,Polito,SS,IDA,A,0
+Michael,Barro,C,MAIN,AA,0
+Dennis,Cummings,1B,ROME,AA,0
+Bernard,Young,SS,CASP,AA,0
+Eric,Stephenson,C,SCRN,A,0
+Rafael,Ayala,C,ROCK,A,0
+Ivan,Russell,1B,OMA,A,0
+Willie,Manning,2B,WISC,A,0
+Salvador,West,3B,SUGR,A,0
+Charles,Droke,SS,ROME,A,0
+Roger,Owens,1B,HILL,AAA,0
+Ringo,Bell,LF,SCRN,A,0
+Lester,Fuente,CF,SF,A,0
+Alfonso,Nieland,CF,EDMO,ML,0
+Tommy,McKellop,RF,LOUI,A,0
+Blake,Gugerty,CF,WISC,ML,1
+Rickey,Cross,P,WISC,AA,0
+Mike,Eisenberg,P,HILL,A,0
+Julius,Johnson,1B,IDA,AAA,1
+Ted,Roon,P,CHES,A,0
+Alfredo,Montiel,P,EDMO,ML,0
+Homer,Ashley,P,PEOR,A,0
+Allan,Borkowski,P,FRIS,A,0
+Steven,Gibbs,P,SF,A,0
+Jeremy,Scoles,SS,SF,AA,0
+Walter,Vigor,P,WISC,A,0
+Mark,Mann,2B,MAIN,ML,1
+Dave,Abel,P,WISC,A,0
+John,Wider,P,MIDL,A,0
+Matt,Emmons,CF,MAIN,AA,0
+Garth,Brewster,CF,LAKE,AAA,0
+Jim,Veselka,P,BANG,A,0
+John,Wells,P,LAKE,A,0
+Marcus,Turner,CF,ELP,AAA,0
+Marcus,Flanagan,2B,ELP,A,0
+Dwayne,Jetski,RF,ELP,ML,1
+Alvin,Kneip,C,EDMO,A,0
+John,Lockley,RF,PORT,A,0
+Joe,Lang,CF,IDA,A,0
+Ralph,Lord,RF,LOUI,A,4
+Don,McDevitt Jr,CF,NORW,A,0
+Montell,Helfenstein,P,MAIN,AA,0
+Ruben,Nistler,C,IDA,A,0
+Bruce,Hull,2B,LOUI,A,0
+Darrell,Parker,C,PEOR,A,0
+Percy,Segura,1B,FRIS,A,0
+Jerrell,Cantor,2B,NORW,A,0
+Bill,Pugh,3B,SF,A,0
+Frank,Lopez,SS,MAIN,A,0
+John,Flanagan,LF,LAKE,AAA,0
+Kevin,Schelb,LF,IDA,A,0
+Brent,Bejaran,CF,ELP,A,0
+Kendall,Kendall,RF,NORW,A,0
+Scott,Owens,P,TEX,AAA,0
+Ed,Ahlin,P,OKC,A,0
+Bob,Austin,P,BANG,A,0
+Steven,Keltz,P,DAY,AAA,1
+Glenn,Jarratt,P,MIDL,A,0
+Seth,Snyder,P,EDMO,A,7
+Larry,Farren,P,FRIS,A,0
+Stephen,Rappleyea,P,HILL,A,0
+Bob,Gilliam,P,LOUI,A,0
+Gregory,Remus,P,MAHO,A,0
+Rafael,Nitta,P,SUGR,A,0
+Cy,Westley,P,LOUI,A,0
+Oren,Gallegos,P,MIDL,A,0
+Charles,Stephens,RF,IDA,AAA,0
+Joe,Tealer,CF,Free Agent,A,0
+Paul,Yoon,1B,TEX,ML,12
+Scott,Lawhorn,3B,DAY,A,0
+Esteban,Gassett,CF,FRIS,A,0
+Michale,Bray,CF,SCRN,A,0
+Ross,Gordon,P,PEOR,ML,4
+Jesse,Somogyi,1B,FRIS,AAA,0
+Robert,Finkel,P,MAHO,AAA,0
+Cameron,Dooley Jr,1B,SCRN,A,0
+Julio,Hodges,RF,OKC,A,10
+Harry,Fletcher,P,OMA,AAA,0
+Anthony,Gut,3B,MAIN,A,0
+Joe,Allen,CF,SF,A,0
+Joe,Bells,C,Free Agent,A,0
+Daniel,Perez,P,DAY,AAA,0
+Rafael,Farr,1B,ELP,A,0
+Dave,Roos,CF,CASP,AA,0
+Mal,Dolly,2B,RICH,A,0
+Joe,Ekmark,P,LAKE,AAA,0
+Charles,Simmon,3B,MAHO,A,0
+Jose,Delgado,SS,AUCK,A,0
+Silver,Beard,P,OKC,ML,2
+Mike,White,P,ELP,AAA,0
+Allen,Menzie,3B,OMA,AAA,0
+Fredrick,Laughead,LF,ROCK,A,0
+Rafael,Cayton,CF,NORW,A,0
+Joe,Fillmore,C,SCRN,AAA,0
+Aaron,Linton,RF,ALTO,A,0
+Brian,Edwards,P,OMA,AAA,0
+Max,Debutiaco,P,AUCK,A,0
+Rob,McAdoo,P,LAKE,A,0
+Aaron,Grames,2B,CASP,AAA,1
+Bill,Vitello,P,OKC,A,0
+Andre,Wood,C,LOUI,AAA,0
+Jerry,Gil,P,ROCK,ML,6
+Dave,Ayars,P,OMA,A,0
+Jim,Prins,P,Free Agent,A,0
+Hans,Harper,SS,RICH,AAA,0
+Zander,Jacobs,P,EDMO,ML,0
+John,Brock,CF,HILL,ML,2
+Todd,Witherington,P,SUGR,A,0
+Fred,Heminger,P,WISC,A,0
+Mike,Burgess,1B,OMA,ML,0
+Darrell,Furniss,3B,OMA,ML,1
+Paul,Bacon,1B,AUCK,AA,0
+John,Benitez,P,CHES,A,0
+John,Stallings,P,OMA,A,0
+Myer,Seven,1B,BANG,AAA,0
+Patrick,Strehl,P,LAKE,A,0
+Linc,Huhn,P,ROCK,ML,0
+Israel,Thuss,C,OMA,AA,0
+Vincent,Johnson,C,EDMO,AAA,0
+Keith,Laufer,P,OKC,A,0
+Eugene,Crumrine,RF,EDMO,AA,0
+Chubbs,Peterson,RF,MAIN,ML,0
+Alan,Jackson,C,SCRN,A,2
+Plessy,Ferguson,1B,ROCK,A,0
+Jason,Fleece,LF,OKC,ML,2
+Miguel,Tomasino,C,RICH,A,0
+Jessie,Fischer,RF,WISC,AA,0
+Tim,Bermingham,CF,SCRN,A,0
+Johnny,Caligiuri,3B,FRIS,A,0
+Mike,Rivera,1B,CASP,A,6
+Mike,Inouye,RF,DAY,A,0
+Jason,Calhoun,SS,ROME,A,0
+Mark,Tribbey,C,SCRN,A,0
+Mervin,Baney,1B,IDA,A,0
+Bryon,Rodrigue,2B,LAKE,A,0
+Eric,Shartrand,SS,EDMO,ML,0
+Ron,Duncan,3B,PORT,A,0
+Murray,Gross,SS,SF,A,0
+Gerald,Acevedo,LF,MAHO,A,0
+Charles,Rowley,2B,SCRN,A,5
+Jose,Zamorano,CF,Free Agent,A,0
+Ralph,Busch,RF,FRIS,A,0
+Raymond,Volden,P,OMA,A,0
+Clifford,Terrell,P,CHES,ML,1
+Tom,Zimmerman,P,BANG,A,0
+Mark,Santos,P,HILL,A,0
+Marcelino,Wong,P,BANG,ML,4
+Jason,Cokely,P,HILL,A,0
+Tyreese,Warnack,SS,ROCK,AAA,3
+Ray,Zody,P,ALTO,A,0
+Robert,Robison,P,CHES,A,0
+Jeffrey,Cohenour,SS,EDMO,ML,4
+Jim,Senteno,P,MAHO,AAA,0
+Pedro,Hoopii,LF,PEOR,ML,0
+Jacob,Cox,C,IDA,AA,0
+Jeremiah,Longfellow,P,BANG,A,0
+Derrick,Taylor,P,SUGR,A,0
+John,Fontaine,P,OMA,A,0
+Bob,Royal,P,FRIS,AA,0
+Justin,Yauger,P,SUGR,A,0
+Walter,Whaley,P,ROCK,A,0
+Leo,Dietz,1B,CASP,A,0
+Dan,Scholten,3B,Free Agent,A,0
+Pete,Moss,2B,PORT,A,0
+Bob,Zunkle,SS,AUCK,A,0
+Charles,Peeters,C,DAY,A,0
+John,Versace,3B,SCRN,AA,0
+Mike,Baltimore,1B,PEOR,A,0
+Alfred,Thornton,SS,SCRN,ML,2
+Hub,Viele,C,DAY,A,0
+Clyde,Barrow,LF,LOUI,A,7
+Leonard,Lerma,1B,MAHO,A,0
+Tom,Sperry,2B,IDA,A,0
+Gary,Gentry,3B,IDA,A,0
+Cal,Trask,2B,OMA,A,12
+Amal,Walker,SS,NORW,A,0
+Bradley,Kunstlinger,LF,EDMO,A,0
+Francis,Solid,CF,Free Agent,A,0
+Allen,Iverson,1B,ALTO,AA,0
+Howard,Venegas,RF,Free Agent,A,0
+Sly,Pupo,P,LAKE,A,0
+Theodore,Person,P,MAHO,A,0
+Delmar,Moore,P,LAKE,A,0
+Elias,White,P,PORT,A,0
+Jacob,Vogt,P,LOUI,A,0
+Matthew,Tiegs,P,WISC,A,0
+Mike,Schnelle,LF,SF,AAA,0
+Alfred,Manzanarez,P,FRIS,A,0
+Lew,Thompson,P,OKC,A,0
+Bill,Wallace,P,CHES,A,0
+Rob,Dominguez,P,LOUI,AA,0
+Clem,Tschetter,P,DAY,A,0
+Eric,Shoop,P,AUCK,A,0
+Jarvis,Badeaux,C,CASP,A,0
+Harold,Stiger,C,IDA,A,0
+Gary,Victor,1B,Free Agent,A,0
+Ken,Fields,C,SCRN,AAA,0
+Jose,Tozier,2B,ROCK,A,0
+Ronald,McCants,P,MAIN,ML,8
+Jake,Leblanc,SS,PEOR,A,0
+Frederick,Williams,P,ELP,ML,7
+Russell,Hopton,C,Free Agent,A,0
+Frank,Wrenn,LF,TEX,AAA,0
+Charles,Sistrunk,C,MAIN,A,0
+Ed,Gigante,1B,NORW,A,0
+Oliver,Mitchell,3B,ROCK,ML,0
+Roger,James,2B,ALTO,A,0
+Joe,Lamphear,3B,CHES,A,0
+Jamie,Billups,SS,Free Agent,A,0
+Nick,Hopple,LF,AUCK,A,0
+Josh,Iwaoka,CF,SUGR,A,0
+Christopher,Armstrong,P,Free Agent,A,1
+Mario,Pitts,RF,FRIS,A,0
+Walter,Mavro,P,AUCK,A,0
+Donnie,Tapia,P,PEOR,A,0
+Jim,Herrera,P,ELP,A,0
+Brett,Murray,P,ALTO,A,0
+Travis,Horney,P,ROCK,ML,0
+Dave,Miles,P,ROCK,A,0
+Irv,Ray,2B,DAY,ML,8
+Dave,Hicks,LF,IDA,ML,3
+Bobbie,Severns,P,WISC,A,0
+Tex,Bunche,P,SF,A,0
+Charlie,Schwartz,P,ROCK,A,0
+Eugenio,Kistle,P,WISC,A,0
+Gregory,Nichols,P,ALTO,A,0
+Josh,Hall,1B,TEX,A,0
+David,Rivers,2B,WISC,A,2
+George,Fox,RF,ROME,A,0
+Fred,Ellison,P,MAIN,AAA,0
+Leigh,Hunter,3B,ELP,A,0
+Wayne,Donelly,RF,ALTO,A,0
+John,Fitzpatrick,2B,OKC,A,0
+Mike,Gray,P,ALTO,AA,0
+Keith,Elam,P,SUGR,ML,1
+Patrick,Galdi,LF,BANG,A,0
+Phillip,Beringer,1B,LOUI,A,0
+Albert,Copps,C,BANG,A,0
+Dave,Pitts,1B,IDA,A,0
+Gary,Spaulding,2B,DAY,A,0
+Joe,Nassimi,LF,CHES,AAA,0
+Terrence,Davis,3B,PEOR,A,0
+John,Cheung,SS,MAHO,A,0
+Micheal,Newman,P,SCRN,AAA,0
+Enrique,Deadwyler,LF,DAY,A,0
+Bucky,Liedke,CF,ALTO,A,0
+Ronaldo,Martinez,RF,BANG,A,0
+Billy,Fineberg,P,SUGR,A,0
+Chris,Brown,P,ELP,AA,0
+Ed,Lawson,P,IDA,A,0
+Dave,Middleton,P,WISC,A,0
+Eric,Neering,P,LAKE,A,0
+Erich,Stewart,P,NORW,A,0
+William,Varlas,P,OKC,A,0
+Lenny,Espinoza,LF,SCRN,AA,0
+Dane,Nguyen,P,CHES,A,0
+Carroll,Sloan,P,HILL,A,0
+Charles,Yackel,P,SUGR,A,0
+Ali,Puskar,P,SUGR,A,0
+Donny,Jaime,CF,SUGR,ML,5
+Anthony,Laflen,P,CHES,A,0
+Travis,McNair,LF,CASP,A,0
+Bob,Paganico,C,MIDL,A,0
+Boyd,Curran,SS,OMA,A,0
+John,Schiavi,P,CASP,AA,0
+Philip,Nisbet,1B,TEX,A,0
+Jeremy,Kracke,SS,ROCK,AAA,0
+Martin,Murray,CF,LOUI,AAA,0
+Burt,Workman,2B,EDMO,AAA,0
+Mike,Igartua,1B,Free Agent,A,0
+Gary,Riggleman,C,LAKE,A,5
+Manuel,Raymond,3B,TEX,A,0
+Eloy,Stephens,C,SF,A,0
+Jim,Moten,1B,ALTO,A,0
+George,Davidson,2B,HILL,A,0
+Virgil,Atkins,LF,ELP,AA,0
+Wilson,Fultz,3B,Free Agent,A,0
+Chad,Schepper,SS,PORT,A,0
+Don,Duffey,LF,ELP,A,0
+Royal,Schudel,CF,ELP,A,0
+Ramiro,Russell,RF,IDA,A,0
+Rich,Nougat,P,IDA,A,0
+John,Goe,P,SUGR,A,0
+Don,Brown,P,MIDL,A,0
+Gary,Mixon,P,MAHO,ML,1
+Bob,Logan,P,MAHO,A,0
+Pedro,Schwan,P,SUGR,A,0
+Hubert,Rose,P,EDMO,A,0
+Barry,Lee,P,ROME,A,0
+Julian,Brown,P,MAIN,A,3
+Brian,Lee,P,WISC,A,0
+Brian,Jones,P,PORT,A,0
+Brandon,Gigantino,P,ROME,A,0
+Edmond,Delmage,SS,ALTO,AA,0
+Nathan,Yoder,P,CASP,AA,0
+Edmundo,Nienaber,3B,SCRN,A,4
+Al,Morga,CF,SCRN,A,0
+Sig,Stewart,C,SCRN,A,0
+Florentino,Hacher,CF,MAIN,A,0
+Mike,Condry,CF,PEOR,A,0
+Romeo,Seamon,SS,ROME,A,0
+Martin,Book,3B,BANG,A,0
+Chili,Spall,LF,OMA,A,0
+Alfonso,Cradle,P,MAHO,ML,9
+Mike,Kuehner,C,Free Agent,A,0
+Ray,Dahline,1B,Free Agent,A,0
+Otis,Schoeck,P,SCRN,AAA,0
+Norm,Agamao,2B,RICH,A,0
+Hipolito,Fernandez,P,IDA,AAA,0
+Graham,Walser,3B,MIDL,A,0
+Gerald,Mercado,SS,MIDL,A,0
+George,Tep,LF,TEX,A,0
+Mike,Klee,P,WISC,AAA,0
+Carlton,Brandt,CF,PORT,A,0
+Vernon,Snowden,P,Free Agent,A,8
+Dash,Crofts,3B,IDA,AAA,0
+Pike,Fisher,1B,MIDL,AAA,0
+Bradley,Dumond,RF,CASP,A,0
+Steve,Kotowski,P,CHES,A,0
+George,Payne,P,WISC,A,0
+Willie,Delano,P,ROME,A,0
+Wallace,Lawson,P,SCRN,A,0
+Tom,Parker,P,IDA,A,0
+Rafael,Sabata,P,HILL,A,0
+James,Carriedo,P,PORT,A,0
+Tom,Manda,P,AUCK,A,0
+Grady,Tigano,LF,PORT,ML,1
+Carl,Broddy,P,PEOR,A,0
+August,Michitsch,P,OKC,A,0
+Aaron,Jorge,2B,CASP,AA,0
+Dan,Wells,P,BANG,A,0
+Nicholas,Mack,C,LOUI,A,0
+Larry,McGuirl,RF,FRIS,A,0
+Lonnie,Bellafiore,RF,Free Agent,A,0
+Walter,Norfleet,3B,CASP,A,0
+Jim,Head,C,PORT,A,0
+Herman,Dominguez,1B,RICH,A,0
+Charles,Hildebrandt,C,ROCK,A,0
+Louis,McLaughlin,1B,Free Agent,A,0
+Tomili,Jones,2B,SF,A,0
+Dee,Knepshield,3B,NORW,A,0
+Jessie,Koyanagi,SS,FRIS,A,0
+Al,Simpson,LF,NORW,A,0
+Pete,Smithhisler,CF,MAHO,A,0
+Jeremy,Mathews,RF,Free Agent,A,0
+Jerry,Tsuha,2B,AUCK,AA,0
+Larry,Long,P,PORT,A,0
+Jeffery,Payne,P,BANG,A,0
+Larry,Vanhouten,P,ALTO,A,0
+Errol,Sturkie,P,SUGR,A,0
+Eric,Hendrick,P,IDA,A,0
+Jerry,Gettys,P,ROCK,A,0
+Mike,Ohotnicky,P,IDA,A,0
+Marv,Idleburg,P,OKC,A,0
+Nick,Walker,P,IDA,AA,0
+Bob,Porth,1B,MAIN,A,4
+Harvey,Rocher,P,ROCK,ML,8
+Edwin,Phillips,P,CHES,A,0
+John,Dilmore,P,MIDL,A,0
+Dan,Slusarski,2B,ALTO,ML,5
+Brandon,Pasha,1B,ALTO,ML,9
+Van,Poinsette,P,MAHO,A,0
+Mike,Stene,SS,DAY,A,0
+Norman,Alig,P,WISC,AAA,0
+Alfred,Braker,1B,Free Agent,A,0
+John,Williamson,2B,LOUI,A,0
+Jim,Moreno,2B,LAKE,A,0
+Dennis,George,P,BANG,AA,0
+L.O.,Newman,C,PORT,ML,2
+Milton,Zhu,P,CASP,ML,1
+Terence,Merchant,2B,ROCK,A,0
+Rocky,Abrams,1B,MAIN,A,0
+Dan,Bora,C,MAIN,A,0
+Aaron,Lewis,1B,LYNC,A,0
+Lucas,Bartley,P,LOUI,AA,0
+Jose,Magby,RF,CHES,ML,6
+Raul,Robinson,C,FRIS,A,9
+James,Stjohn,P,NORW,A,7
+Ed,Wilson,2B,Free Agent,A,0
+Nicholas,Stevens,3B,FRIS,A,0
+Gary,Tackitt,SS,HILL,A,0
+Alan,Willis,LF,FRIS,A,0
+John,Pedlar,CF,ELP,A,0
+Al,Hamzik,RF,PORT,A,0
+Garrett,Thibodeaux,P,BANG,A,0
+Vean,Broussard,P,MIDL,A,0
+Clayton,Wray,P,MAHO,A,0
+Danny,Cecil,P,SCRN,A,0
+Ernesto,Mages,P,HILL,A,0
+Dandy,Kelly,P,OMA,A,0
+Will,Boyd,P,Free Agent,A,0
+Mike,Poer,P,CHES,AA,0
+Thomas,Ullrich,LF,FRIS,AAA,0
+Frank,Duval,P,AUCK,A,0
+Brad,Dunlap,P,SUGR,A,0
+Bullet Joe,Busch,SS,MAIN,ML,10
+Carl,Sprague,P,HILL,A,0
+Manny,Olson,P,ALTO,A,0
+Yong,Campbell,CF,CASP,A,0
+Oscar,Nelson,RF,MAIN,A,0
+Sam,Sockwell,CF,MAHO,ML,0
+Ira,Moon,1B,SF,A,0
+Jimmy,Pestka,1B,ALTO,A,0
+Christian,Russell,CF,RICH,A,0
+Pearson,Kelley,LF,LOUI,A,0
+Cornell,Snipes,CF,FRIS,AAA,0
+Eric,Henthorn,RF,LYNC,AA,0
+Frederick,Thornton,P,Free Agent,A,1
+Terry,Goldberg,P,LOUI,ML,8
+Alfred,Barnes,SS,ELP,AA,0
+Piper,Maru,P,ROME,A,5
+Larry,June,2B,SF,AAA,0
+Keith,Salehi,P,IDA,AA,0
+Garrett,Colon,P,AUCK,AAA,0
+Eric,Heningburg,C,ROCK,AAA,0
+Morgan,Bowdre,1B,MAIN,ML,0
+Shane,Hariri,P,TEX,A,11
+Jason,Franco,P,FRIS,AA,0
+Cedric,Corns,P,CHES,ML,11
+Mark,Hodgkinson,P,WISC,ML,8
+Jim,Carvalho,SS,LOUI,ML,2
+John,Ryon,C,NORW,AAA,0
+Harry,Orscheln,P,CASP,A,10
+Jose,Mitchell,P,WISC,AAA,0
+Tom,Ward,P,PEOR,ML,0
+Mike,Cumbo,P,ROCK,ML,1
+Harry,Bormann,P,PEOR,ML,0
+Joe,Bessette,RF,PORT,ML,5
+Wesley,Gongalves,SS,IDA,AA,0
+Woody,Wilson,1B,PORT,ML,5
+Elijah,Koval Jr,2B,FRIS,ML,8
+Hayden,Farmer,CF,IDA,ML,3
+Anthony,Alfred,RF,PORT,AA,0
+Boyd,Schroeder,P,BANG,A,5
+Jordan,Placencia,3B,FRIS,ML,0
+Davis,Clark,P,FRIS,ML,0
+Garrett,Haugen,P,AUCK,A,2
+Whiskey,Aleman,P,PORT,AA,0
+Adrian,Kulakowski,C,IDA,ML,1
+Bill,Sprecher,C,SF,ML,0
+Christopher,Leyua,P,EDMO,ML,3
+Jacob,Knepel,LF,OMA,ML,6
+Carl,Statham,1B,CASP,AAA,0
+Neil,Rickers,2B,ELP,AA,0
+Ryan,Jax,C,LYNC,ML,1
+Mike,Tippett,P,IDA,ML,1
+Shorty,Jones,P,EDMO,ML,10
+Anthony,Engman,C,ROCK,AAA,4
+Jeffrey,Law,P,ROCK,ML,1
+Ivory,Fries,P,BANG,AAA,0
+Sol,Paquin,1B,CASP,ML,2
+Fox,McCloud,SS,CHES,ML,6
+Jeffrey,Farmer,P,Free Agent,A,9
+Daniel,Calhoun,CF,ROCK,AA,0
+Dave,Inglis,P,TEX,AAA,0
+Charlie,Salvant,P,SCRN,ML,3
+Chris,William,P,BANG,A,5
+Del,Griffith,P,CASP,ML,8
+Jimmie,Arnott,P,IDA,AA,0
+Scott,Neville,CF,IDA,AAA,0
+George,Acedo,RF,AUCK,A,7
+Tom,Walder,LF,Free Agent,A,9
+John,Corbin,P,LAKE,ML,3
+Wendell,Beck,P,OKC,AAA,0
+Harold,Pabey,P,EDMO,A,7
+Francis,Bradley,C,FRIS,AAA,0
+Dave,Savage,C,IDA,AA,0
+William,Stennis,3B,LAKE,ML,13
+Curtis,Grizzell,LF,RICH,A,4
+Victor,Overmyer,C,NORW,AA,0
+Sandy,Koufax,P,ROME,AA,0
+Shane,Kohlmeier,RF,ELP,ML,4
+Dan,Johnston,RF,SUGR,ML,0
+Vincent,Donadio,P,PORT,ML,1
+Latka,Gravas,P,RICH,AAA,0
+Rich,Richard,2B,PORT,ML,7
+Eddie,Dominque,SS,AUCK,AA,0
+Jamison,Thompson,LF,DAY,AA,0
+Wilson,Behringer,P,BANG,ML,0
+Franklin,Annen,P,PORT,ML,8
+Pi,Patel,P,NORW,ML,2
+Dominic,Spataro,3B,EDMO,ML,12
+Augie,Garrido,P,FRIS,ML,8
+Gary,Lorts,1B,OKC,A,5
+Jason,Waynick,LF,DAY,ML,0
+Carlos,Terrell,P,DAY,ML,1
+Lyle,Jenson,RF,CASP,AAA,0
+Ibrahim,Moizoos,LF,RICH,AAA,0
+Kelvin,Herrmann,RF,MAHO,AAA,0
+Joe,Pikul,2B,IDA,AA,0
+Lowell,Heisel,3B,MAIN,AA,0
+Bryce,Jones,C,IDA,ML,2
+John,Polanco,SS,LAKE,AAA,0
+James,Re,P,OMA,ML,2
+Brad,Goodman,P,IDA,ML,3
+Albert,Sanchez,CF,IDA,AAA,0
+Jefferson,Skains,P,Free Agent,A,8
+Kimo,Humes,LF,OMA,ML,3
+Dave,Votta,P,MIDL,AA,0
+Rich,Waters,P,RICH,AA,0
+Jack,Reed,P,PORT,AAA,0
+Henry,Parker,3B,IDA,AA,0
+Travis,Banks,RF,MAHO,AAA,0
+Stanley,McCawley,1B,IDA,AA,0
+Garry,Adcock,P,CHES,AAA,0
+Archie,Ellis,RF,TEX,AAA,0
+Angel,Eggleston,1B,ROME,ML,2
+Barney,Miller,2B,FRIS,AAA,0
+Christian,Eickhoff,P,FRIS,AAA,0
+Charles,Patterson,SS,IDA,AAA,0
+Wayne,Donchez,2B,ROCK,AAA,0
+Laurence,Young,P,WISC,AAA,0
+Nickolas,Salcedo,2B,WISC,AAA,0
+Melvin,Travis,SS,Free Agent,A,14
+Ivory,Hickernell,RF,CASP,AAA,0
+Dave,Marlborough,LF,WISC,AA,0
+Matthew,Klein,RF,ALTO,ML,5
+Porter,Miller,P,IDA,AAA,4
+Lenny,Briscoe,P,CASP,A,8
+Chance,Williams,P,Free Agent,A,2
+Amado,Stanford,P,MIDL,AAA,0
+Paul,Acosta,RF,SCRN,AAA,0
+Arthur,Brazzell,P,Free Agent,A,0
+Killer,Tofu,P,PORT,ML,1
+Issac,Yue,P,ALTO,AA,0
+Emmanuel,Atwell,P,PEOR,AAA,2
+Brian,Valles,P,SCRN,AA,0
+Roger,Aaron,CF,SUGR,ML,8
+Joe,Ashby,P,ALTO,ML,3
+Andrew,Rice,2B,CHES,A,18
+John,Charles,2B,LOUI,AA,0
+Bill,Franklin,SS,MAHO,ML,6
+Kyle,Booker,1B,FRIS,AAA,0
+Anthony,McNeill,2B,SF,AA,0
+Jimmie,Chavers,1B,SCRN,AAA,1
+Douglas,Moher,CF,PORT,ML,10
+Keith,Mordue,2B,CHES,AAA,0
+Jason,Walker,3B,DAY,ML,5
+Harris,Shank,P,MIDL,ML,1
+Barnes,Noble,P,CASP,ML,2
+Alec,Hardison,2B,HILL,ML,11
+Clarenzo,Hernandez,P,LOUI,AAA,0
+Filiberto,Supnet,LF,WISC,AA,0
+Manuel,Price,3B,CASP,AAA,0
+Jason,Lajoie,P,FRIS,AAA,0
+Luis,Tyler,P,MIDL,ML,3
+Mike,McDonald,P,ELP,ML,8
+Benjamin,Sleighter,P,TEX,ML,3
+Timothy,Maller,SS,SCRN,AAA,0
+Elden,Whitehead,P,CASP,ML,5
+Jim,McMurray,LF,LOUI,AAA,0
+Larry,Gaubert,P,FRIS,ML,10
+Charlie,Bellario,LF,CASP,AA,0
+Ed,Langley,2B,LOUI,AAA,0
+Jim,Hodgman,P,ALTO,ML,7
+Ralph,Thompson,CF,PEOR,ML,0
+Craig,Little,3B,WISC,AA,0
+Jesse,Acevedo,P,OMA,AAA,0
+Guillermo,Palacios,P,SCRN,ML,2
+Tom,Skidmore,CF,HILL,AA,0
+Val,Cagle,P,FRIS,ML,8
+Nathan,Thompkins,P,WISC,AAA,0
+Pizza,Wow,P,ELP,ML,4
+Jaime,Hall,RF,TEX,ML,9
+Jeffrey,Perez,P,LOUI,AA,0
+Karl,Farbman,1B,MAHO,AAA,7
+Ben,Lawrence,C,FRIS,ML,6
+Geoff,Peterson,3B,SCRN,ML,5
+Edwin,Graces,1B,AUCK,AAA,0
+Jose,Sanders,3B,ELP,ML,5
+Steve,Lahr,P,ALTO,AA,0
+Miguel,Rivera,P,SCRN,AAA,0
+Zach,Cole,RF,TEX,A,8
+Lance,Pozzuoli,LF,ROCK,AAA,0
+Darryl,Rossi,P,DAY,A,4
+Kelly,Minjarez,RF,SCRN,AA,0
+Alberto,Bunn,LF,Free Agent,A,4
+Sol,Brown,3B,ELP,A,5
+James,Lewis,CF,SCRN,AA,0
+Louis,Brosnahan,LF,LAKE,A,9
+Todd,Channing,P,PORT,ML,6
+Morgan,Thompson,P,EDMO,ML,1
+Seth,Gecko,3B,CASP,ML,5
+Tom,Shaffer,P,ROCK,ML,5
+Glenn,Bonet,P,ROME,ML,6
+Seven,Costanza,P,IDA,A,4
+Brett,Sorensen,P,TEX,A,10
+Bob,Herrera,2B,OKC,ML,8
+Kevin,Boomershine,LF,FRIS,AAA,0
+Jeffrey,Horner,P,TEX,A,11
+Dave,Guadalupe,P,TEX,AA,0
+William,Shea,C,SCRN,AA,0
+John,Madrid,P,ALTO,AA,0
+Steve,Young,LF,ALTO,AA,0
+Bill,Schlinger,P,AUCK,AA,0
+Regan,Bloodworth,CF,FRIS,ML,5
+Horace,Chugg,P,ALTO,AA,0
+Lowell,Murrish,SS,FRIS,ML,7
+Sophocles,Fox,RF,ELP,ML,13
+Jack,Burton,3B,LYNC,ML,0
+Buck,Gabourel,2B,SCRN,ML,2
+Cheech,Marin,1B,OKC,A,5
+Jay,Reimenschneider,P,EDMO,ML,10
+Vance,Rivera,CF,SCRN,AA,0
+Bob,Pendry,P,FRIS,AAA,0
+Zeb,Supry,LF,IDA,AAA,0
+Carlos,Hernandez,LF,ELP,AA,0
+Dave,Nordyke,3B,CASP,AA,0
+Douglas,Bonner,2B,IDA,AAA,0
+Max,Luhman,LF,SCRN,AAA,0
+Lech,Walesa,C,EDMO,AAA,0
+Joseph,Israel,P,LAKE,AA,0
+Mike,Young,1B,ROCK,AA,0
+Davey,Beaver,C,OKC,AA,0
+Andrew,Case,3B,Free Agent,A,11
+Mike,Gholston,P,FRIS,ML,0
+Roger,Sanchez,1B,ROCK,ML,8
+Gordon,Stanger,P,FRIS,ML,1
+Randy,Watkins,2B,MIDL,AAA,0
+Karl,Godwin,2B,MIDL,ML,1
+Durance,Vile,SS,CASP,ML,0
+Wendell,Merrill,P,Free Agent,A,7
+Ken,Perkins,P,TEX,AAA,0
+Augie,Johnson,P,CHES,AA,0
+Bob,Caruso,P,WISC,ML,13
+Jed,Prast,P,IDA,AAA,2
+Bobby,Urquidez,C,LYNC,A,3
+Paul,Clanton,P,ALTO,ML,5
+Manuel,Britt,LF,WISC,AAA,0
+Joe,Brazil,P,Free Agent,A,2
+Maximo,Herdt,CF,PEOR,AA,0
+Jesse,Duke,P,MAIN,ML,3
+Steve,Mekee,1B,SCRN,AAA,0
+Archer,Fletcher,LF,OMA,AAA,0
+Rob,Buckingham,P,OMA,AAA,0
+Gary,Hoffman,1B,SF,AAA,0
+Jack,Marshak,P,ROCK,ML,7
+Carrol,Severy,1B,IDA,AA,0
+Sammy,Stewart,C,HILL,AA,0
+John,Forseth,C,WISC,ML,8
+Randy,Philbrook,P,SCRN,ML,2
+Lenny,Ranft,P,OMA,ML,7
+Thomas,Hert,P,MAHO,ML,8
+Tim,Wilbur,3B,MAIN,ML,0
+Walter,Roark,P,WISC,AAA,0
+Saul,Petersen,C,SF,AA,0
+Hippy,Birkil,P,OMA,ML,11
+Hobie,Werts,P,OMA,AA,0
+Gregorio,Barefoot,P,MIDL,ML,1
+Bill,Sennett,C,SCRN,AAA,0
+Justin,Because,LF,ROCK,ML,1
+Jimmy,Willard,P,Free Agent,A,6
+Tex,Carter,P,HILL,AAA,0
+Pete,Nguyen,1B,HILL,AA,0
+Jimmie,Mitchell,P,MAHO,AAA,0
+Brian,Edminster,1B,EDMO,AAA,0
+Bill,Sweeney,LF,IDA,AAA,0
+Anton,Vrieze,P,ROCK,ML,6
+Mike,Skarupa,2B,OMA,AA,0
+Joe,Acoba,P,MAHO,ML,13
+Stew,Veres,P,ALTO,ML,5
+Ben,Pierotti,RF,MAIN,AAA,0
+Terry,Cruise,P,LAKE,A,5
+Minh,Shelor Jr,3B,PORT,ML,9
+Jason,Wright,C,SCRN,AAA,0
+Kelly,Moczygemba,SS,RICH,ML,0
+Eric,Schikora,P,HILL,AA,0
+Jimmy,Appel,P,Free Agent,A,5
+Jesus,Gaston,P,ALTO,ML,2
+Pumpkin,Surprise,P,CASP,A,5
+Ignacio,Varga,LF,WISC,A,12
+Herbert,Shimek,2B,FRIS,AAA,0
+Bert,Pearce,P,WISC,AA,0
+Brian,Rippin,P,Free Agent,A,4
+Rodger,Yanke,P,Free Agent,A,5
+Miles,Dalrymple,RF,OMA,ML,9
+Luis,Pelosi,P,LOUI,AA,0
+George,Nissen,RF,IDA,A,9
+Troy,Wilson,P,CHES,ML,8
+Nolan,Patel,P,TEX,A,10
+Long,Lunderville,LF,CHES,AAA,0
+Mongo,McMichael,P,TEX,A,9
+Willie,Gaston,RF,EDMO,ML,6
+Kyrie,Naomi,RF,MIDL,ML,7
+Juan,During,CF,PORT,ML,6
+Elton,Calamia,LF,FRIS,AAA,0
+Joe,McNiell,LF,SF,ML,0
+Will,McMichael,P,ELP,ML,3
+Chris,Edgar,P,HILL,A,8
+Jason,Fitzmaurice,P,FRIS,ML,8
+Justin,Fuson,P,Free Agent,A,6
+Seth,Kelly,3B,TEX,A,9
+Ren,Lewis,CF,OMA,A,12
+Antoine,Peregrino,P,ROCK,A,4
+Derrick,Anderson,CF,BANG,AAA,0
+Joe,Baillargeon,P,BANG,AA,0
+Trip,Hawkins,P,BANG,AA,0
+Vernon,Bason,P,BANG,AAA,0
+Harry,Beeks,C,BANG,ML,6
+Qarl,Bert,C,BANG,ML,1
+Tito,Beshero,C,BANG,AA,0
+Luke,Cambra,P,BANG,ML,6
+Harold,Cates,SS,BANG,AA,0
+Ramon,Colantuono,1B,BANG,AA,0
+Nester,Contra,P,MAIN,A,7
+Tom,Culpepper,2B,BANG,AA,0
+Raul,Degler,P,BANG,ML,4
+John,Elwood,CF,BANG,ML,1
+Chester,Engebretsen,P,IDA,A,8
+Tracy,Frey,1B,BANG,AAA,0
+Roger,Gosha,P,BANG,AAA,0
+Dave,Gotchy,C,BANG,AA,0
+George,Griffith,RF,BANG,AA,0
+Cannonball,Gus,P,BANG,AAA,0
+Tyrone,Hammond,P,HILL,ML,11
+Teeter,Harris,C,BANG,AAA,0
+Willie,Hilton,2B,BANG,ML,0
+Jackie,King,P,BANG,AAA,0
+Dann,Kirkeby,2B,BANG,AAA,0
+Matthew,Livingston,P,BANG,AA,0
+Arthur,Lorts,2B,BANG,ML,0
+Bob,Lucchini,P,Free Agent,A,8
+Noodles,MacIntosh,LF,BANG,ML,3
+Deuce,Manoogian,LF,BANG,ML,8
+Arthur,Martinez,C,Free Agent,A,3
+Mike,McBride,3B,BANG,AA,0
+Brandon,McPherson,P,TEX,A,14
+Arnold,Migdal,CF,BANG,ML,0
+Eddie,Miller,3B,BANG,AAA,0
+Rickey,Miller,CF,BANG,ML,1
+Simon,Morris,1B,Free Agent,A,2
+Glenn,Nelson,P,ELP,A,5
+Jose,Ok,LF,BANG,AAA,0
+Samuel,Pegues,1B,BANG,AA,0
+Clifford,Pinder,RF,BANG,ML,0
+Joe,Powell,LF,BANG,AA,0
+Dave,Randolph,P,BANG,AA,0
+Eugene,Sanz,P,BANG,A,5
+Dave,Scott,CF,BANG,ML,4
+Bryan,Sharko,SS,BANG,ML,5
+Christopher,Sharma,1B,Free Agent,A,4
+Joe,Spidell,1B,BANG,ML,3
+Joe,Stickles,SS,BANG,AAA,0
+Lou,Sturgis,3B,SUGR,ML,6
+Paul,Triola,RF,FRIS,ML,5
+Victor,Tritto,P,BANG,AAA,0
+Tom,Tucker,P,BANG,AA,0
+Jackie,Welles,P,BANG,ML,5
+Ed,Angelo,1B,DAY,ML,1
+Alfonzo,Aponte,RF,DAY,AAA,0
+Todd,Barthelmes,LF,DAY,AAA,0
+Clarence,Breeden,P,TEX,A,11
+Bill,Brehm,P,DAY,AAA,0
+Gary,Carrillo,3B,BANG,AAA,0
+Dave,Cather,1B,AUCK,AA,0
+Oscar,Craigen,P,DAY,ML,4
+Kendall,Dain,P,BANG,A,3
+John,Dougherty,3B,DAY,AA,0
+Woodrow,Flowers,P,DAY,A,13
+Harold,Gaudio,P,Free Agent,A,10
+Spiders,Georg,P,OKC,A,13
+Lance,Graham,P,DAY,AAA,0
+Barbeque,Hat,P,NORW,A,11
+John,Hetherington,RF,DAY,AAA,0
+Brian,Hicks,RF,DAY,ML,2
+Jim,Hochnadel,P,DAY,ML,3
+Campbell,Howard,P,DAY,ML,1
+Tanjiro,Kamado,LF,TEX,A,13
+Jerry,Keefner,P,DAY,ML,7
+Shawn,Kruse,P,DAY,ML,1
+Nap,Lee,2B,DAY,AAA,0
+Joe,Liapis,P,DAY,AAA,0
+Mike,Lira,CF,SCRN,AAA,0
+Russell,Maddox,P,Free Agent,A,1
+Glover,Massett,1B,DAY,AAA,0
+John,Miller,3B,DAY,AAA,0
+Adrian,Monk,P,EDMO,A,14
+Steven,Nelson,3B,DAY,AAA,0
+Rube,Perez,P,ROCK,A,3
+Avery,Reece,P,DAY,AAA,0
+Jim,Schaub,2B,DAY,AA,0
+Bob,Vasquez,SS,DAY,ML,11
+Johnnie,Verrill,C,DAY,ML,4
+Jordan,Waldenmyer,CF,ROME,A,4
+Jason,Wellings Jr,CF,CHES,A,5
+Ernie,Alsobrook,P,LOUI,ML,9
+Charlie,Ames,SS,ROCK,ML,7
+Rich,Anderson,RF,NORW,ML,5
+Joshua,Beckers,P,NORW,ML,1
+Joe,Bindrup,SS,NORW,ML,3
+Carl,Brim,P,OKC,A,14
+Ben,Fung,3B,MIDL,A,5
+James,Golightly,CF,NORW,AA,0
+Stewie,Griffin,P,MIDL,ML,4
+Roberto,Gulley,P,FRIS,ML,4
+Frederick,Hill,C,NORW,AA,0
+Herman,Hoelscher,P,NORW,ML,4
+Jesus,Illie,P,SCRN,A,5
+Ben,Johnston,SS,Free Agent,A,4
+Gustavo,King,SS,NORW,AA,0
+Pete,Kosmicki,P,NORW,ML,1
+John,Krueger,CF,NORW,AA,0
+Ignacio,Lerno,P,NORW,AA,0
+Jim,Mabry,CF,NORW,AA,0
+Glenn,McCracken,CF,NORW,AAA,0
+Ron,McDonald,LF,NORW,AA,0
+Turk,McIntyre,P,NORW,ML,2
+Dewey,Nary,3B,NORW,AAA,0
+Glen,Nichols,2B,NORW,AAA,0
+Mike,Roafoan,2B,NORW,AAA,0
+Raul,Romano,2B,NORW,AA,0
+Goat,Scott,CF,NORW,AA,0
+Rogelio,Scott,3B,NORW,ML,1
+John,Selleck,CF,MIDL,ML,1
+Winston,Smith,P,NORW,AAA,0
+Jon,Snow,LF,NORW,ML,5
+John,Thompson,P,NORW,ML,3
+Clyde,Traxson,P,NORW,AA,0
+Dave,Treptow,CF,MAIN,ML,9
+Pete,Villalobos,2B,NORW,ML,2
+Wallace,Wallace,P,NORW,ML,1
+Mark,Watney,3B,NORW,A,14
+Quincy,Bierbower,2B,ROME,AA,0
+Archie,Brewer,P,ROME,AA,0
+Allan,Brooks,RF,ROME,AA,0
+Ed,Brown,LF,ROME,ML,2
+Herman,Bue,SS,ROME,AAA,0
+Ferris,Bueller,RF,ROME,AAA,0
+Ed,Burns,SS,PORT,ML,6
+King,Clancy,3B,ROME,AA,0
+John,Crain,P,ROME,ML,8
+Johnny,Dodd,P,ROME,AAA,0
+John,Doe,LF,ROME,ML,2
+Damien,Dudney,P,ROME,AA,0
+George,Ellner,2B,ROME,AAA,0
+Paul,Fields,P,ROME,AA,0
+Samwise,Gamgee,P,ROME,ML,2
+Mike,Gentry,LF,ROME,ML,0
+Jason,Goulden,1B,ROME,AA,0
+Terrance,Hegstad,LF,DAY,ML,9
+Marty,Hoey,P,ROME,ML,3
+Doc,Holliday,P,ROME,A,9
+Willy,Jasmin,C,ROME,ML,3
+Carl,Lowe,RF,ROME,AAA,0
+Raistlin,Majere,P,ROME,AAA,0
+Roosevelt,Maruyama,P,FRIS,ML,5
+Bill,McCray,1B,ROME,ML,5
+Cornelius,McIntosh,P,ROME,ML,1
+Baader,Meinhof,P,ROME,ML,1
+Jose,Melching,SS,PEOR,ML,4
+Lawrence,Monterroso,2B,ROME,ML,2
+Ernesto,Muniz,P,ROME,A,5
+Tom,Olvera,CF,LAKE,A,8
+Ben,Perera,CF,ROME,AA,0
+Robert,Santiago,P,DAY,ML,4
+Jack,Snider,CF,ROME,ML,1
+Joshua,Stewart,P,ROME,AA,0
+Isaac,Tunney,SS,EDMO,A,12
+Israel,Turkel,C,ROME,ML,1
+Joe,Willis,P,ROME,AA,0
+Shinrin,Yoku,P,LOUI,ML,8
+Efren,Yoshizawa,RF,ROME,AAA,2
+John,Adam,P,RICH,ML,2
+Sean,Aguilar,C,RICH,AAA,0
+Kevin,Aiken,RF,RICH,AAA,0
+Arnold,Anderson,3B,RICH,ML,1
+Rene,Appleby,P,RICH,AAA,0
+Mike,Barresi,P,RICH,AA,0
+Tony,Bearse,1B,RICH,AAA,0
+Daniel,Bergholm Jr,P,MAIN,ML,1
+General,Booty,P,RICH,AAA,0
+Manny,Bothans,C,NORW,AAA,0
+Tyrone,Bradigan,3B,RICH,AA,0
+Cedric,Byrd,1B,RICH,ML,7
+Emmanuel,Cain,P,RICH,AAA,2
+Colton,Campbell,P,RICH,ML,6
+Ronnie,Clark,C,RICH,ML,3
+Jacob,Dallavalle,2B,RICH,AAA,0
+Denny,Diaz,P,RICH,ML,4
+Jose,Dibartolomeo,LF,RICH,AAA,0
+Bill,Dominique,1B,RICH,AA,0
+Pampero,Firpo,P,MAIN,ML,1
+Matt,Gaudet,C,RICH,AAA,0
+Bradley,Gruenwald,3B,RICH,AAA,0
+Dan,Hastings,P,RICH,AA,0
+Manny,Heathcock,P,CASP,AAA,0
+Shawn,Hill,SS,RICH,AA,0
+Dave,Huskin,1B,Free Agent,A,6
+Tanka,Jahari,2B,RICH,ML,3
+Shawn,Janousek,P,RICH,ML,10
+Torpedo,Jones,P,Free Agent,A,0
+Marcel,Jorgensen,P,RICH,AA,0
+Dale,Juckett,P,RICH,AA,0
+Tyrone,Jungwirth,LF,RICH,AA,0
+Bryan,Kim,LF,RICH,AA,0
+Matt,Kinney,3B,RICH,AA,0
+Neil,Knox,P,LOUI,ML,12
+Leo,Kovalsky,P,RICH,AA,0
+Jerold,Lambdin,P,RICH,AA,0
+Nolan,Lawing,P,RICH,AAA,0
+James,Mallen,P,RICH,AA,0
+Sleve,McDichael,SS,RICH,ML,10
+Milt,Messer,P,FRIS,ML,4
+Santiago,Milbrath,CF,RICH,AA,0
+Arthur,Miller,P,SUGR,A,5
+Alton,Morales,P,RICH,ML,2
+Bill,Morris,P,RICH,AAA,0
+Munetaka,Murakami,3B,RICH,ML,2
+Richard,Nguyen,P,SF,ML,6
+Sam,Nickels,P,RICH,AA,0
+Rob,Padfield,RF,RICH,AAA,0
+Dave,Posey,2B,Free Agent,A,2
+Louis,Prater,C,RICH,AA,0
+Cameron,Repetti,P,LAKE,A,10
+Maxwell,Rumer,2B,RICH,AA,0
+Patrick,Schwarz,1B,RICH,AAA,0
+John,Soules,SS,RICH,AA,0
+Barry,Sweet,CF,RICH,AAA,0
+Elijah,Teitsworth,P,RICH,ML,5
+Vis,Telimus,P,RICH,ML,8
+Mike,Tumaneng,P,RICH,AAA,0
+Lucius,Vorenus,CF,CASP,ML,5
+Wayne,Watson,C,RICH,AA,0
+Eldon,Wiggins,P,RICH,AA,0
+Scott,Willaims,C,RICH,AA,0
+Don,Woodcock,RF,SUGR,ML,5
+Foots,Zeckelman,RF,RICH,AAA,0
+Alvin,Boyle,P,AUCK,AAA,0
+Will,Scott,LF,AUCK,AAA,0
+Dusty,Wicks,P,Free Agent,A,12
+Blondie,Johnson,P,AUCK,AA,0
+Rich,Beckham,P,AUCK,ML,2
+Thomas,Ruden,CF,AUCK,AAA,0
+Beefy,Bothan,C,AUCK,ML,1
+Santos,Wells,3B,AUCK,AA,0
+Wayne,Bethea,P,AUCK,AA,0
+Kaynard,Canning,LF,AUCK,AA,0
+Darryl,Mello,P,AUCK,ML,7
+John,Jentzen,P,AUCK,AA,0
+John,Callanan,C,AUCK,AA,0
+Trevor,Pov,P,AUCK,ML,11
+Julius,Caesar,CF,AUCK,ML,1
+Frank,Tep,P,AUCK,AA,0
+Norman,Chou,P,AUCK,AA,0
+Willie,Bleich,RF,Free Agent,A,10
+George,Acree,P,AUCK,ML,2
+John,Robinson,1B,AUCK,AA,0
+John,Creel,SS,AUCK,A,5
+Demonte,Dupree,P,AUCK,ML,3
+Norm,Kocon,P,AUCK,AA,0
+Dave,Allocco,C,AUCK,ML,0
+Earl,Boyd,LF,AUCK,ML,10
+Jay,Call,P,PEOR,ML,6
+John,Mueller,SS,RICH,AA,0
+Korey,Guyette,C,Free Agent,A,1
+Kenny,Belay,LF,AUCK,AA,0
+Josh,Gemme,P,WISC,AA,0
+Jim,Dandy,P,AUCK,AA,0
+Charlie,Lucas,P,AUCK,ML,5
+William,Shakespeare,P,SUGR,A,6
+Mike,East,P,AUCK,AA,0
+Carlton,Vitello,2B,AUCK,AAA,0
+Terence,Lopez,P,AUCK,AAA,0
+Tim,Cuffie,P,DAY,ML,7
+Raul,Wagner,P,PORT,A,6
+Jacob,Hamm,LF,MAHO,ML,0
+Dave,Prosperie,CF,AUCK,AA,0
+Joe,Montreuil,P,AUCK,AAA,0
+Jose,Denson,P,AUCK,ML,1
+James,Watkins,RF,AUCK,AA,0
+Alfred,Anderson,P,LYNC,ML,2
+Anthony,Delap,3B,Free Agent,AAA,0
+Jacob,Horton,RF,Free Agent,AAA,0
+Lee,Archer,2B,LYNC,AA,0
+T.J.,Slagowski,SS,Free Agent,AAA,0
+Mike,Dupp,P,LYNC,AA,0
+Joe,Ristig,P,ELP,A,4
+Kris,Kringle,RF,LYNC,ML,7
+Paul,Amaral,2B,LYNC,AA,0
+Harry,Bosch,P,LYNC,AAA,0
+Goldie,Wilson,P,LYNC,ML,4
+Dave,Martin,1B,LYNC,AA,0
+Billy Ray,Valentine,P,LYNC,AAA,0
+Don,Dufort,1B,LYNC,AA,0
+Sam,Heath,RF,LYNC,ML,0
+Zander,Halls,SS,LYNC,AAA,0
+Alan,Morgan,P,LYNC,ML,6
+Rodolfo,Johengen,LF,LYNC,AA,0
+Mike,Robinson,P,LYNC,ML,0
+Burton,Moore,CF,LYNC,AAA,0
+Chris,McCombs,LF,Free Agent,AAA,0
+Max,Cady,1B,LYNC,AA,0
+Jim,Miramontes,2B,LYNC,AAA,0
+Jim,Pora,RF,LYNC,ML,1
+J.J.,Hinton,1B,LYNC,AA,0
+John,Hughes,P,LYNC,ML,1
+Antony,Webb,P,LYNC,AA,0
+Eddie,Murray,LF,LYNC,AA,0
+Moses,Cannon,1B,LYNC,AA,0
+Roger,Winget,3B,LYNC,AAA,0
+Cecil,Zavalza,RF,LYNC,AAA,0
+Moe,McAlpin,LF,LYNC,AA,0
+Trevor,Kloth,2B,LYNC,ML,8
+Rich,Coontz,P,BANG,A,5
+Toots,Dreyfuss,3B,LYNC,AAA,0
+Eddie,Burns,P,LYNC,ML,7
+Ray,Horsfall,P,LYNC,ML,5
+Rich,Tarvin,1B,LYNC,AAA,0
+Shaun,Gucman,SS,HILL,ML,8
+Arnoldo,Plummer,LF,LYNC,AAA,0
+Nick,Ceaser,SS,Free Agent,AAA,0
+Henry,Aujla,SS,LYNC,AAA,0
+Dave,Banister,P,LYNC,A,4
+Alvin,Adams,1B,LYNC,ML,4
+Dean,Peck,C,SCRN,ML,7
+Ray,Pavelko,RF,LYNC,AA,0
+John,McWhorter,3B,LYNC,ML,2
+Nathaniel,Drake,2B,LYNC,ML,1
+Rene,Humphreys,P,LYNC,ML,2
+Pedro,Collins,LF,LYNC,AA,0
+Eric,Schlicker,RF,LYNC,AA,0
+Alfred,Jarvis,2B,HILL,AAA,1
+Calvin,Boettger,LF,LYNC,ML,1
+Douglas,Sterlace,1B,LYNC,AAA,0
+Dave,Callis,P,SF,ML,13
+Jack,Crowley,SS,Free Agent,AA,0
+Randy,Bachman,C,MAIN,A,6
+Fritz,Varughese,2B,MIDL,ML,2
+Taran,Vandewater,1B,OKC,A,5
+Steven,Cody,P,MIDL,ML,3
+Patrick,Pongkhamsing,RF,MIDL,AAA,0
+Jimmy,Schindler,SS,ALTO,ML,11
+Fairweather,Johnson,RF,MIDL,ML,2
+Montgomery,Henderson,3B,MIDL,ML,1
+Larry,Buchholz,3B,MIDL,AAA,0
+John,Sampson,RF,MIDL,AAA,0
+Chris,Gallinari,P,MIDL,ML,2
+Moses,Lauro,P,MIDL,ML,2
+Shannon,Chacon,P,MIDL,ML,4
+Dawson,Blue,3B,MIDL,AAA,0
+SilentRain,Espinoza,LF,Free Agent,A,9
+Will,Nelms,SS,MIDL,AA,0
+Logan,Pickelsimer,LF,MIDL,A,8
+Brian,Hougham,P,MIDL,AAA,0
+Marcus,Johnson,LF,MIDL,AAA,0
+Lance,Henderson,LF,MIDL,AA,0
+Kenny,Gajewski,1B,MIDL,ML,12
+Christopher,Ramsey,C,MIDL,AA,0
+Don,Moles,CF,MIDL,AAA,0
+Dave,Zatarain,3B,MIDL,AA,0
+Dennis,Disbrow,C,MIDL,ML,1
+Jeffrey,Taylor,P,MIDL,AAA,0
+Rudy,Meylan,P,MIDL,AAA,0
+Jim,Crumrine,P,MIDL,A,8
+Ray,Mosher,P,MIDL,AAA,0
+Bob,Selvy,3B,MIDL,AAA,0
+Keagan,Rothrock,P,MIDL,ML,5
+Tallen,Edwards,C,MIDL,ML,4
+Owen,Chicca,P,MIDL,AA,0
+Phil,Stone,P,MIDL,AA,0
+Preslee,Downing,P,MIDL,AA,0
+Cal,Schroll,P,MIDL,ML,1
+Taylor,Tuck,C,MIDL,AAA,0
+Anthony,Morris,P,MIDL,AA,0
+Armando,Pena,CF,MIDL,AA,0
+Ed,McLaney,2B,MIDL,AAA,0
+Hugh,Caraker,SS,MIDL,AAA,0
+Joe,Call,P,MIDL,AAA,0
+Thomas,Bennett,SS,PEOR,ML,2
+Jess,Willey,RF,LOUI,A,2
+Steve,Voorheis,P,PEOR,ML,3
+Rocky,Kang,P,PEOR,AAA,0
+Larry,Dewitt,P,PEOR,AAA,0
+Joe,Boykins,2B,PEOR,ML,0
+Manny,Cooper,P,PEOR,ML,2
+Henry,Maker,P,PEOR,ML,10
+Dan,Gonzalez,3B,PEOR,AA,4
+Ben,Stern,P,PEOR,ML,0
+Courtney,Colclasure,P,PEOR,AAA,0
+Cody,Fryer,3B,PEOR,AAA,0
+Kerry,Fox,LF,PEOR,ML,0
+Steve,Gaffey,P,WISC,A,12
+Curtis,Roberts,P,PEOR,AA,0
+Julius,Brattain,LF,PEOR,ML,1
+Jerry,Kerle,CF,MIDL,A,5
+Maurice,Neiss,P,PEOR,AAA,0
+Dennis,Manton,LF,PEOR,AAA,0
+Roy,Richards,C,PEOR,ML,0
+Joseph,Averhart,CF,PEOR,AAA,0
+Randy,Honeywell,RF,PEOR,ML,3
+Ryan,Hamann,P,PEOR,ML,3
+Ron,Stearman,P,PEOR,ML,5
+Chris,Chase,P,PEOR,AA,0
+Joseph,Mangels,LF,PEOR,ML,2
+Stanley,Dyson,P,PEOR,ML,1
+Gary,Oplinger,RF,PEOR,ML,1
+Nemo,Mensick,2B,PEOR,ML,9
+Toby,Hunt,C,PEOR,AAA,0
+Adam,High,SS,PEOR,AAA,0
+Fabian,Schemmel,P,PEOR,AAA,0
+Stewart,Shipp,LF,PEOR,ML,2
+John,Debari,RF,PEOR,AAA,0
+Jonathan,Hermann,P,PEOR,AA,0
+Harvey,Maloy,P,PEOR,AA,0
+Jeff,Collins,1B,PEOR,AAA,0
+Richard,McFadden,LF,PEOR,AA,0
+Kenneth,Tirone,P,PEOR,ML,4
+Paul,Opal,P,LAKE,A,6
+Gary,Kramer,P,PEOR,AA,0
+Shawn,Sandler,CF,PEOR,ML,1
+Jim,Voskamp Jr,P,PEOR,AAA,0
+Barry,Corbett,P,SUGR,ML,1
+Paul,Haviland,P,SUGR,AA,0
+George,Scarbrough,P,Free Agent,A,6
+Bob,Laudermilk,P,Free Agent,A,9
+Charley,Gildea,RF,SUGR,AAA,0
+Alvin,Leclerc,P,FRIS,AAA,0
+Fred,Yoes,C,SUGR,ML,7
+Courtney,Stclair,2B,WISC,A,9
+Jose,Chambers,P,SUGR,AAA,1
+Chris,Lapeyrolerie,P,ROME,ML,6
+Jose,Lee,RF,SUGR,AAA,0
+Paul,Miles,CF,SUGR,AAA,0
+Micheal,Wallace,P,Free Agent,A,5
+Michael,Fremont,2B,SUGR,ML,9
+Timothy,Shetrawski,P,SUGR,AAA,0
+Korey,Davis,LF,SUGR,AA,0
+Lester,Lewis,P,SUGR,AAA,0
+Woodrow,Lipszyc,P,SUGR,AAA,0
+Steve,Sublett,P,SUGR,ML,3
+Bert,Allred,1B,SUGR,AA,0
+Roderick,Burk,RF,SUGR,ML,3
+Kevin,Kuza,RF,SUGR,AAA,0
+Archie,Randell,CF,SUGR,ML,0
+Jason,McKinney,P,SUGR,ML,2
+Lee,Daily,CF,SUGR,AAA,0
+Mark,Lawrence,P,EDMO,ML,9
+Elton,Trapasso,P,SUGR,AAA,0
+Ed,Grimes,P,NORW,A,6
+Ken,Quirino,P,SUGR,AAA,0
+Benito,Sadler,3B,WISC,A,13
+Benji,McCollum,P,SUGR,ML,3
+Darrell,Carpenter,P,SUGR,AAA,0
+Marvin,Fair,P,SUGR,AAA,0
+Slim,Charles,SS,LOUI,AA,0
+Jason,Watkins,P,SUGR,AAA,2
+Gene,Belcher,1B,HILL,ML,8
+Bill,Farro,P,HILL,AAA,0
+Terry,Graves,P,HILL,AA,0
+Ed,Austin,C,HILL,ML,4
+Coffee,Black,P,ROME,A,15
+Dan,Ferioli,P,HILL,ML,6
+Dave,Closs,P,HILL,AAA,0
+Charlie,Green,RF,HILL,AA,0
+Wedge,Donovan,P,HILL,ML,1
+Larry,Dallas,RF,Free Agent,A,3
+Somerset,Lane,RF,HILL,ML,13
+Kelly,Sturtevant,2B,HILL,AA,0
+Bobby,Tran,P,HILL,ML,9
+Cruz,Gilday,P,HILL,AAA,0
+Malcom,McCarthy,1B,NORW,AAA,0
+Don,Pena,P,HILL,AAA,0
+Alex,McCuistion,P,HILL,ML,2
+Joel,Shanklin,P,HILL,AAA,0
+Johnny,Suyama,P,IDA,A,8
+Jody,Brandel,P,HILL,AAA,0
+Owen,Agilar,3B,HILL,AAA,0
+Maurice,Nader,SS,HILL,AA,0
+Wilbert,Williams,CF,HILL,AAA,0
+Joe,Berger,P,HILL,ML,3
+Scott,Michlin,3B,HILL,ML,11
+Forrest,Fenn,P,HILL,ML,3
+Wally,Karue,P,HILL,ML,11
+Jeffrey,Raffe,P,HILL,AA,0
+Gino,Felino,1B,HILL,ML,3
+Scott,Michaels,2B,HILL,AAA,1
+Josh,Johnson,SS,HILL,ML,1
+Tom,Shapiro,P,HILL,AA,0
+Bucky,Rideout,P,HILL,AAA,0
+Kendall,Canada,2B,TEX,ML,11
+Rob,Kier,P,HILL,AA,0
+Jose,Butts,P,HILL,AAA,0
+Frank,Wicks,P,HILL,AA,0
+Chaz,Collins,P,LAKE,ML,6
+Gary,Berkshire,1B,LAKE,ML,0
+Harlan,Pittinger,P,LAKE,AA,0
+Mayday,Montgomery,CF,LAKE,ML,10
+Butch,Maasch,P,MAIN,A,12
+Greg,Chavarria,P,ROME,A,9
+Moshe,Maple,3B,LAKE,ML,1
+Brian,Sullivan,P,LAKE,ML,5
+Ken,Russell,P,PORT,AAA,0
+Louie,Gatts,P,LAKE,AA,0
+Todd,Avila,P,LAKE,AA,0
+Michael,Skarn,3B,LAKE,AA,0
+Pretzel,Schneider,RF,LAKE,AA,0
+Trey,Henderson,SS,LAKE,ML,6
+Williams,Wallington,P,LAKE,ML,9
+Terrell,Alexender,P,ALTO,DL,6
+Mark,Scott,P,LAKE,AAA,0
+Rene,Parker,2B,LAKE,ML,4
+Ricardo,McElwain,P,LAKE,AAA,0
+Ralph,Bisaillon,P,LAKE,ML,4
+Dave,Manzanares,P,LAKE,AA,0
+Joe,Bianchi,P,LAKE,ML,7
+Rich,Sia,P,LAKE,AA,0
+Ned,Ryerson,1B,FRIS,A,11
+Mark,Mayol,2B,LAKE,AA,0
+George,Dohrmann,P,LAKE,AAA,0
+Lucas,Ahmed,2B,RICH,AAA,0
+Anthony,Silva,RF,LAKE,ML,7
+Conrad,Hart,P,LAKE,AA,0
+Lawrence,McGeachy,LF,LAKE,AA,0
+Willie,Bezak,2B,LAKE,ML,2
+Edward,Jenson,P,LAKE,AAA,0
+Jose,Moss,P,LAKE,AAA,0
+Toots,Rawls,3B,OKC,ML,7
+Don,Zurly-Light,P,OKC,ML,1
+Brady,Ziebarth,P,OKC,ML,6
+Ivan,Weast,C,OKC,A,4
+Matt,Stoltzman,2B,OKC,AAA,0
+Tom,Kander,P,OKC,AA,0
+Brodie,Lee,P,OKC,ML,4
+Phil,Dixon,P,ROCK,AAA,0
+Duncan,Williams,SS,OKC,ML,1
+Dallas,Fuhriman,RF,OKC,ML,4
+Matthew,Armstrong,P,LOUI,A,9
+Wade,Salisbury,P,OKC,ML,2
+Grover,Taylor,P,HILL,AAA,4
+Anthony,Sloan,CF,LYNC,A,7
+Danny,Budd,LF,OKC,AAA,0
+Lawrence,Rasmussen,P,OKC,ML,4
+Joshua,Dudding,CF,OKC,A,1
+Jim,Berardi,C,OKC,AAA,0
+Bray,Wyatt,P,OKC,ML,8
+Truman,Wall,1B,Free Agent,A,7
+Gene,Vanloo,P,OMA,AA,0
+Marc,Hunsley,1B,TEX,A,13
+Eric,Reeve,C,OMA,ML,6
+Mark,Wahr,P,OMA,AAA,0
+Philip,Stephenson,P,OMA,ML,12
+Jem,Finch,C,OMA,AAA,0
+Charlie,Queal,P,OMA,ML,1
+Jeremy,Avans,2B,OMA,A,7
+Neal,Eccleston,SS,OMA,ML,1
+Hardin,Hall,C,OMA,AA,0
+Zan,Allen,CF,OMA,ML,4
+Jean,Summers,2B,OMA,ML,1
+Fred,Labuda,P,SUGR,A,4
+Tim,Caicedo,P,OMA,AAA,0
+Mike,Arteaga,P,OMA,ML,7
+Daniel,Scarbrough,RF,OMA,AA,0
+Danial,Cleary,P,OMA,AA,0
+Dion,Dudzic,P,OMA,AAA,0
+Calvin,Blaha,P,Free Agent,A,6
+Augie,Tolbert,P,OMA,AA,0
+Mark,Tomaro,CF,OMA,AA,0
+RyLee,Crandall,P,OMA,ML,7
+Francis,Hackshaw,P,OMA,AA,0
+Harold,Healy,CF,OMA,AAA,0
+Nicholas,Theodorou,P,OMA,AA,0
+Billie,Sloan,SS,OMA,AA,0
+Danny,Davis,2B,OMA,AAA,0
+Walt,Labean,CF,OMA,AA,0
+Deacon,McCook,SS,Free Agent,A,14
+Mervin,Coulbourne,P,OMA,AAA,0
+Joe,Peel,P,OMA,AA,0
+Hollis,Jones,1B,OMA,ML,1
+Ahmed,Gooslin,SS,OMA,AAA,0
+Andrew,Koch,P,OMA,ML,0
+Lester,Lowe,P,OMA,AA,0
+Manuel,Tarbox,P,SF,AAA,0
+Jason,Quintanilla,CF,FRIS,AAA,0
+Mario,Martin,3B,SF,ML,1
+George,Anderson,C,SF,AA,0
+Christopher,Mangan,RF,SF,AA,0
+John,Perry,2B,ROME,A,4
+Adolph,Peguero,C,SF,AA,0
+Steve,Anderson,P,OKC,A,15
+Wally,Si,C,SF,AA,0
+Travis,Lineman,C,SF,AA,0
+Richie,Prak,SS,SF,AAA,0
+Roberto,Larimore,3B,SF,ML,3
+Heath,Hill,P,SF,AAA,0
+Stacey,Turner,1B,SF,AA,0
+Wendell,Sanders,P,SF,AAA,0
+Scott,Hearn,C,SF,ML,0
+Barry,Delacruz,RF,SF,ML,7
+Sung,Jinwoo,1B,SF,ML,9
+Joe,Flynn,SS,SF,ML,5
+Jake,Davies,LF,SCRN,ML,7
+Kelley,Skeans,2B,SF,AA,0
+Roland,Perez,2B,SF,AA,0
+Paul,Wilkerson,CF,SF,ML,2
+Charlie,Land,C,FRIS,AA,0
+Jim,Hughes,RF,SF,AAA,0
+Tom,Shelton,P,SF,AA,0
+Julio,Langeveld,2B,CHES,AAA,0
+Ben,Santos,P,Free Agent,A,3
+Tim,Jackson,2B,CHES,AAA,0
+Juan,Castro,2B,CHES,AAA,0
+Lamar,Horn,P,CHES,ML,3
+Jarvis,McCally,SS,CHES,AAA,0
+Matt,James,P,CHES,ML,3
+Benji,Demichelis,CF,CHES,AAA,0
+Dave,Stewart,1B,CHES,AAA,0
+Dwight,Thomas,1B,CHES,AA,0
+Dave,Sauer,C,CHES,AA,0
+Jim,Rutledge,CF,CHES,AAA,0
+Joe,Griffin,3B,CHES,AAA,0
+Bobby,Bonilla,RF,CHES,AAA,0
+Larry,Pothier,2B,CHES,AA,0
+Sammie,Marki,P,Free Agent,ML,10
+Brendan,Garcia,P,CHES,ML,3
+Sucre,Wolodarsky,P,CHES,ML,5
+Alberto,Axford,CF,CHES,AAA,0
+Keith,James,3B,CHES,AA,0
+Kristopher,Shields,1B,CHES,AAA,0
+Rupert,Brown,CF,CHES,AA,0
+Pedro,Salazar,1B,CHES,ML,3
+James,Chambers,LF,CHES,AA,0
+Jose,Bride,LF,CHES,ML,8
+Dustin,Burkley,P,CHES,ML,1
+Ray,Street,P,CHES,AA,0
+Dewayne,Gomez,P,CHES,ML,1
+Bob,Jenkins,P,CHES,AAA,0
+Isaac,Angalich,LF,CHES,AAA,0
+Matthew,Eveland,CF,Free Agent,A,7
+Joseph,Ringwald,3B,CHES,AA,0
+Billy,Tarone,LF,CHES,AA,0
+Raul,Allen,2B,CHES,AA,0
+Mark,Feoli,1B,CHES,AAA,1
+Jody,Lydia,LF,LOUI,AA,0
+Ronnie,Visalli,RF,LOUI,ML,4
+Hub,Burt,SS,LOUI,AAA,0
+Matthew,Fackler,2B,SUGR,ML,2
+Scott,Beers,CF,MAHO,ML,4
+Darryl,Delany,3B,LOUI,AA,0
+Keith,Morris,C,LOUI,AA,0
+Tyree,Forkin,P,LOUI,ML,0
+Cameron,Turner,P,LOUI,ML,4
+Carl,Malone,P,LOUI,ML,7
+Samuel,Pavia,P,LOUI,AA,0
+Mike,Hazelrigg,P,LOUI,AAA,0
+Mark,Glasner,P,EDMO,A,11
+Ason,Unique,3B,LOUI,ML,1
+Larry,Fowler,P,LOUI,ML,8
+Bobby,Digital,P,LOUI,AAA,0
+Brandon,Dehaan,CF,LOUI,AAA,0
+Christian,Cage,P,LOUI,ML,12
+Rob,Knecht,P,LOUI,AAA,0
+George,Norgaard,RF,LOUI,AA,0
+Stephen,Yoh,2B,LOUI,AAA,0
+Alexander,Nottage,LF,LOUI,ML,2
+Sam,Surace,CF,LOUI,AA,0
+Kyle,Ruppel,C,ROCK,A,13
+Booker,Allocco,P,DAY,A,11
+Edward,Thomsen,1B,LOUI,AA,0
+Gilbert,Palm,RF,LOUI,AAA,0
+Santiago,Rogers,P,TEX,A,10
+Abel,Barnes,P,LOUI,AA,0
+Jim,Bell,3B,MAHO,AAA,0
+Richard,Newberry,P,MAHO,ML,3
+Jose,Griffin,P,MAHO,ML,3
+Adam,Mooney,P,Free Agent,A,2
+Jacob,Sittloh,CF,MAHO,A,5
+Bryan,Wernimont,P,MAHO,ML,4
+Bill,Hickem,P,MAHO,AAA,0
+Peyton,Schnackenberg,P,Free Agent,A,13
+Dexter,Bluth,P,Free Agent,A,3
+Bill,Simmons,P,TEX,A,4
+Anibal,Elvis,CF,MAHO,AAA,0
+Michael,Lopez,RF,MAHO,AAA,0
+Larry,Chiszar,P,MAHO,AAA,0
+Jim,Levin,LF,MAHO,AA,0
+Sylvester,Jones,P,Free Agent,A,4
+Antione,Hortman,CF,MAHO,AA,0
+Leon,Cummins,P,Free Agent,A,2
+Ira,Bessard,LF,MAHO,AA,0
+Dean,Logue,P,MAHO,AAA,0
+Jerald,Hood,P,MAHO,AAA,0
+Will,Sanderman,LF,OMA,A,5
+Frederick,Bond,2B,MAHO,AAA,0
+Tracy,Badman,SS,HILL,A,13
+Jose,Delaura,C,MAHO,AAA,0
+Wesley,McNett,2B,MAHO,ML,3
+Ben,Griffin,RF,ROCK,AA,0
+Ray,Borthwick,CF,MAHO,AA,0
+Izzy,Marinucci,2B,MAHO,ML,2
+Jacob,Gigantino,P,Free Agent,A,8
+Brian,Nixon,P,MAIN,ML,3
+Stacy,Oyola,CF,Free Agent,A,12
+Jason,Myung,P,MAIN,AA,0
+Craig,Groff,LF,Free Agent,A,3
+Javier,Pacleb,P,MAIN,ML,1
+Colin,Piper,P,FRIS,A,10
+Eric,Cort,C,TEX,A,9
+Mart,Finamore,P,MAIN,AAA,0
+Nacho,Alvarez,P,MAIN,AAA,0
+Gerald,Tyus,P,TEX,A,6
+Dan,Williams,P,ALTO,ML,5
+Charlie,Bogar,C,Free Agent,A,3
+Tom,Kirwan,P,SCRN,AAA,0
+Burt,Conser,P,SCRN,AA,0
+Tim,Rodriguez,RF,SCRN,AAA,0
+Antonio,Freeborn,P,SCRN,AAA,0
+Nasir,Johnson,RF,SCRN,ML,9
+George,Hill,3B,BANG,ML,5
+Joe,Searle,P,SCRN,ML,1
+Aaron,Vazquez,C,SCRN,AA,0
+Danny,Bean Jr,P,SCRN,ML,3
+Andy,Taylor,C,SCRN,AAA,0
+Josiah,Nunez,LF,SCRN,AA,0
+Marc,Gardner,P,WISC,A,10
+Richard,Taliaferro,RF,SCRN,AAA,0
+Andrew,Dardy,C,SCRN,AAA,0
+Herbert,Hairston,LF,SCRN,ML,6
+Gregory,Negroni,P,SCRN,AAA,0
+Joel,Space,P,SCRN,AAA,1
+Dave,Crippen,RF,SCRN,AA,0
+Vernon,Millikin,LF,ROME,ML,0
+Arturo,Moore,1B,SCRN,AAA,0
+Loyd,Chavez,2B,SCRN,AA,0
+Jerry,Sheekey,P,ALTO,AA,0
+Cal,Gawron,P,ALTO,AAA,0
+Tim,Balaam,1B,ALTO,AA,0
+Ira,Peiper,P,ALTO,ML,2
+Loren,Kitzmiller,CF,ALTO,AA,0
+Alfred,Decant,P,ALTO,AAA,2
+Frank,Whyte,RF,ALTO,AA,0
+Jeffrey,White,P,Free Agent,A,8
+Marv,Napoleon,SS,ALTO,AAA,1
+Stanley,Lieberman,P,Free Agent,A,8
+Gilbert,Wood,P,SUGR,ML,1
+Martin,Todd,1B,ALTO,AAA,0
+Lawrence,Dean,RF,ALTO,AA,0
+Eugene,Ward,3B,CASP,ML,1
+Joe,Sweeney,CF,EDMO,ML,6
+Rodney,Winsley,P,Free Agent,A,4
+Wesley,Pippenger,P,AUCK,AAA,10
+Jack,Sehnert,C,EDMO,ML,12
+Ossie,Elledge,LF,EDMO,AAA,0
+Marv,Duryee,1B,EDMO,ML,2
+Cody,Essman,LF,EDMO,AAA,0
+Dennis,Weinberg,LF,EDMO,ML,0
+Jason,Green,P,EDMO,ML,4
+Bill,Martain,LF,EDMO,AA,0
+Alexander,Jones,C,ELP,ML,0
+Jody,Gathers,P,ELP,AA,0
+Goat,Crandall Jr,RF,ELP,AA,0
+Nick,Koss,P,ELP,AAA,0
+Jose,Mayner,P,BANG,A,5
+Aroma,Joe,1B,ELP,ML,1
+Bob,Papaleo,P,LYNC,ML,10
+Ray,Klinekole,P,MAIN,A,6
+Ted,Salazer,P,ELP,AAA,0
+Randall,Moultry,RF,ELP,AAA,0
+Sang,Henry,CF,ELP,ML,1
+Heath,Rudolph,1B,CASP,A,9
+Willie,Garant,P,ELP,AA,0
+Howard,Dunnigan,P,ELP,ML,2
+Dave,Stockwell,P,ELP,AAA,0
+Alex,Keleher,LF,Free Agent,A,0
+Flash,Funk,CF,ROCK,ML,4
+Phil,Koch,RF,ROCK,AA,0
+Mark,Swentzel,3B,ROCK,AAA,0
+Dave,Humphreys,LF,ROCK,AAA,0
+George,Maness,RF,ROCK,AAA,0
+Robert,Brading,P,Free Agent,A,3
+John,Cormier,2B,ROCK,AA,0
+Clifford,Johnson,P,ROCK,AAA,0
+Bob,Fields,C,ROCK,AA,0
+Tom,Russell,CF,Free Agent,A,0
+Ben,Butt,P,Free Agent,AAA,0
+Michael,McCuiston,C,ROCK,AAA,0
+Antoine,Tarvin,P,CASP,A,8
+Joe,Vanantwerp,C,ROCK,AA,1
+Joe,Kanai,2B,ROCK,AA,0
+Eddie,Goodrum,2B,ROCK,AAA,0
+Marv,Schwertner,C,ROCK,AA,0
+Daron,Fattig,P,Free Agent,A,9
+Harry,Henson,3B,WISC,AA,0
+Ed,Peeples,C,WISC,ML,4
+Fern,Woodall,LF,WISC,ML,2
+Williams,Rivers,P,WISC,AAA,0
+Jacob,Miller,P,WISC,AAA,0
+Augustine,Conley,P,Free Agent,A,11
+Kenneth,Chitwood,C,TEX,A,10
+Marshall,Dombkowski,RF,WISC,A,5
+Ron,Comnick,LF,CASP,AA,0
+Josue,Coote,2B,CASP,AA,0
+Rob,Bienvenu,C,CASP,AA,0
+Warren,Robinson,P,CASP,AA,0
+Ed,Morrisseau,CF,CASP,AAA,0
+Joe,Gillis,P,CASP,AA,0
+Pedro,Ruiz,2B,CASP,ML,0
+Kevin,Malley,2B,Free Agent,A,4
+Tom,Tepley,1B,CASP,AA,0
+Kevin,Bayot,LF,CASP,AAA,0
+Abe,Froman,LF,CASP,ML,4
+Mason,Hickman,C,NORW,ML,2
+Rich,Arrowsmith,1B,IDA,A,6
+Elmer,Richardson,SS,CASP,AA,0
+Elmer,Tyce,1B,TEX,ML,0
+Dylan,Murphy,P,Free Agent,A,7
+Pierre,Lafitte,P,ROCK,ML,9
+Ken,Vang,C,Free Agent,A,0
+Anderson,Ina,CF,IDA,ML,4
+Fabian,Randall,3B,IDA,AAA,0
+Rich,Gertner,1B,IDA,AAA,0
