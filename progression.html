@@ -54,7 +54,7 @@
 <h1>MLBC <span>PROGRESSION TRACKER</span></h1>
 <div class="sub">Compares each player's edited/projected performance (from the roster export, run through the real ranking engine) against what they actually did on the field, across career / last-3-years / last-year / current. Re-run this every season as new performance exports come in — it's the empirical check on whether the ranker's assumptions hold up, and it surfaces who's trending up or down for trade purposes. Does not modify the ranking engine itself — this is a read-only analysis layer on top of it.</div>
 
-<div class="upload-grid">
+<div class="upload-grid" style="grid-template-columns: repeat(2, 1fr);">
   <div class="upload-card" id="rosterCard">
     <input type="file" id="rosterFile" accept=".csv">
     <div class="upload-label">League Roster</div>
@@ -67,17 +67,61 @@
     <div class="upload-hint">Pro_Years_Report_XXXX.csv</div>
     <div class="upload-status" id="proStatus"></div>
   </div>
-  <div class="upload-card" id="hittersPerfCard">
-    <input type="file" id="hittersPerfFile" accept=".csv">
-    <div class="upload-label">Hitters Performance</div>
-    <div class="upload-hint">Period,Name,Team,...AVG,OBP,SLG,AB...</div>
-    <div class="upload-status" id="hittersPerfStatus"></div>
+</div>
+
+<div class="sub" style="margin-bottom:8px">Hitters performance — export each tab of your stats spreadsheet (Career / Last 3 / Last Year / Current) as its own CSV and drop each in the matching box. Career is required; the others are optional but the more you provide, the more reliable the report.</div>
+<div class="upload-grid">
+  <div class="upload-card" id="hCareerCard">
+    <input type="file" id="hCareerFile" accept=".csv">
+    <div class="upload-label">Hitters — Career</div>
+    <div class="upload-hint">required</div>
+    <div class="upload-status" id="hCareerStatus"></div>
   </div>
-  <div class="upload-card" id="pitchersPerfCard">
-    <input type="file" id="pitchersPerfFile" accept=".csv">
-    <div class="upload-label">Pitchers Performance</div>
-    <div class="upload-hint">Period,Name,Team,...ERA,IP,K,BB...</div>
-    <div class="upload-status" id="pitchersPerfStatus"></div>
+  <div class="upload-card" id="hLast3Card">
+    <input type="file" id="hLast3File" accept=".csv">
+    <div class="upload-label">Hitters — Last 3</div>
+    <div class="upload-hint">optional</div>
+    <div class="upload-status" id="hLast3Status"></div>
+  </div>
+  <div class="upload-card" id="hLastYearCard">
+    <input type="file" id="hLastYearFile" accept=".csv">
+    <div class="upload-label">Hitters — Last Year</div>
+    <div class="upload-hint">optional (needed for trend tables)</div>
+    <div class="upload-status" id="hLastYearStatus"></div>
+  </div>
+  <div class="upload-card" id="hCurrentCard">
+    <input type="file" id="hCurrentFile" accept=".csv">
+    <div class="upload-label">Hitters — Current</div>
+    <div class="upload-hint">optional</div>
+    <div class="upload-status" id="hCurrentStatus"></div>
+  </div>
+</div>
+
+<div class="sub" style="margin-bottom:8px">Pitchers performance — same idea, one CSV per tab.</div>
+<div class="upload-grid">
+  <div class="upload-card" id="pCareerCard">
+    <input type="file" id="pCareerFile" accept=".csv">
+    <div class="upload-label">Pitchers — Career</div>
+    <div class="upload-hint">required</div>
+    <div class="upload-status" id="pCareerStatus"></div>
+  </div>
+  <div class="upload-card" id="pLast3Card">
+    <input type="file" id="pLast3File" accept=".csv">
+    <div class="upload-label">Pitchers — Last 3</div>
+    <div class="upload-hint">optional</div>
+    <div class="upload-status" id="pLast3Status"></div>
+  </div>
+  <div class="upload-card" id="pLastYearCard">
+    <input type="file" id="pLastYearFile" accept=".csv">
+    <div class="upload-label">Pitchers — Last Year</div>
+    <div class="upload-hint">optional (needed for trend tables)</div>
+    <div class="upload-status" id="pLastYearStatus"></div>
+  </div>
+  <div class="upload-card" id="pCurrentCard">
+    <input type="file" id="pCurrentFile" accept=".csv">
+    <div class="upload-label">Pitchers — Current</div>
+    <div class="upload-hint">optional</div>
+    <div class="upload-status" id="pCurrentStatus"></div>
   </div>
 </div>
 
@@ -113,13 +157,16 @@
 
 <section>
   <h2>Log</h2>
-  <div class="log" id="log">Upload all 4 files, then click Run Analysis.</div>
+  <div class="log" id="log">Upload League Roster + Pro Years, plus at least the "Career" tab for hitters and pitchers, then click Run Analysis.</div>
 </section>
 
 <iframe id="engineFrame" src="./index.html"></iframe>
 
 <script>
-let rosterCSV = null, proCSV = null, hittersPerfCSV = null, pitchersPerfCSV = null;
+let rosterCSV = null, proCSV = null;
+// period label -> csv text, per side. Filled in as each box is used; missing periods stay null.
+const hitterPeriodCSV = { Career: null, Last3: null, LastYear: null, Current: null };
+const pitcherPeriodCSV = { Career: null, Last3: null, LastYear: null, Current: null };
 
 function log(msg) {
   const el = document.getElementById('log');
@@ -142,10 +189,16 @@ function wireUpload(inputId, cardId, statusId, onLoaded) {
 }
 wireUpload('rosterFile', 'rosterCard', 'rosterStatus', t => rosterCSV = t);
 wireUpload('proFile', 'proCard', 'proStatus', t => proCSV = t);
-wireUpload('hittersPerfFile', 'hittersPerfCard', 'hittersPerfStatus', t => hittersPerfCSV = t);
-wireUpload('pitchersPerfFile', 'pitchersPerfCard', 'pitchersPerfStatus', t => pitchersPerfCSV = t);
+wireUpload('hCareerFile', 'hCareerCard', 'hCareerStatus', t => hitterPeriodCSV.Career = t);
+wireUpload('hLast3File', 'hLast3Card', 'hLast3Status', t => hitterPeriodCSV.Last3 = t);
+wireUpload('hLastYearFile', 'hLastYearCard', 'hLastYearStatus', t => hitterPeriodCSV.LastYear = t);
+wireUpload('hCurrentFile', 'hCurrentCard', 'hCurrentStatus', t => hitterPeriodCSV.Current = t);
+wireUpload('pCareerFile', 'pCareerCard', 'pCareerStatus', t => pitcherPeriodCSV.Career = t);
+wireUpload('pLast3File', 'pLast3Card', 'pLast3Status', t => pitcherPeriodCSV.Last3 = t);
+wireUpload('pLastYearFile', 'pLastYearCard', 'pLastYearStatus', t => pitcherPeriodCSV.LastYear = t);
+wireUpload('pCurrentFile', 'pCurrentCard', 'pCurrentStatus', t => pitcherPeriodCSV.Current = t);
 function checkReady() {
-  document.getElementById('runBtn').disabled = !(rosterCSV && proCSV && hittersPerfCSV && pitchersPerfCSV);
+  document.getElementById('runBtn').disabled = !(rosterCSV && proCSV && hitterPeriodCSV.Career && pitcherPeriodCSV.Career);
 }
 
 function parseCSVRows(text) {
@@ -167,9 +220,24 @@ async function runAnalysis() {
 
   try {
     log('Parsing uploaded CSVs...');
-    const hittersPerf = parseCSVRows(hittersPerfCSV);
-    const pitchersPerf = parseCSVRows(pitchersPerfCSV);
+    // Each period's rows get tagged with its period here — the source CSVs (one Excel tab
+    // each) don't need a Period column themselves, since the upload box already says which
+    // period this file is.
+    function tagPeriod(periodCSVMap) {
+      const out = [];
+      Object.entries(periodCSVMap).forEach(([period, csvText]) => {
+        if (!csvText) return;
+        parseCSVRows(csvText).forEach(r => { r.Period = period; out.push(r); });
+      });
+      return out;
+    }
+    const hittersPerf = tagPeriod(hitterPeriodCSV);
+    const pitchersPerf = tagPeriod(pitcherPeriodCSV);
     log(`Hitters performance rows: ${hittersPerf.length}, Pitchers performance rows: ${pitchersPerf.length}`);
+    const missingH = Object.entries(hitterPeriodCSV).filter(([k,v])=>!v).map(([k])=>k);
+    const missingP = Object.entries(pitcherPeriodCSV).filter(([k,v])=>!v).map(([k])=>k);
+    if (missingH.length) log(`Hitters — no file provided for: ${missingH.join(', ')} (skipped, not an error)`);
+    if (missingP.length) log(`Pitchers — no file provided for: ${missingP.join(', ')} (skipped, not an error)`);
 
     log('Waiting for engine iframe (real, unmodified index.html)...');
     const frame = document.getElementById('engineFrame');
