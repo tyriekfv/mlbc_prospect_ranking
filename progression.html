@@ -47,9 +47,23 @@
   .badge { display:inline-block; padding: 1px 6px; border-radius: 3px; font-size: 10px; font-weight: 600; }
   .badge-h { background: rgba(61,220,132,.15); color: var(--hitter); }
   .badge-p { background: rgba(74,158,255,.15); color: var(--pitcher); }
+  .subnav { display: flex; gap: 4px; margin-bottom: 16px; }
+  .subnav a {
+    color: var(--text2); text-decoration: none; font-size: 12px;
+    font-family: 'IBM Plex Mono', monospace; padding: 6px 10px; border-radius: 4px;
+    transition: all .15s;
+  }
+  .subnav a:hover { color: var(--text); background: var(--surface2); }
+  .subnav a.active { color: var(--accent); background: rgba(232,160,32,.1); }
 </style>
 </head>
 <body>
+
+<nav class="subnav">
+  <a href="./index.html">Ranker</a>
+  <a href="./validate.html">Validation</a>
+  <a href="./progression.html" class="active">Progression Tracker</a>
+</nav>
 
 <h1>MLBC <span>PROGRESSION TRACKER</span></h1>
 <div class="sub">Compares each player's edited/projected performance (from the roster export, run through the real ranking engine) against what they actually did on the field, across career / last-3-years / last-year / current. Re-run this every season as new performance exports come in — it's the empirical check on whether the ranker's assumptions hold up, and it surfaces who's trending up or down for trade purposes. Does not modify the ranking engine itself — this is a read-only analysis layer on top of it.</div>

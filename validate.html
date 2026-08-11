@@ -37,9 +37,23 @@
   .muted { color: var(--text3); }
   .log { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 12px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--text2); white-space: pre-wrap; max-height: 200px; overflow-y: auto; }
   #engineFrame { position: absolute; top: 0; left: -9999px; width: 1200px; height: 800px; border: 0; visibility: hidden; }
+  .subnav { display: flex; gap: 4px; margin-bottom: 16px; }
+  .subnav a {
+    color: var(--text2); text-decoration: none; font-size: 12px;
+    font-family: 'IBM Plex Mono', monospace; padding: 6px 10px; border-radius: 4px;
+    transition: all .15s;
+  }
+  .subnav a:hover { color: var(--text); background: var(--surface2); }
+  .subnav a.active { color: var(--accent); background: rgba(232,160,32,.1); }
 </style>
 </head>
 <body>
+
+<nav class="subnav">
+  <a href="./index.html">Ranker</a>
+  <a href="./validate.html" class="active">Validation</a>
+  <a href="./progression.html">Progression Tracker</a>
+</nav>
 
 <h1>PROSPECT RANKER <span>REGRESSION TEST</span></h1>
 <div class="sub">Runs the real, unmodified <code>index.html</code> ranking engine (via hidden iframe) against fixture data and checks it against the site's known top-300 rank order &amp; hidden grade-bar values. This is the harness described in the README's contributing notes — run it before and after any formula change.</div>
