@@ -227,7 +227,10 @@ async function buildBoard() {
     // iframe's own global (indirect eval), not window property access (let/function
     // declarations from a classic <script> aren't exposed as window properties either way,
     // and top-level let specifically never is regardless of same-origin status).
-    win.__poolNames = poolRows.map(r => r.Name.trim());
+    // Carry each pool row's own player ID through alongside its name — needed to re-import
+    // the finished board back into the game (name alone is ambiguous, especially once a GM
+    // renames a player post-draft).
+    win.__poolEntries = poolRows.map(r => ({ name: r.Name.trim(), id: r.ID !== undefined ? r.ID : '' }));
     const resultJSON = win.eval(`
       (function() {
         const rosterByKey = {};
@@ -250,13 +253,16 @@ async function buildBoard() {
         }
         const num = v => (v===null||v===undefined||isNaN(v)) ? null : +(+v).toFixed(4);
         const matched = [], unmatched = [];
-        __poolNames.forEach(poolName => {
-          const row = resolve(poolName);
-          if (!row) { unmatched.push(poolName); return; }
+        __poolEntries.forEach(entry => {
+          const row = resolve(entry.name);
+          if (!row) { unmatched.push(entry.name); return; }
           const s = scoreProspect(row);
-          if (!s) { unmatched.push(poolName); return; }
+          if (!s) { unmatched.push(entry.name); return; }
           matched.push({
-            poolName, name: s.name, type: s.type, pos: s.pos, age: s.age, team: s.team, level: s.level,
+            // name uses the pool file's own "First Last" format (needed to re-import into the
+            // game) rather than the engine's internal "Last, First" — engineName kept for
+            // reference/debugging only, not shown or exported by default.
+            name: entry.name, engineName: s.name, id: entry.id, type: s.type, pos: s.pos, age: s.age, team: s.team, level: s.level,
             bat: s.bat, throw: s.throw,
             overall: num(s.overall), rawOverall: num(s.rawOverall),
             hit: num(s.hit), fld: num(s.fld), stuff: num(s.stuff), end: num(s.end),
@@ -342,6 +348,7 @@ function renderTable() {
   table.innerHTML = `<tr>
     <th onclick="sortBy('rank')">#</th>
     <th onclick="sortBy('name')">Name</th>
+    <th>ID</th>
     <th>Type</th>
     <th onclick="sortBy('pos')">Pos</th>
     <th onclick="sortBy('age')">Age</th>
@@ -355,7 +362,7 @@ function renderTable() {
       ? `HIT:${r.hit?.toFixed(1) ?? '—'} FLD:${r.fld?.toFixed(1) ?? '—'}`
       : `STF:${r.stuff?.toFixed(1) ?? '—'} END:${r.end?.toFixed(1) ?? '—'}`;
     return `<tr>
-      <td>${r.rank}</td><td>${r.name}</td>
+      <td>${r.rank}</td><td>${r.name}</td><td class="muted">${r.id || '—'}</td>
       <td><span class="type-badge type-${r.type}">${r.type === 'P' ? 'PITCHER' : 'HITTER'}</span></td>
       <td>${r.pos}</td><td>${r.age}</td><td>${r.team}</td><td>${hand || '-'}</td>
       <td>${r.overall.toFixed(2)}</td><td class="muted">${grades}</td>
@@ -364,7 +371,7 @@ function renderTable() {
 }
 
 function exportCSV() {
-  const cols = ['rank','name','type','pos','age','team','level','bat','throw','overall','rawOverall','hit','fld','stuff','end','isSP'];
+  const cols = ['rank','name','id','type','pos','age','team','level','bat','throw','overall','rawOverall','hit','fld','stuff','end','isSP'];
   const header = cols.join(',');
   const body = boardRows.map(r => cols.map(c => {
     const v = r[c];
