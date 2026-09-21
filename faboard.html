@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MLBC Draft Board</title>
+<title>MLBC FA Board</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 <style>
@@ -25,7 +25,7 @@
   }
   .subnav a:hover { color: var(--text); background: var(--surface2); }
   .subnav a.active { color: var(--accent); background: rgba(232,160,32,.1); }
-  .upload-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; max-width: 1100px; }
+  .upload-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 16px; max-width: 750px; }
   .upload-card { background: var(--surface); border: 1px dashed var(--border); border-radius: 8px; padding: 18px 14px; text-align: center; cursor: pointer; position: relative; }
   .upload-card.loaded { border-color: var(--accent3); border-style: solid; }
   .upload-card input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
@@ -46,15 +46,22 @@
   }
   .export-btn:hover { background: var(--accent); color: #000; }
   .export-btn:disabled { border-color: var(--border); color: var(--text3); cursor: not-allowed; background: transparent; }
-  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 20px; max-width: 1100px; }
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 20px; max-width: 1100px; }
   .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 14px; }
   .stat-card .label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--text2); margin-bottom: 6px; }
   .stat-card .value { font-family: 'IBM Plex Mono', monospace; font-size: 20px; font-weight: 600; }
   .filter-row { display: flex; gap: 10px; align-items: center; margin-bottom: 12px; flex-wrap: wrap; }
+  .filter-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text2); }
   select, input[type=text] {
     background: var(--surface2); border: 1px solid var(--border); color: var(--text);
     padding: 6px 10px; border-radius: 4px; font-family: 'IBM Plex Sans', sans-serif; font-size: 13px;
   }
+  .btn-group { display: flex; gap: 4px; }
+  .btn-toggle {
+    padding: 6px 12px; border: 1px solid var(--border); background: transparent; color: var(--text2);
+    border-radius: 4px; cursor: pointer; font-size: 12px; font-family: 'IBM Plex Mono', monospace; transition: all .15s;
+  }
+  .btn-toggle.active { background: var(--accent); border-color: var(--accent); color: #000; font-weight: 600; }
   table { width: 100%; border-collapse: collapse; font-size: 12px; font-family: 'IBM Plex Mono', monospace; }
   th, td { text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--border); white-space: nowrap; }
   th { color: var(--text2); font-weight: 600; font-size: 10px; text-transform: uppercase; cursor: pointer; }
@@ -63,8 +70,9 @@
   .type-H { background: rgba(61,220,132,.15); color: var(--hitter); }
   .type-P { background: rgba(74,158,255,.15); color: var(--pitcher); }
   .muted { color: var(--text3); }
+  .rookie { color: var(--accent3); }
   .log { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 12px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--text2); white-space: pre-wrap; max-height: 200px; overflow-y: auto; }
-  section { margin-bottom: 24px; max-width: 1200px; }
+  section { margin-bottom: 24px; max-width: 1300px; }
   section h2 { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 1px; margin-bottom: 4px; color: var(--text); }
   #engineFrame { position: absolute; top: 0; left: -9999px; width: 1200px; height: 800px; border: 0; visibility: hidden; }
 </style>
@@ -75,20 +83,14 @@
   <a href="./index.html">Ranker</a>
   <a href="./validate.html">Validation</a>
   <a href="./progression.html">Progression Tracker</a>
-  <a href="./draftboard.html" class="active">Draft Board</a>
-  <a href="./faboard.html">FA Board</a>
+  <a href="./draftboard.html">Draft Board</a>
+  <a href="./faboard.html" class="active">FA Board</a>
 </nav>
 
-<h1>MLBC <span>DRAFT BOARD</span></h1>
-<div class="sub">Ranks a specific draft class using the real ranking engine. Upload the draft pool export for that draft (the batch of newly-created players, Name column is all that's used from it), plus that season's League Roster and Pro Years Report so the engine has full stat lines to score against. Matches pool names to roster rows automatically — nothing needs to be pre-processed.</div>
+<h1>MLBC <span>FA BOARD</span></h1>
+<div class="sub">The Ranker filters to Pro-Years-0, age-25-and-under prospects only — this doesn't. Upload League Roster + Pro Years Report and it scores and ranks every player in the export, using the real, unmodified engine (scoreProspect() run directly on every row, not just the prospect pool). Filter by team (including FA) to build a free-agent target board, or leave it open to browse the whole league.</div>
 
 <div class="upload-grid">
-  <div class="upload-card" id="poolCard">
-    <input type="file" id="poolFile" accept=".csv">
-    <div class="upload-label">Draft Pool</div>
-    <div class="upload-hint">Pool_XXXX.csv (this draft's new players)</div>
-    <div class="upload-status" id="poolStatus"></div>
-  </div>
   <div class="upload-card" id="rosterCard">
     <input type="file" id="rosterFile" accept=".csv">
     <div class="upload-label">League Roster</div>
@@ -98,27 +100,28 @@
   <div class="upload-card" id="proCard">
     <input type="file" id="proFile" accept=".csv">
     <div class="upload-label">Pro Years Report</div>
-    <div class="upload-hint">Pro_Years_Report_XXXX.csv</div>
+    <div class="upload-hint">Pro_Years_Report_XXXX.csv (used for display only here, not filtering)</div>
     <div class="upload-status" id="proStatus"></div>
   </div>
 </div>
 
-<div class="options-row">
-  <label><input type="checkbox" id="handTiebreak" checked> Apply hand tie-break when OVR ties (hitters: Switch &gt; Left &gt; Right &nbsp;·&nbsp; pitchers: Right &gt; Left)</label>
-</div>
-
-<button class="run-btn" id="runBtn" onclick="buildBoard()" disabled>BUILD DRAFT BOARD</button>
+<button class="run-btn" id="runBtn" onclick="runBoard()" disabled>GENERATE RANKINGS</button>
 <button class="export-btn" id="exportBtn" onclick="exportCSV()" disabled>⬇ EXPORT CSV</button>
 
 <div id="results" style="display:none">
   <div class="stat-grid" id="statGrid"></div>
 
   <section>
-    <h2>Draft board</h2>
+    <h2>Full player board</h2>
     <div class="filter-row">
+      <div class="btn-group">
+        <button class="btn-toggle active" id="typeAll" onclick="setTypeFilter('all')">ALL</button>
+        <button class="btn-toggle" id="typeH" onclick="setTypeFilter('H')">HITTERS</button>
+        <button class="btn-toggle" id="typeP" onclick="setTypeFilter('P')">PITCHERS</button>
+      </div>
       <select id="teamFilter" onchange="renderTable()"><option value="all">All Teams</option></select>
-      <select id="typeFilter" onchange="renderTable()">
-        <option value="all">All</option><option value="H">Hitters</option><option value="P">Pitchers</option>
+      <select id="levelFilter" onchange="renderTable()">
+        <option value="all">All Levels</option><option value="ML">ML</option><option value="AAA">AAA</option><option value="AA">AA</option><option value="A">A</option><option value="IA">IA</option>
       </select>
       <input type="text" id="searchBox" placeholder="Search name..." oninput="renderTable()">
     </div>
@@ -128,15 +131,15 @@
 
 <section>
   <h2>Log</h2>
-  <div class="log" id="log">Upload all 3 files, then click Build Draft Board.</div>
+  <div class="log" id="log">Upload League Roster + Pro Years Report, then click Generate Rankings.</div>
 </section>
 
 <iframe id="engineFrame" src="./index.html"></iframe>
 
 <script>
-let poolCSV = null, rosterCSV = null, proCSV = null;
-let boardRows = [];
-let sortCol = 'rank', sortDir = 1;
+let rosterCSV = null, proCSV = null;
+let boardRows = [], filtered = [];
+let sortCol = 'rank', sortDir = 1, typeFilter = 'all';
 
 function log(msg) {
   const el = document.getElementById('log');
@@ -157,37 +160,17 @@ function wireUpload(inputId, cardId, statusId, onLoaded) {
     reader.readAsText(f);
   });
 }
-wireUpload('poolFile', 'poolCard', 'poolStatus', t => poolCSV = t);
 wireUpload('rosterFile', 'rosterCard', 'rosterStatus', t => rosterCSV = t);
 wireUpload('proFile', 'proCard', 'proStatus', t => proCSV = t);
 function checkReady() {
-  document.getElementById('runBtn').disabled = !(poolCSV && rosterCSV && proCSV);
+  document.getElementById('runBtn').disabled = !(rosterCSV && proCSV);
 }
 
 function parseCSVRows(text) {
   return Papa.parse(text, { header: true, skipEmptyLines: true }).data;
 }
 
-// Same name-resolution heuristic as the pool-matching script used earlier this project:
-// try first-token-as-first-name, then last-token-as-last-name (handles suffixes like "Jr").
-function resolvePoolName(poolName, rosterByKey) {
-  const parts = poolName.trim().split(/\s+/);
-  const candidates = [[parts[0], parts.slice(1).join(' ')]];
-  if (parts.length > 2) {
-    candidates.push([parts.slice(0, -1).join(' '), parts[parts.length - 1]]);
-    candidates.push([parts[0], parts.slice(1, -1).join(' ')]);
-  }
-  for (const [first, last] of candidates) {
-    const key = (first.trim() + '|' + last.trim()).toLowerCase();
-    if (rosterByKey[key]) return rosterByKey[key];
-  }
-  return null;
-}
-
-const HIT_HAND_RANK = { S: 0, L: 1, R: 2 };
-const PIT_HAND_RANK = { R: 0, L: 1 };
-
-async function buildBoard() {
+async function runBoard() {
   const btn = document.getElementById('runBtn');
   btn.disabled = true;
   document.getElementById('log').textContent = '';
@@ -195,9 +178,13 @@ async function buildBoard() {
   document.getElementById('exportBtn').disabled = true;
 
   try {
-    log('Parsing draft pool CSV...');
-    const poolRows = parseCSVRows(poolCSV).filter(r => r.Name && r.Name.trim());
-    log(`Pool players: ${poolRows.length}`);
+    log('Parsing Pro Years Report (for display — not used to filter here)...');
+    const proRows = parseCSVRows(proCSV);
+    const proMap = {};
+    proRows.forEach(r => {
+      const key = ((r.Firstname||r.First||'').trim() + '|' + (r.Lastname||r.Last||'').trim()).toLowerCase();
+      proMap[key] = +(r['Pro Years'] || 0);
+    });
 
     log('Waiting for engine iframe (real, unmodified index.html)...');
     const frame = document.getElementById('engineFrame');
@@ -219,93 +206,61 @@ async function buildBoard() {
     await new Promise(r => setTimeout(r, 400));
     if (doc.getElementById('runBtn').disabled) throw new Error('Engine did not accept both files.');
 
-    log('Running the real runModel()...');
+    log('Running the real runModel() (populates position-range stats the FLD grade needs)...');
     win.runModel();
-    await new Promise(r => setTimeout(r, 600));
+    await new Promise(r => setTimeout(r, 800));
 
-    log('Matching pool names to roster rows, then scoring every match via the real scoreProspect()...');
+    log('Scoring EVERY player in the roster directly via the real scoreProspect() — no Pro-Years/age filter...');
     // rosterData/scoreProspect live in index.html's own top-level scope — read via the
     // iframe's own global (indirect eval), not window property access (let/function
-    // declarations from a classic <script> aren't exposed as window properties either way,
-    // and top-level let specifically never is regardless of same-origin status).
-    // Carry each pool row's own player ID through alongside its name — needed to re-import
-    // the finished board back into the game (name alone is ambiguous, especially once a GM
-    // renames a player post-draft).
-    win.__poolEntries = poolRows.map(r => ({ name: r.Name.trim(), id: r.ID !== undefined ? r.ID : '' }));
+    // declarations from a classic <script> aren't exposed as window properties either way).
     const resultJSON = win.eval(`
       (function() {
-        const rosterByKey = {};
-        rosterData.forEach(r => {
-          const key = ((r.First||'').trim() + '|' + (r.Last||'').trim()).toLowerCase();
-          if (!rosterByKey[key]) rosterByKey[key] = r;
-        });
-        function resolve(poolName) {
-          const parts = poolName.trim().split(/\\s+/);
-          const candidates = [[parts[0], parts.slice(1).join(' ')]];
-          if (parts.length > 2) {
-            candidates.push([parts.slice(0, -1).join(' '), parts[parts.length - 1]]);
-            candidates.push([parts[0], parts.slice(1, -1).join(' ')]);
-          }
-          for (const [first, last] of candidates) {
-            const key = (first.trim() + '|' + last.trim()).toLowerCase();
-            if (rosterByKey[key]) return rosterByKey[key];
-          }
-          return null;
-        }
         const num = v => (v===null||v===undefined||isNaN(v)) ? null : +(+v).toFixed(4);
-        const matched = [], unmatched = [];
-        __poolEntries.forEach(entry => {
-          const row = resolve(entry.name);
-          if (!row) { unmatched.push(entry.name); return; }
+        const out = [];
+        rosterData.forEach(row => {
           const s = scoreProspect(row);
-          if (!s) { unmatched.push(entry.name); return; }
-          matched.push({
-            // name uses the pool file's own "First Last" format (needed to re-import into the
-            // game) rather than the engine's internal "Last, First" — engineName kept for
-            // reference/debugging only, not shown or exported by default.
-            name: entry.name, engineName: s.name, id: entry.id, type: s.type, pos: s.pos, age: s.age, team: s.team, level: s.level,
-            bat: s.bat, throw: s.throw,
+          if (!s) return;
+          out.push({
+            last: s.last, first: s.first, name: s.name, type: s.type, pos: s.pos, age: s.age,
+            team: s.team, level: s.level, bat: s.bat, throw: s.throw,
             overall: num(s.overall), rawOverall: num(s.rawOverall),
             hit: num(s.hit), fld: num(s.fld), stuff: num(s.stuff), end: num(s.end),
-            isSP: s.isSP || false
+            obp: num(s.obp), ops: num(s.ops), hr: s.hr, bb: s.bb, so: s.so,
+            wops: num(s.wops), kbb: num(s.kbb), p_so: s.p_so, p_gb: s.p_gb,
+            posBonus: s.posBonus, powBonus: s.powBonus, loBonus: s.loBonus, batBonus: s.batBonus, htPen: s.htPen,
+            obpG: s.obpG, xbhG: s.xbhG, kbbG: s.kbbG, gbG: s.gbG, fldG: s.fldG, runG: s.runG, armG: s.armG
           });
         });
-        return JSON.stringify({ matched, unmatched });
+        return JSON.stringify(out);
       })();
     `);
-    const { matched, unmatched } = JSON.parse(resultJSON);
-    log(`Matched ${matched.length}/${poolRows.length} pool players to roster rows and scored them.`);
-    if (unmatched.length) log(`Unmatched (${unmatched.length}): ${unmatched.slice(0, 10).join(', ')}${unmatched.length > 10 ? ', ...' : ''}`);
+    const scored = JSON.parse(resultJSON);
+    log(`Scored ${scored.length} players (out of ${parseCSVRows(rosterCSV).length} roster rows).`);
 
-    // Sort: displayed OVR (1 decimal, matching what the app shows) desc, then hand tie-break
-    // if enabled, then exact rawOverall desc as the final tiebreak.
-    const useTiebreak = document.getElementById('handTiebreak').checked;
-    matched.sort((a, b) => {
-      const ovrA = Math.round(a.overall * 10) / 10, ovrB = Math.round(b.overall * 10) / 10;
-      if (ovrB !== ovrA) return ovrB - ovrA;
-      if (useTiebreak) {
-        const rankA = a.type === 'H' ? (HIT_HAND_RANK[a.bat] ?? 3) : (PIT_HAND_RANK[a.throw] ?? 2);
-        const rankB = b.type === 'H' ? (HIT_HAND_RANK[b.bat] ?? 3) : (PIT_HAND_RANK[b.throw] ?? 2);
-        if (rankA !== rankB) return rankA - rankB;
-      }
-      return b.rawOverall - a.rawOverall;
+    scored.forEach(r => {
+      const key = (r.first.trim() + '|' + r.last.trim()).toLowerCase();
+      r.proYears = proMap[key] !== undefined ? proMap[key] : null;
     });
-    matched.forEach((r, i) => r.rank = i + 1);
-    boardRows = matched;
 
-    // populate team filter
-    const teams = [...new Set(matched.map(r => r.team))].sort();
+    scored.sort((a, b) => b.overall - a.overall);
+    scored.forEach((r, i) => r.rank = i + 1);
+    boardRows = scored;
+
+    const teams = [...new Set(scored.map(r => r.team))].sort();
     const tf = document.getElementById('teamFilter');
     tf.innerHTML = '<option value="all">All Teams</option>' + teams.map(t => `<option value="${t}">${t}</option>`).join('');
 
     document.getElementById('statGrid').innerHTML = [
-      `<div class="stat-card"><div class="label">Pool players</div><div class="value">${poolRows.length}</div></div>`,
-      `<div class="stat-card"><div class="label">Matched &amp; scored</div><div class="value">${matched.length}</div></div>`,
-      `<div class="stat-card"><div class="label">Unmatched</div><div class="value">${unmatched.length}</div></div>`,
-      `<div class="stat-card"><div class="label">Hand tie-break</div><div class="value">${useTiebreak ? 'ON' : 'OFF'}</div></div>`,
+      `<div class="stat-card"><div class="label">Total scored</div><div class="value">${scored.length}</div></div>`,
+      `<div class="stat-card"><div class="label">Hitters</div><div class="value">${scored.filter(r=>r.type==='H').length}</div></div>`,
+      `<div class="stat-card"><div class="label">Pitchers</div><div class="value">${scored.filter(r=>r.type==='P').length}</div></div>`,
+      `<div class="stat-card"><div class="label">Free agents</div><div class="value">${scored.filter(r=>r.team==='FA').length}</div></div>`,
     ].join('');
 
-    sortCol = 'rank'; sortDir = 1;
+    sortCol = 'rank'; sortDir = 1; typeFilter = 'all';
+    document.querySelectorAll('.btn-group .btn-toggle').forEach(b => b.classList.remove('active'));
+    document.getElementById('typeAll').classList.add('active');
     renderTable();
     document.getElementById('results').style.display = 'block';
     document.getElementById('exportBtn').disabled = false;
@@ -318,19 +273,27 @@ async function buildBoard() {
   }
 }
 
+function setTypeFilter(t) {
+  typeFilter = t;
+  document.querySelectorAll('.btn-group .btn-toggle').forEach(b => b.classList.remove('active'));
+  document.getElementById(t === 'all' ? 'typeAll' : t === 'H' ? 'typeH' : 'typeP').classList.add('active');
+  renderTable();
+}
+
 function sortBy(col) {
-  if (sortCol === col) sortDir *= -1; else { sortCol = col; sortDir = 1; }
+  if (sortCol === col) sortDir *= -1; else { sortCol = col; sortDir = -1; }
   renderTable();
 }
 
 function renderTable() {
   const team = document.getElementById('teamFilter').value;
-  const type = document.getElementById('typeFilter').value;
+  const level = document.getElementById('levelFilter').value;
   const search = document.getElementById('searchBox').value.toLowerCase();
 
-  let rows = boardRows.filter(r => {
+  filtered = boardRows.filter(r => {
+    if (typeFilter !== 'all' && r.type !== typeFilter) return false;
     if (team !== 'all' && r.team !== team) return false;
-    if (type !== 'all' && r.type !== type) return false;
+    if (level !== 'all' && r.level !== level) return false;
     if (search && !r.name.toLowerCase().includes(search)) return false;
     return true;
   });
@@ -342,18 +305,20 @@ function renderTable() {
     age: (a,b) => a.age - b.age,
     team: (a,b) => a.team.localeCompare(b.team),
     overall: (a,b) => a.overall - b.overall,
+    proYears: (a,b) => (a.proYears??-1) - (b.proYears??-1),
   }[sortCol] || ((a,b) => a.rank - b.rank);
-  rows = [...rows].sort((a,b) => sortDir * sortFn(a,b));
+  const rows = [...filtered].sort((a,b) => sortDir * sortFn(a,b));
 
   const table = document.getElementById('boardTable');
   table.innerHTML = `<tr>
     <th onclick="sortBy('rank')">#</th>
     <th onclick="sortBy('name')">Name</th>
-    <th>ID</th>
     <th>Type</th>
     <th onclick="sortBy('pos')">Pos</th>
     <th onclick="sortBy('age')">Age</th>
     <th onclick="sortBy('team')">Team</th>
+    <th>Lvl</th>
+    <th onclick="sortBy('proYears')">Pro Yrs</th>
     <th>Bat/Thr</th>
     <th onclick="sortBy('overall')">OVR</th>
     <th>Grades</th>
@@ -362,27 +327,36 @@ function renderTable() {
     const grades = r.type === 'H'
       ? `HIT:${r.hit?.toFixed(1) ?? '—'} FLD:${r.fld?.toFixed(1) ?? '—'}`
       : `STF:${r.stuff?.toFixed(1) ?? '—'} END:${r.end?.toFixed(1) ?? '—'}`;
+    const py = r.proYears === null ? '—' : r.proYears;
+    const pyClass = r.proYears === 0 ? 'rookie' : '';
     return `<tr>
-      <td>${r.rank}</td><td>${r.name}</td><td class="muted">${r.id || '—'}</td>
+      <td>${r.rank}</td><td>${r.name}</td>
       <td><span class="type-badge type-${r.type}">${r.type === 'P' ? 'PITCHER' : 'HITTER'}</span></td>
-      <td>${r.pos}</td><td>${r.age}</td><td>${r.team}</td><td>${hand || '-'}</td>
+      <td>${r.pos}</td><td>${r.age}</td><td>${r.team}</td><td>${r.level}</td>
+      <td class="${pyClass}">${py}</td><td>${hand || '-'}</td>
       <td>${r.overall.toFixed(2)}</td><td class="muted">${grades}</td>
     </tr>`;
   }).join('');
 }
 
 function exportCSV() {
-  const cols = ['rank','name','id','type','pos','age','team','level','bat','throw','overall','rawOverall','hit','fld','stuff','end','isSP'];
+  const rows = [...filtered].sort((a,b) => a.rank - b.rank);
+  // Same column order as the Ranker's own export, plus proYears appended — drop-in familiar
+  // format, just covering the whole roster instead of the prospect-only filter.
+  const cols = ['rank','last','first','type','pos','bat','team','level','age',
+                'overall','hit','stuff','fld',
+                'obp','ops','hr','bb','so',
+                'wops','bestOps','end','kbb','p_so','p_gb',
+                'posBonus','powBonus','loBonus','batBonus','htPen',
+                'obpG','xbhG','kbbG','gbG','fldG','runG','armG','proYears'];
   const header = cols.join(',');
-  const body = boardRows.map(r => cols.map(c => {
+  const body = rows.map(r => cols.map(c => {
     const v = r[c];
-    return v === null || v === undefined ? '' : typeof v === 'number' ? v : `"${v}"`;
+    return v===null||v===undefined ? '' : typeof v==='number' ? v.toFixed(2) : `"${v}"`;
   }).join(',')).join('\n');
-  const blob = new Blob([header + '\n' + body], { type: 'text/csv' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'draft_board.csv';
-  a.click();
+  const blob = new Blob([header+'\n'+body], {type:'text/csv'});
+  const a = document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download='mlbc_fa_board.csv'; a.click();
 }
 </script>
 </body>
