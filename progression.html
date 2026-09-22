@@ -162,13 +162,13 @@
 
   <section>
     <h2>Trending down (regression / possible sell candidates)</h2>
-    <div class="desc">Last Year performance well below Career baseline, min. sample size in both windows.</div>
+    <div class="desc">Most recent season (Current if provided, else Last Year) well below Career baseline, min. sample size in both windows. "Prior Yr OPS" shows the season before the recent one when available, so a dip that's already recovering shows up instead of getting flagged as a flat decline.</div>
     <table id="downTable"></table>
   </section>
 
   <section>
     <h2>Trending up (possible buy-low / breakout)</h2>
-    <div class="desc">Last Year performance well above Career baseline, min. sample size in both windows.</div>
+    <div class="desc">Most recent season (Current if provided, else Last Year) well above Career baseline, min. sample size in both windows.</div>
     <table id="upTable"></table>
   </section>
 </div>
@@ -374,25 +374,41 @@ async function runAnalysis() {
     });
     document.getElementById('pitchHandTable').innerHTML = pitchHandRows;
 
-    // ── Trending up/down: hitters, LastYear OPS vs Career OPS ──
+    // ── Trending up/down: hitters, most recent season vs Career OPS ──
+    // In this game's export scheme, "Current" is the most recently completed season and
+    // "LastYear" is the one before that — NOT "current" as in still-in-progress. Prefer
+    // Current as the recency signal; fall back to LastYear only if Current is missing or
+    // too thin. Also carry the other season along as "Prior" so a dip-then-recovery (or
+    // vice versa) is visible instead of being hidden behind whichever period happened to
+    // be picked.
     const trend = [];
     Object.keys(hitterPerfByName).forEach(name => {
       const perf = hitterPerfByName[name];
-      const career = perf['Career'], lastYear = perf['LastYear'];
-      if (!career || !lastYear || career.AB < 400 || lastYear.AB < 150) return;
-      const careerOps = career.OBP + career.SLG, lyOps = lastYear.OBP + lastYear.SLG;
+      const career = perf['Career'];
+      if (!career || career.AB < 400) return;
+      const current = perf['Current'], lastYear = perf['LastYear'];
+      let recent = null, recentLabel = null, prior = null, priorLabel = null;
+      if (current && current.AB >= 150) {
+        recent = current; recentLabel = 'Current';
+        if (lastYear && lastYear.AB >= 150) { prior = lastYear; priorLabel = 'LastYear'; }
+      } else if (lastYear && lastYear.AB >= 150) {
+        recent = lastYear; recentLabel = 'LastYear';
+      }
+      if (!recent) return;
+      const careerOps = career.OBP + career.SLG, recentOps = recent.OBP + recent.SLG;
+      const priorOps = prior ? (prior.OBP + prior.SLG) : null;
       const sc = hitterScoreByName[name];
-      trend.push({ name, careerOps, lyOps, delta: lyOps - careerOps, age: sc ? sc.age : null, bat: sc ? sc.bat : null });
+      trend.push({ name, careerOps, recentOps, recentLabel, priorOps, priorLabel,
+        delta: recentOps - careerOps, age: sc ? sc.age : null, bat: sc ? sc.bat : null });
     });
     trend.sort((a,b) => a.delta - b.delta);
     const down = trend.slice(0, 15);
     const up = [...trend].sort((a,b) => b.delta - a.delta).slice(0, 15);
 
-    const trendRow = t => `<tr><td>${t.name}</td><td>${t.bat||'-'}</td><td>${t.age||'-'}</td><td>${t.careerOps.toFixed(3)}</td><td>${t.lyOps.toFixed(3)}</td><td class="${t.delta>=0?'pos':'neg'}">${t.delta>=0?'+':''}${t.delta.toFixed(3)}</td></tr>`;
-    document.getElementById('downTable').innerHTML =
-      '<tr><th>Name</th><th>Bat</th><th>Age</th><th>Career OPS</th><th>Last Yr OPS</th><th>Delta</th></tr>' + down.map(trendRow).join('');
-    document.getElementById('upTable').innerHTML =
-      '<tr><th>Name</th><th>Bat</th><th>Age</th><th>Career OPS</th><th>Last Yr OPS</th><th>Delta</th></tr>' + up.map(trendRow).join('');
+    const trendRow = t => `<tr><td>${t.name}</td><td>${t.bat||'-'}</td><td>${t.age||'-'}</td><td>${t.careerOps.toFixed(3)}</td><td>${t.priorOps!==null?t.priorOps.toFixed(3):'—'}</td><td>${t.recentOps.toFixed(3)} <span class="muted">(${t.recentLabel})</span></td><td class="${t.delta>=0?'pos':'neg'}">${t.delta>=0?'+':''}${t.delta.toFixed(3)}</td></tr>`;
+    const trendHeader = '<tr><th>Name</th><th>Bat</th><th>Age</th><th>Career OPS</th><th>Prior Yr OPS</th><th>Recent OPS</th><th>Delta</th></tr>';
+    document.getElementById('downTable').innerHTML = trendHeader + down.map(trendRow).join('');
+    document.getElementById('upTable').innerHTML = trendHeader + up.map(trendRow).join('');
 
     document.getElementById('statGrid').innerHTML = [
       `<div class="stat-card"><div class="label">Hitters scored</div><div class="value">${hitterScores.length}</div></div>`,
