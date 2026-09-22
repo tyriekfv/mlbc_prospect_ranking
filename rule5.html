@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MLBC Draft Board</title>
+<title>MLBC Rule 5 Board</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 <style>
@@ -46,7 +46,7 @@
   }
   .export-btn:hover { background: var(--accent); color: #000; }
   .export-btn:disabled { border-color: var(--border); color: var(--text3); cursor: not-allowed; background: transparent; }
-  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 20px; max-width: 1100px; }
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 20px; max-width: 1100px; }
   .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 14px; }
   .stat-card .label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--text2); margin-bottom: 6px; }
   .stat-card .value { font-family: 'IBM Plex Mono', monospace; font-size: 20px; font-weight: 600; }
@@ -75,20 +75,20 @@
   <a href="./index.html">Ranker</a>
   <a href="./validate.html">Validation</a>
   <a href="./progression.html">Progression Tracker</a>
-  <a href="./draftboard.html" class="active">Draft Board</a>
+  <a href="./draftboard.html">Draft Board</a>
   <a href="./faboard.html">FA Board</a>
-  <a href="./rule5.html">Rule 5 Board</a>
+  <a href="./rule5.html" class="active">Rule 5 Board</a>
 </nav>
 
-<h1>MLBC <span>DRAFT BOARD</span></h1>
-<div class="sub">Ranks a specific draft class using the real ranking engine. Upload the draft pool export for that draft (the batch of newly-created players, Name column is all that's used from it), plus that season's League Roster and Pro Years Report so the engine has full stat lines to score against. Matches pool names to roster rows automatically — nothing needs to be pre-processed.</div>
+<h1>MLBC <span>RULE 5 BOARD</span></h1>
+<div class="sub">Ranks a Rule 5-eligible list (Pro-Years-0 but past the young-prospect age range, unprotected on other teams' rosters) using the real ranking engine. Upload your generated Rule 5 list (Last, First, Pos, Team, Age, Pro Years), plus League Roster and Pro Years Report so the engine has full stat lines to score against. Matches by exact Last/First — this list already has clean name columns, no fuzzy matching needed.</div>
 
 <div class="upload-grid">
-  <div class="upload-card" id="poolCard">
-    <input type="file" id="poolFile" accept=".csv">
-    <div class="upload-label">Draft Pool</div>
-    <div class="upload-hint">Pool_XXXX.csv (this draft's new players)</div>
-    <div class="upload-status" id="poolStatus"></div>
+  <div class="upload-card" id="listCard">
+    <input type="file" id="listFile" accept=".csv">
+    <div class="upload-label">Rule 5 List</div>
+    <div class="upload-hint">rule5_list.csv (Last,First,Pos,Team,Age,Pro Years)</div>
+    <div class="upload-status" id="listStatus"></div>
   </div>
   <div class="upload-card" id="rosterCard">
     <input type="file" id="rosterFile" accept=".csv">
@@ -108,14 +108,14 @@
   <label><input type="checkbox" id="handTiebreak" checked> Apply hand tie-break when OVR ties (hitters: Switch &gt; Left &gt; Right &nbsp;·&nbsp; pitchers: Right &gt; Left)</label>
 </div>
 
-<button class="run-btn" id="runBtn" onclick="buildBoard()" disabled>BUILD DRAFT BOARD</button>
+<button class="run-btn" id="runBtn" onclick="buildBoard()" disabled>BUILD RULE 5 BOARD</button>
 <button class="export-btn" id="exportBtn" onclick="exportCSV()" disabled>⬇ EXPORT CSV</button>
 
 <div id="results" style="display:none">
   <div class="stat-grid" id="statGrid"></div>
 
   <section>
-    <h2>Draft board</h2>
+    <h2>Rule 5 board</h2>
     <div class="filter-row">
       <select id="teamFilter" onchange="renderTable()"><option value="all">All Teams</option></select>
       <select id="typeFilter" onchange="renderTable()">
@@ -129,13 +129,13 @@
 
 <section>
   <h2>Log</h2>
-  <div class="log" id="log">Upload all 3 files, then click Build Draft Board.</div>
+  <div class="log" id="log">Upload all 3 files, then click Build Rule 5 Board.</div>
 </section>
 
 <iframe id="engineFrame" src="./index.html"></iframe>
 
 <script>
-let poolCSV = null, rosterCSV = null, proCSV = null;
+let listCSV = null, rosterCSV = null, proCSV = null;
 let boardRows = [];
 let sortCol = 'rank', sortDir = 1;
 
@@ -158,31 +158,15 @@ function wireUpload(inputId, cardId, statusId, onLoaded) {
     reader.readAsText(f);
   });
 }
-wireUpload('poolFile', 'poolCard', 'poolStatus', t => poolCSV = t);
+wireUpload('listFile', 'listCard', 'listStatus', t => listCSV = t);
 wireUpload('rosterFile', 'rosterCard', 'rosterStatus', t => rosterCSV = t);
 wireUpload('proFile', 'proCard', 'proStatus', t => proCSV = t);
 function checkReady() {
-  document.getElementById('runBtn').disabled = !(poolCSV && rosterCSV && proCSV);
+  document.getElementById('runBtn').disabled = !(listCSV && rosterCSV && proCSV);
 }
 
 function parseCSVRows(text) {
   return Papa.parse(text, { header: true, skipEmptyLines: true }).data;
-}
-
-// Same name-resolution heuristic as the pool-matching script used earlier this project:
-// try first-token-as-first-name, then last-token-as-last-name (handles suffixes like "Jr").
-function resolvePoolName(poolName, rosterByKey) {
-  const parts = poolName.trim().split(/\s+/);
-  const candidates = [[parts[0], parts.slice(1).join(' ')]];
-  if (parts.length > 2) {
-    candidates.push([parts.slice(0, -1).join(' '), parts[parts.length - 1]]);
-    candidates.push([parts[0], parts.slice(1, -1).join(' ')]);
-  }
-  for (const [first, last] of candidates) {
-    const key = (first.trim() + '|' + last.trim()).toLowerCase();
-    if (rosterByKey[key]) return rosterByKey[key];
-  }
-  return null;
 }
 
 const HIT_HAND_RANK = { S: 0, L: 1, R: 2 };
@@ -196,9 +180,9 @@ async function buildBoard() {
   document.getElementById('exportBtn').disabled = true;
 
   try {
-    log('Parsing draft pool CSV...');
-    const poolRows = parseCSVRows(poolCSV).filter(r => r.Name && r.Name.trim());
-    log(`Pool players: ${poolRows.length}`);
+    log('Parsing Rule 5 list...');
+    const listRows = parseCSVRows(listCSV).filter(r => (r.Last || r.last) && (r.First || r.first));
+    log(`Rule 5-eligible players: ${listRows.length}`);
 
     log('Waiting for engine iframe (real, unmodified index.html)...');
     const frame = document.getElementById('engineFrame');
@@ -224,48 +208,34 @@ async function buildBoard() {
     win.runModel();
     await new Promise(r => setTimeout(r, 600));
 
-    log('Matching pool names to roster rows, then scoring every match via the real scoreProspect()...');
+    log('Matching Rule 5 list to roster rows (exact Last/First), scoring every match via the real scoreProspect()...');
     // rosterData/scoreProspect live in index.html's own top-level scope — read via the
-    // iframe's own global (indirect eval), not window property access (let/function
-    // declarations from a classic <script> aren't exposed as window properties either way,
-    // and top-level let specifically never is regardless of same-origin status).
-    // Carry each pool row's own player ID through alongside its name — needed to re-import
-    // the finished board back into the game (name alone is ambiguous, especially once a GM
-    // renames a player post-draft).
-    win.__poolEntries = poolRows.map(r => ({ name: r.Name.trim(), id: r.ID !== undefined ? r.ID : '' }));
+    // iframe's own global (indirect eval), not window property access.
+    win.__listEntries = listRows.map(r => ({
+      last: (r.Last || r.last || '').trim(), first: (r.First || r.first || '').trim(),
+      listProYears: (r['Pro Years'] || r.proYears || '').trim()
+    }));
     const resultJSON = win.eval(`
       (function() {
         const rosterByKey = {};
         rosterData.forEach(r => {
-          const key = ((r.First||'').trim() + '|' + (r.Last||'').trim()).toLowerCase();
+          const key = ((r.Last||'').trim() + '|' + (r.First||'').trim()).toLowerCase();
           if (!rosterByKey[key]) rosterByKey[key] = r;
         });
-        function resolve(poolName) {
-          const parts = poolName.trim().split(/\\s+/);
-          const candidates = [[parts[0], parts.slice(1).join(' ')]];
-          if (parts.length > 2) {
-            candidates.push([parts.slice(0, -1).join(' '), parts[parts.length - 1]]);
-            candidates.push([parts[0], parts.slice(1, -1).join(' ')]);
-          }
-          for (const [first, last] of candidates) {
-            const key = (first.trim() + '|' + last.trim()).toLowerCase();
-            if (rosterByKey[key]) return rosterByKey[key];
-          }
-          return null;
-        }
         const num = v => (v===null||v===undefined||isNaN(v)) ? null : +(+v).toFixed(4);
         const matched = [], unmatched = [];
-        __poolEntries.forEach(entry => {
-          const row = resolve(entry.name);
-          if (!row) { unmatched.push(entry.name); return; }
+        __listEntries.forEach(entry => {
+          const key = (entry.last.toLowerCase() + '|' + entry.first.toLowerCase());
+          const row = rosterByKey[key];
+          if (!row) { unmatched.push(entry.first + ' ' + entry.last); return; }
           const s = scoreProspect(row);
-          if (!s) { unmatched.push(entry.name); return; }
+          if (!s) { unmatched.push(entry.first + ' ' + entry.last); return; }
           matched.push({
-            // name uses the pool file's own "First Last" format (needed to re-import into the
-            // game) rather than the engine's internal "Last, First" — engineName kept for
-            // reference/debugging only, not shown or exported by default.
-            name: entry.name, engineName: s.name, id: entry.id, type: s.type, pos: s.pos, age: s.age, team: s.team, level: s.level,
-            bat: s.bat, throw: s.throw,
+            // name uses "First Last" (the game's own format, for reimport) built directly
+            // from the Rule 5 list's clean First/Last columns, not the engine's "Last, First".
+            name: entry.first + ' ' + entry.last, engineName: s.name,
+            type: s.type, pos: s.pos, age: s.age, team: s.team, level: s.level,
+            bat: s.bat, throw: s.throw, proYears: entry.listProYears,
             overall: num(s.overall), rawOverall: num(s.rawOverall),
             hit: num(s.hit), fld: num(s.fld), stuff: num(s.stuff), end: num(s.end),
             isSP: s.isSP || false
@@ -275,11 +245,9 @@ async function buildBoard() {
       })();
     `);
     const { matched, unmatched } = JSON.parse(resultJSON);
-    log(`Matched ${matched.length}/${poolRows.length} pool players to roster rows and scored them.`);
-    if (unmatched.length) log(`Unmatched (${unmatched.length}): ${unmatched.slice(0, 10).join(', ')}${unmatched.length > 10 ? ', ...' : ''}`);
+    log(`Matched ${matched.length}/${listRows.length} Rule 5 players to roster rows and scored them.`);
+    if (unmatched.length) log(`Unmatched (${unmatched.length}): ${unmatched.slice(0, 15).join(', ')}${unmatched.length > 15 ? ', ...' : ''}`);
 
-    // Sort: displayed OVR (1 decimal, matching what the app shows) desc, then hand tie-break
-    // if enabled, then exact rawOverall desc as the final tiebreak.
     const useTiebreak = document.getElementById('handTiebreak').checked;
     matched.sort((a, b) => {
       const ovrA = Math.round(a.overall * 10) / 10, ovrB = Math.round(b.overall * 10) / 10;
@@ -294,13 +262,12 @@ async function buildBoard() {
     matched.forEach((r, i) => r.rank = i + 1);
     boardRows = matched;
 
-    // populate team filter
     const teams = [...new Set(matched.map(r => r.team))].sort();
     const tf = document.getElementById('teamFilter');
     tf.innerHTML = '<option value="all">All Teams</option>' + teams.map(t => `<option value="${t}">${t}</option>`).join('');
 
     document.getElementById('statGrid').innerHTML = [
-      `<div class="stat-card"><div class="label">Pool players</div><div class="value">${poolRows.length}</div></div>`,
+      `<div class="stat-card"><div class="label">Rule 5 list</div><div class="value">${listRows.length}</div></div>`,
       `<div class="stat-card"><div class="label">Matched &amp; scored</div><div class="value">${matched.length}</div></div>`,
       `<div class="stat-card"><div class="label">Unmatched</div><div class="value">${unmatched.length}</div></div>`,
       `<div class="stat-card"><div class="label">Hand tie-break</div><div class="value">${useTiebreak ? 'ON' : 'OFF'}</div></div>`,
@@ -350,7 +317,6 @@ function renderTable() {
   table.innerHTML = `<tr>
     <th onclick="sortBy('rank')">#</th>
     <th onclick="sortBy('name')">Name</th>
-    <th>ID</th>
     <th>Type</th>
     <th onclick="sortBy('pos')">Pos</th>
     <th onclick="sortBy('age')">Age</th>
@@ -364,7 +330,7 @@ function renderTable() {
       ? `HIT:${r.hit?.toFixed(1) ?? '—'} FLD:${r.fld?.toFixed(1) ?? '—'}`
       : `STF:${r.stuff?.toFixed(1) ?? '—'} END:${r.end?.toFixed(1) ?? '—'}`;
     return `<tr>
-      <td>${r.rank}</td><td>${r.name}</td><td class="muted">${r.id || '—'}</td>
+      <td>${r.rank}</td><td>${r.name}</td>
       <td><span class="type-badge type-${r.type}">${r.type === 'P' ? 'PITCHER' : 'HITTER'}</span></td>
       <td>${r.pos}</td><td>${r.age}</td><td>${r.team}</td><td>${hand || '-'}</td>
       <td>${r.overall.toFixed(2)}</td><td class="muted">${grades}</td>
@@ -373,7 +339,7 @@ function renderTable() {
 }
 
 function exportCSV() {
-  const cols = ['rank','name','id','type','pos','age','team','level','bat','throw','overall','rawOverall','hit','fld','stuff','end','isSP'];
+  const cols = ['rank','name','type','pos','age','team','level','bat','throw','proYears','overall','rawOverall','hit','fld','stuff','end','isSP'];
   const header = cols.join(',');
   const body = boardRows.map(r => cols.map(c => {
     const v = r[c];
@@ -382,7 +348,7 @@ function exportCSV() {
   const blob = new Blob([header + '\n' + body], { type: 'text/csv' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = 'draft_board.csv';
+  a.download = 'rule5_board.csv';
   a.click();
 }
 </script>

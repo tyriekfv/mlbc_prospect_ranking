@@ -17,7 +17,7 @@
   h1 { font-family: 'Bebas Neue', sans-serif; font-size: 34px; letter-spacing: 2px; margin-bottom: 4px; }
   h1 span { color: var(--accent); }
   .sub { color: var(--text2); margin-bottom: 24px; font-size: 13px; max-width: 900px; }
-  .subnav { display: flex; gap: 4px; margin-bottom: 16px; }
+  .subnav { display: flex; gap: 4px; margin-bottom: 16px; flex-wrap: wrap; }
   .subnav a {
     color: var(--text2); text-decoration: none; font-size: 12px;
     font-family: 'IBM Plex Mono', monospace; padding: 6px 10px; border-radius: 4px;
@@ -85,6 +85,7 @@
   <a href="./progression.html">Progression Tracker</a>
   <a href="./draftboard.html">Draft Board</a>
   <a href="./faboard.html" class="active">FA Board</a>
+  <a href="./rule5.html">Rule 5 Board</a>
 </nav>
 
 <h1>MLBC <span>FA BOARD</span></h1>
@@ -122,6 +123,18 @@
       <select id="teamFilter" onchange="renderTable()"><option value="all">All Teams</option></select>
       <select id="levelFilter" onchange="renderTable()">
         <option value="all">All Levels</option><option value="ML">ML</option><option value="AAA">AAA</option><option value="AA">AA</option><option value="A">A</option><option value="IA">IA</option>
+      </select>
+      <select id="posFilter" onchange="renderTable()">
+        <option value="all">All Pos</option>
+        <option value="P">P</option>
+        <option value="C">C</option>
+        <option value="1B">1B</option>
+        <option value="2B">2B</option>
+        <option value="3B">3B</option>
+        <option value="SS">SS</option>
+        <option value="LF">LF</option>
+        <option value="CF">CF</option>
+        <option value="RF">RF</option>
       </select>
       <input type="text" id="searchBox" placeholder="Search name..." oninput="renderTable()">
     </div>
@@ -288,12 +301,14 @@ function sortBy(col) {
 function renderTable() {
   const team = document.getElementById('teamFilter').value;
   const level = document.getElementById('levelFilter').value;
+  const pos = document.getElementById('posFilter').value;
   const search = document.getElementById('searchBox').value.toLowerCase();
 
   filtered = boardRows.filter(r => {
     if (typeFilter !== 'all' && r.type !== typeFilter) return false;
     if (team !== 'all' && r.team !== team) return false;
     if (level !== 'all' && r.level !== level) return false;
+    if (pos !== 'all' && r.pos !== pos) return false;
     if (search && !r.name.toLowerCase().includes(search)) return false;
     return true;
   });
