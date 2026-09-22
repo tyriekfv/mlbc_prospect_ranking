@@ -397,15 +397,28 @@ async function runAnalysis() {
       if (!recent) return;
       const careerOps = career.OBP + career.SLG, recentOps = recent.OBP + recent.SLG;
       const priorOps = prior ? (prior.OBP + prior.SLG) : null;
+      // Current exists but was too thin to trust (fell back to LastYear) — surface it
+      // anyway so a small-sample hot/cold streak doesn't get silently hidden behind
+      // whichever period the AB threshold happened to pick.
+      let thinCurrent = null;
+      if (recentLabel === 'LastYear' && current && current.AB > 0 && current.AB < 150) {
+        thinCurrent = { ab: current.AB, g: current.G, ops: current.OBP + current.SLG };
+      }
       const sc = hitterScoreByName[name];
-      trend.push({ name, careerOps, recentOps, recentLabel, priorOps, priorLabel,
+      trend.push({ name, careerOps, recentOps, recentLabel, priorOps, priorLabel, thinCurrent,
         delta: recentOps - careerOps, age: sc ? sc.age : null, bat: sc ? sc.bat : null });
     });
     trend.sort((a,b) => a.delta - b.delta);
     const down = trend.slice(0, 15);
     const up = [...trend].sort((a,b) => b.delta - a.delta).slice(0, 15);
 
-    const trendRow = t => `<tr><td>${t.name}</td><td>${t.bat||'-'}</td><td>${t.age||'-'}</td><td>${t.careerOps.toFixed(3)}</td><td>${t.priorOps!==null?t.priorOps.toFixed(3):'—'}</td><td>${t.recentOps.toFixed(3)} <span class="muted">(${t.recentLabel})</span></td><td class="${t.delta>=0?'pos':'neg'}">${t.delta>=0?'+':''}${t.delta.toFixed(3)}</td></tr>`;
+    const trendRow = t => {
+      const mainRow = `<tr><td>${t.name}</td><td>${t.bat||'-'}</td><td>${t.age||'-'}</td><td>${t.careerOps.toFixed(3)}</td><td>${t.priorOps!==null?t.priorOps.toFixed(3):'—'}</td><td>${t.recentOps.toFixed(3)} <span class="muted">(${t.recentLabel})</span></td><td class="${t.delta>=0?'pos':'neg'}">${t.delta>=0?'+':''}${t.delta.toFixed(3)}</td></tr>`;
+      if (!t.thinCurrent) return mainRow;
+      const tc = t.thinCurrent;
+      const noteRow = `<tr><td colspan="7" class="muted" style="font-style:italic">↳ Current season in progress: ${tc.g} G, ${tc.ab} AB, ${tc.ops.toFixed(3)} OPS — below the 150 AB minimum, so it wasn't used above (small samples swing wildly). Shown for reference only.</td></tr>`;
+      return mainRow + noteRow;
+    };
     const trendHeader = '<tr><th>Name</th><th>Bat</th><th>Age</th><th>Career OPS</th><th>Prior Yr OPS</th><th>Recent OPS</th><th>Delta</th></tr>';
     document.getElementById('downTable').innerHTML = trendHeader + down.map(trendRow).join('');
     document.getElementById('upTable').innerHTML = trendHeader + up.map(trendRow).join('');
