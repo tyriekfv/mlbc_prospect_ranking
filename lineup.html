@@ -117,6 +117,7 @@
   <label>Team code <input type="text" id="teamCode" value="SCRN" style="text-transform:uppercase"></label>
   <label>Rotation size <input type="number" id="rotationSize" value="5" min="3" max="6"></label>
   <label><input type="checkbox" id="handTiebreak" checked> Hand tie-break on close position battles (hitters: Switch &gt; Left &gt; Right &nbsp;·&nbsp; pitchers: Right &gt; Left)</label>
+  <label><input type="checkbox" id="includeReassigned" checked> Include players who played for this team in the stats files but show elsewhere in the roster export (pre-season re-signings the export hasn't caught up to yet)</label>
 </div>
 
 <button class="run-btn" id="runBtn" onclick="buildLineup()" disabled>BUILD LINEUP &amp; ROTATION</button>
@@ -127,7 +128,7 @@
 
   <section id="attentionSection" style="display:none">
     <h2 style="color:var(--danger)">⚠ Needs attention</h2>
-    <div class="desc">These players show up in your stats files as having played for this team, but the roster export doesn't have them here — most likely an expiring contract or a trade. Not included in the lineup/rotation below until their roster status is resolved.</div>
+    <div class="desc">These players show up in your stats files as having played for this team, but the roster export currently has them elsewhere — a trade, an expiring contract, or (if you're running this pre-season) a re-signing the export hasn't caught up to yet. "Included" means they were scored off their existing ratings row anyway and are in the lineup/rotation below; uncheck the option above to exclude them, or re-export the roster file once it's updated.</div>
     <table id="attentionTable"></table>
   </section>
 
@@ -325,8 +326,12 @@ async function buildLineup() {
     // ── Flag stats-file players who didn't match a ${teamCode} roster row ──
     // A player who actually played a full season for this team can still be missing
     // here if the roster export currently shows them on a different team, or as an
-    // unsigned free agent (e.g. an expiring contract processed at season's end). That's
-    // real, actionable roster information — surface it instead of silently dropping them.
+    // unsigned free agent (e.g. an expiring contract processed at season's end, or a
+    // re-signing that hasn't made it into the export yet if you run this pre-season).
+    // When includeReassigned is on, score them off their existing roster row anyway —
+    // their ratings are still there, just under the stale team tag — and fold them into
+    // the pool with a visible "reassigned" flag rather than silently merging them in.
+    const includeReassigned = document.getElementById('includeReassigned').checked;
     const scoredKeys = new Set(fullRosterRows.map(r => keyOf(r.last, r.first)));
     const statKeys = new Set([...Object.keys(prevH), ...Object.keys(curH), ...Object.keys(prevP), ...Object.keys(curP)]);
     const missingKeys = [...statKeys].filter(k => !scoredKeys.has(k));
@@ -334,23 +339,44 @@ async function buildLineup() {
     if (missingKeys.length) {
       const lookupJSON = win.eval(`
         (function() {
+          const num = v => (v===null||v===undefined||isNaN(v)) ? null : +(+v).toFixed(4);
           const keys = ${JSON.stringify(missingKeys)};
           const byKey = {};
           rosterData.forEach(r => { byKey[((r.Last||'').trim()+'|'+(r.First||'').trim()).toLowerCase()] = r; });
           return JSON.stringify(keys.map(k => {
             const r = byKey[k];
-            return { key: k, foundTeam: r ? r.Team : null, foundLevel: r ? r.Level : null };
+            if (!r) return { key: k, foundTeam: null, foundLevel: null, scored: null };
+            let scored = null;
+            if (${includeReassigned}) {
+              const s = scoreProspect({ ...r, Team: ${JSON.stringify(teamCode)} });
+              if (s) scored = {
+                last: s.last, first: s.first, type: s.type, pos: s.pos, age: s.age, level: s.level,
+                bat: s.bat, throw: s.throw, isSP: s.isSP||false,
+                overall: num(s.overall), rawOverall: num(s.rawOverall),
+                hit: num(s.hit), fld: num(s.fld), stuff: num(s.stuff), end: num(s.end),
+                obp: num(s.obp), ops: num(s.ops)
+              };
+            }
+            return { key: k, foundTeam: r.Team, foundLevel: r.Level, scored };
           }));
         })();
       `);
-      needsAttention = JSON.parse(lookupJSON).map(x => {
+      const lookup = JSON.parse(lookupJSON);
+      needsAttention = lookup.map(x => {
         const [last, first] = x.key.split('|');
-        return { name: `${first} ${last}`, foundTeam: x.foundTeam, foundLevel: x.foundLevel };
+        return { name: `${first} ${last}`, foundTeam: x.foundTeam, foundLevel: x.foundLevel, included: !!x.scored };
       });
-      needsAttention.forEach(p => {
-        log(p.foundTeam
-          ? `NOTE: ${p.name} played for ${teamCode} in your stats file but the roster export currently shows them on ${p.foundTeam} — check contract/trade status.`
-          : `NOTE: ${p.name} played for ${teamCode} in your stats file but isn't found anywhere in the roster export at all.`);
+      lookup.forEach(x => {
+        const [last, first] = x.key.split('|');
+        const name = `${first} ${last}`;
+        if (x.scored) {
+          fullRosterRows.push({ ...x.scored, reassignedFrom: x.foundTeam });
+          log(`${name} played for ${teamCode} in your stats file but the roster export shows ${x.foundTeam} — included anyway (reassigned).`);
+        } else if (x.foundTeam) {
+          log(`NOTE: ${name} played for ${teamCode} in your stats file but the roster export currently shows them on ${x.foundTeam} — check contract/trade status.`);
+        } else {
+          log(`NOTE: ${name} played for ${teamCode} in your stats file but isn't found anywhere in the roster export at all.`);
+        }
       });
     }
 
@@ -467,8 +493,8 @@ async function buildLineup() {
     if (needsAttention.length) {
       document.getElementById('attentionSection').style.display = 'block';
       document.getElementById('attentionTable').innerHTML =
-        '<tr><th>Name</th><th>Roster export shows</th></tr>' +
-        needsAttention.map(p => `<tr><td>${p.name}</td><td>${p.foundTeam ? `${p.foundTeam} (${p.foundLevel})` : '<span class="muted">not found in roster file</span>'}</td></tr>`).join('');
+        '<tr><th>Name</th><th>Roster export shows</th><th>Status</th></tr>' +
+        needsAttention.map(p => `<tr><td>${p.name}</td><td>${p.foundTeam ? `${p.foundTeam} (${p.foundLevel})` : '<span class="muted">not found in roster file</span>'}</td><td>${p.included ? '<span class="tag tag-tierA">Included</span>' : '<span class="muted">Excluded</span>'}</td></tr>`).join('');
     } else {
       document.getElementById('attentionSection').style.display = 'none';
     }
@@ -477,11 +503,14 @@ async function buildLineup() {
       haveCurH ? 'OPS/OBP/SLG/SB drawn from actual Current (or Previous) Year stats where available, engine projection otherwise — shown per player below.'
                 : 'No performance file provided — ordered on engine-projected OBP/OPS only.';
 
-    const tierTag = i => i < 3 ? '<span class="tag tag-tierA">Tier A</span>' : i < 5 ? '<span class="tag tag-tierB">Tier B</span>' : '<span class="tag tag-tierC">Tier C</span>';
+    // Slot index -> source tier is NOT sequential: 1/2/4 (indices 0,1,3) are Tier A,
+    // 3/5 (indices 2,4) are Tier B, 6/7/8 (indices 5,6,7) are Tier C.
+    const tierTag = i => [0,1,3].includes(i) ? '<span class="tag tag-tierA">Tier A</span>' : [2,4].includes(i) ? '<span class="tag tag-tierB">Tier B</span>' : '<span class="tag tag-tierC">Tier C</span>';
+    const nameCell = r => `${r.first} ${r.last}` + (r.reassignedFrom ? ` <span class="muted" title="Roster export shows ${r.reassignedFrom} — included from the stats files anyway">↩</span>` : '');
     document.getElementById('lineupTable').innerHTML =
       '<tr><th>#</th><th>Name</th><th>Bat</th><th>Pos</th><th>OBP</th><th>SLG</th><th>OPS</th><th>Source</th><th>Tier</th></tr>' +
       lineup.map((r,i) => !r ? `<tr><td>${i+1}</td><td colspan="8" class="muted">— no eligible player —</td></tr>` : `<tr>
-        <td>${i+1}</td><td>${r.first} ${r.last}</td><td>${r.bat}</td><td>${r.pos}</td>
+        <td>${i+1}</td><td>${nameCell(r)}</td><td>${r.bat}</td><td>${r.pos}</td>
         <td>${r.perf.obp!=null?r.perf.obp.toFixed(3):'—'}</td><td>${r.perf.slg!=null?r.perf.slg.toFixed(3):'—'}</td><td>${r.perf.ops!=null?r.perf.ops.toFixed(3):'—'}</td>
         <td class="muted">${r.perf.source}</td><td>${tierTag(i)}</td>
       </tr>`).join('');
@@ -489,22 +518,22 @@ async function buildLineup() {
     document.getElementById('benchTable').innerHTML =
       '<tr><th>Name</th><th>Bat</th><th>Pos</th><th>OVR</th><th>OPS</th><th>Source</th></tr>' +
       bench.sort((a,b)=>b.overall-a.overall).map(r => `<tr>
-        <td>${r.first} ${r.last}</td><td>${r.bat}</td><td>${r.pos}</td><td>${r.overall.toFixed(2)}</td>
+        <td>${nameCell(r)}</td><td>${r.bat}</td><td>${r.pos}</td><td>${r.overall.toFixed(2)}</td>
         <td>${r.perf.ops!=null?r.perf.ops.toFixed(3):'—'}</td><td class="muted">${r.perf.source}</td>
       </tr>`).join('');
 
     document.getElementById('rotationTable').innerHTML =
       '<tr><th>#</th><th>Name</th><th>Throw</th><th>OVR</th><th>END</th><th>Actual ERA</th><th>Actual GS/G</th><th>Source</th></tr>' +
       rotation.map((r,i) => `<tr>
-        <td>SP${i+1}</td><td>${r.first} ${r.last}</td><td>${r.throw}</td><td>${r.overall.toFixed(2)}</td><td>${r.end!=null?r.end.toFixed(1):'—'}</td>
+        <td>SP${i+1}</td><td>${nameCell(r)}</td><td>${r.throw}</td><td>${r.overall.toFixed(2)}</td><td>${r.end!=null?r.end.toFixed(1):'—'}</td>
         <td>${r.perf.era!=null?r.perf.era.toFixed(2):'—'}</td><td>${r.perf.gs!=null?r.perf.gs+'/'+r.perf.g:'—'}</td><td class="muted">${r.perf.source}</td>
       </tr>`).join('');
 
     document.getElementById('bullpenTable').innerHTML =
       '<tr><th>Role</th><th>Name</th><th>Throw</th><th>OVR</th><th>Actual ERA</th><th>Actual SV</th><th>Source</th></tr>' +
-      (closer ? `<tr><td><span class="tag tag-closer">Closer</span></td><td>${closer.first} ${closer.last}</td><td>${closer.throw}</td><td>${closer.overall.toFixed(2)}</td><td>${closer.perf.era!=null?closer.perf.era.toFixed(2):'—'}</td><td>${closer.perf.sv??'—'}</td><td class="muted">${closer.perf.source}</td></tr>` : '') +
+      (closer ? `<tr><td><span class="tag tag-closer">Closer</span></td><td>${nameCell(closer)}</td><td>${closer.throw}</td><td>${closer.overall.toFixed(2)}</td><td>${closer.perf.era!=null?closer.perf.era.toFixed(2):'—'}</td><td>${closer.perf.sv??'—'}</td><td class="muted">${closer.perf.source}</td></tr>` : '') +
       bullpen.map(r => `<tr>
-        <td>Bullpen</td><td>${r.first} ${r.last}</td><td>${r.throw}</td><td>${r.overall.toFixed(2)}</td>
+        <td>Bullpen</td><td>${nameCell(r)}</td><td>${r.throw}</td><td>${r.overall.toFixed(2)}</td>
         <td>${r.perf.era!=null?r.perf.era.toFixed(2):'—'}</td><td>${r.perf.sv??'—'}</td><td class="muted">${r.perf.source}</td>
       </tr>`).join('');
 
