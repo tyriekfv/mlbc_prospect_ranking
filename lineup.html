@@ -492,26 +492,28 @@ async function buildLineup() {
     activePitchers = activePitchers.map(r => ({ ...r, perf: r.perf || pitcherPerf(r), minorsEligible: r.minorsEligible, minorsReason: r.minorsReason }));
 
     // ── Position battles: best player per position, hand tie-break on close calls ──
-    // A player with no real stats (perf.source === 'Engine (no stats)') is being judged
-    // purely on an untested projection — that must not outrank someone with actual MLB
-    // production just because the projection happens to be higher. Real stats beat a
-    // stats-free projection outright; only compare on OPS/OVR when both sides have the
-    // same kind of evidence (both real, or both projection-only).
-    const hasRealStats = r => r.perf.source !== 'Engine (no stats)';
+    // Primary signal is the engine's overall grade, not a raw OPS number. The edits that
+    // grade is built from are fixed and genuinely deterministic (confirmed via direct
+    // reverse-engineering of the league's own save file and community testing — a
+    // player's underlying attributes don't drift over a career), so a real prospect's
+    // projected grade deserves real trust rather than being treated as an unproven guess.
+    // Real accumulated production still gets a say — there's a confirmed hidden per-player
+    // factor beyond the visible edits that only shows up empirically — so it acts as a
+    // tiebreak/nudge when two players are close on grade, not as a gate that overrides it.
     const byPos = {};
     activeHitters.forEach(r => { (byPos[r.pos] ??= []).push(r); });
     Object.values(byPos).forEach(arr => arr.sort((a,b) => {
-      const aReal = hasRealStats(a), bReal = hasRealStats(b);
-      if (aReal !== bReal) return aReal ? -1 : 1;
-      const opsA = a.perf.ops ?? -1, opsB = b.perf.ops ?? -1;
-      const closeOps = Math.abs(opsA - opsB) < 0.020;
-      const closeOvr = Math.abs(a.overall - b.overall) < 1.0;
-      if (useTiebreak && closeOps && closeOvr) {
-        const rk = p => HIT_HAND_RANK[p.bat] ?? 3;
-        if (rk(a) !== rk(b)) return rk(a) - rk(b);
+      const ovrA = a.overall, ovrB = b.overall;
+      const closeOvr = Math.abs(ovrA - ovrB) < 2.0;
+      if (closeOvr) {
+        const opsA = a.perf.ops ?? -1, opsB = b.perf.ops ?? -1;
+        if (Math.abs(opsA - opsB) > 0.015) return opsB - opsA; // real production breaks a near-tie on grade
+        if (useTiebreak) {
+          const rk = p => HIT_HAND_RANK[p.bat] ?? 3;
+          if (rk(a) !== rk(b)) return rk(a) - rk(b);
+        }
       }
-      if (Math.abs(opsA - opsB) > 0.015) return opsB - opsA; // real production leads when it clearly separates them
-      return b.overall - a.overall;
+      return ovrB - ovrA;
     }));
     const STARTING_POS = ['C','1B','2B','3B','SS','LF','CF','RF'];
     const starters8 = [], bench = [];
@@ -559,14 +561,12 @@ async function buildLineup() {
     // Starter-eligible: engine isSP flag OR real recent usage shows meaningful starts —
     // catches a starter-grade arm the team has been misusing in relief (a real case we
     // found by hand before building this: starter-caliber endurance, zero actual starts).
-    // Same safeguard as the hitter position battles: a pitcher with zero real MLB innings
-    // is being judged purely on an untested grade and shouldn't leapfrog a proven arm.
-    const pitcherHasRealStats = p => p.perf.source !== 'Engine (no stats)';
+    // Primary signal is engine grade here too, same reasoning as the hitter position
+    // battles above — real usage/ERA is shown alongside in the UI as a sanity check,
+    // not used to override a legitimately-graded arm just because it's unproven.
     const starterEligible = activePitchers.filter(p => p.isSP || (p.perf.gs != null && p.perf.gs >= 8));
     const relieverPool = activePitchers.filter(p => !starterEligible.includes(p));
     starterEligible.sort((a,b) => {
-      const aReal = pitcherHasRealStats(a), bReal = pitcherHasRealStats(b);
-      if (aReal !== bReal) return aReal ? -1 : 1;
       if (useTiebreak && Math.abs(a.overall-b.overall) < 1.0) {
         const rk = p => PIT_HAND_RANK[p.throw] ?? 2;
         if (rk(a) !== rk(b)) return rk(a) - rk(b);
@@ -575,20 +575,12 @@ async function buildLineup() {
     });
     const rotation = starterEligible.slice(0, rotationSize);
     const leftoverStarters = starterEligible.slice(rotationSize);
-    const bullpenAll = [...relieverPool, ...leftoverStarters].sort((a,b) => {
-      const aReal = pitcherHasRealStats(a), bReal = pitcherHasRealStats(b);
-      if (aReal !== bReal) return aReal ? -1 : 1;
-      return b.overall - a.overall;
-    });
+    const bullpenAll = [...relieverPool, ...leftoverStarters].sort((a,b) => b.overall - a.overall);
     // Closer: best true reliever-profile arm, preferring real save history when it exists.
     let closer = null;
     const trueRelievers = bullpenAll.filter(p => !p.isSP);
     if (trueRelievers.length) {
-      closer = [...trueRelievers].sort((a,b) => {
-        const aReal = pitcherHasRealStats(a), bReal = pitcherHasRealStats(b);
-        if (aReal !== bReal) return aReal ? -1 : 1;
-        return (b.perf.sv??0) - (a.perf.sv??0) || b.overall - a.overall;
-      })[0];
+      closer = [...trueRelievers].sort((a,b) => (b.perf.sv??0) - (a.perf.sv??0) || b.overall - a.overall)[0];
     } else if (bullpenAll.length) {
       closer = bullpenAll[0];
     }
@@ -627,9 +619,16 @@ async function buildLineup() {
     // Slot index -> source tier is NOT sequential: 1/2/4 (indices 0,1,3) are Tier A,
     // 3/5 (indices 2,4) are Tier B, 6/7/8 (indices 5,6,7) are Tier C.
     const tierTag = i => [0,1,3].includes(i) ? '<span class="tag tag-tierA">Tier A</span>' : [2,4].includes(i) ? '<span class="tag tag-tierB">Tier B</span>' : '<span class="tag tag-tierC">Tier C</span>';
+    // A hitter under ~150 real AB in their most recent counted season can have a
+    // mechanically depressed fielding rating (confirmed league mechanic: falling short
+    // of the PA threshold at a level tanks displayed FP by up to .070, unrelated to true
+    // skill, recovering the next year with full playing time) — flag it rather than
+    // silently trusting the FLD grade at face value for these players.
+    const thinPA = r => r.type === 'H' && r.perf && r.perf.ab != null && r.perf.ab < 150;
     const nameCell = r => `${r.first} ${r.last}`
       + (r.reassignedFrom ? ` <span class="muted" title="Roster export shows ${r.reassignedFrom} — included from the stats files anyway">↩</span>` : '')
-      + (r.minorsEligible ? ` <span class="muted" title="Not on the active roster — included via minor-league eligibility (${r.minorsReason})">★</span>` : '');
+      + (r.minorsEligible ? ` <span class="muted" title="Not on the active roster — included via minor-league eligibility (${r.minorsReason})">★</span>` : '')
+      + (thinPA(r) ? ` <span class="muted" title="Only ${r.perf.ab} real AB in their counted season — FLD grade may be mechanically depressed by the league's under-150-AB fielding penalty, not a true read on their glove">🧤</span>` : '');
     document.getElementById('lineupTable').innerHTML =
       '<tr><th>#</th><th>Name</th><th>Bat</th><th>Pos</th><th>OBP</th><th>SLG</th><th>OPS</th><th>Source</th><th>Tier</th></tr>' +
       lineup.map((r,i) => !r ? `<tr><td>${i+1}</td><td colspan="8" class="muted">— no eligible player —</td></tr>` : `<tr>
