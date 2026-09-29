@@ -126,7 +126,7 @@
   <label><input type="checkbox" id="includeReassigned" checked> Include players who played for this team in the stats files but show elsewhere in the roster export (pre-season re-signings the export hasn't caught up to yet)</label>
 </div>
 <div class="options-row">
-  <label><input type="checkbox" id="includeMinors" checked> Also make minor-league players eligible if age &ge; <input type="number" id="minAge" value="24" min="18" max="45" style="width:44px"> or they've played &ge; <input type="number" id="minMinorSeasons" value="4" min="1" max="15" style="width:44px"> minor-league seasons (needs Player Cards Folder above)</label>
+  <label><input type="checkbox" id="includeMinors" checked> Also make minor-league players eligible if age &ge; <input type="number" id="minAge" value="24" min="18" max="45" style="width:44px"> or they've played &ge; <input type="number" id="minAAASeasons" value="2" min="1" max="15" style="width:44px"> seasons at AAA (needs Player Cards Folder above)</label>
 </div>
 
 <button class="run-btn" id="runBtn" onclick="buildLineup()" disabled>BUILD LINEUP &amp; ROTATION</button>
@@ -143,7 +143,7 @@
 
   <section id="minorsSection" style="display:none">
     <h2>Minor-league eligibility</h2>
-    <div class="desc">Not on the active roster, but pulled into the pool because they cleared the age/experience bar above. Minor-league seasons counted as distinct years in their player card where the team isn't tagged (ML) — includes partial seasons and multi-team years, each counted once.</div>
+    <div class="desc">Not on the active roster, but pulled into the pool because they cleared the age/AAA-experience bar above. AAA seasons counted as distinct years in their player card tagged (AAA) — includes partial seasons and multi-team years, each counted once.</div>
     <table id="minorsTable"></table>
   </section>
 
@@ -233,7 +233,7 @@ function normalizeNameKey(s) { return (s||'').replace(/[^a-zA-Z]/g, '').toLowerC
 // automatically. Skip the final career "Total" row and any "Total (LVL)" rollup row.
 function parsePlayerCardHTML(html) {
   const doc = new DOMParser().parseFromString(html, 'text/html');
-  const minorSeasons = new Set(), mlSeasons = new Set();
+  const minorSeasons = new Set(), mlSeasons = new Set(), aaaSeasons = new Set();
   const expText = doc.body.textContent.match(/Experience\s*<\/TD>\s*<TD[^>]*>\s*(\d+)/i);
   doc.querySelectorAll('table').forEach(table => {
     const rows = [...table.querySelectorAll('tr')];
@@ -249,9 +249,10 @@ function parsePlayerCardHTML(html) {
       if (!year || year === 'Total' || /^Total\b/i.test(team)) return;
       if (/\(\s*ML\s*\)/i.test(team)) mlSeasons.add(year);
       else if (/\(/.test(team)) minorSeasons.add(year);
+      if (/\(\s*AAA\s*\)/i.test(team)) aaaSeasons.add(year);
     });
   });
-  return { minorSeasons, mlSeasons, experience: expText ? +expText[1] : null };
+  return { minorSeasons, mlSeasons, aaaSeasons, experience: expText ? +expText[1] : null };
 }
 
 document.getElementById('cardsFolder').addEventListener('change', async function(e) {
@@ -458,13 +459,13 @@ async function buildLineup() {
       : pitchers.filter(r => r.level === 'ML');
     log(`Active roster: ${activeHitters.length} hitters, ${activePitchers.length} pitchers (source: ${haveCurH?'Current Year file':'engine Level=ML fallback'}).`);
 
-    // ── Minor-league eligibility (age or experience) ──
-    // Pulls in non-active players who clear the age/season bar, using the parsed
-    // Player Cards folder to count distinct minor-league season-years per player —
-    // that data doesn't exist anywhere else we can export in bulk.
+    // ── Minor-league eligibility (age or AAA experience) ──
+    // Pulls in non-active players who clear the age/AAA-seasons bar, using the parsed
+    // Player Cards folder to count distinct AAA season-years per player — that data
+    // doesn't exist anywhere else we can export in bulk.
     const includeMinors = document.getElementById('includeMinors').checked && !!cardsByNameKey;
     const minAge = +document.getElementById('minAge').value || 24;
-    const minMinorSeasons = +document.getElementById('minMinorSeasons').value || 4;
+    const minAAASeasons = +document.getElementById('minAAASeasons').value || 2;
     let minorsIncluded = [];
     if (includeMinors) {
       const activeKeys = new Set([...activeHitters, ...activePitchers].map(r => keyOf(r.last, r.first)));
@@ -472,13 +473,13 @@ async function buildLineup() {
       notYetActive.forEach(r => {
         const card = cardsByNameKey[normalizeNameKey(r.first + r.last)];
         if (!card) return;
-        const seasons = card.minorSeasons.size;
-        const eligible = r.age >= minAge || seasons >= minMinorSeasons;
+        const seasons = card.aaaSeasons.size;
+        const eligible = r.age >= minAge || seasons >= minAAASeasons;
         if (!eligible) return;
-        const reason = r.age >= minAge && seasons >= minMinorSeasons ? `age ${r.age}, ${seasons} minor seasons`
-          : r.age >= minAge ? `age ${r.age}` : `${seasons} minor seasons`;
+        const reason = r.age >= minAge && seasons >= minAAASeasons ? `age ${r.age}, ${seasons} AAA seasons`
+          : r.age >= minAge ? `age ${r.age}` : `${seasons} AAA seasons`;
         const flagged = { ...r, minorsEligible: true, minorsReason: reason };
-        const withPerf = { ...flagged, perf: r.type === 'H' ? hitterPerf(r) : pitcherPerf(r), minorSeasons: seasons };
+        const withPerf = { ...flagged, perf: r.type === 'H' ? hitterPerf(r) : pitcherPerf(r), aaaSeasonsCount: seasons };
         minorsIncluded.push(withPerf);
         if (r.type === 'H') activeHitters.push(flagged); else activePitchers.push(flagged);
       });
@@ -604,8 +605,8 @@ async function buildLineup() {
     if (minorsIncluded.length) {
       document.getElementById('minorsSection').style.display = 'block';
       document.getElementById('minorsTable').innerHTML =
-        '<tr><th>Name</th><th>Pos</th><th>Age</th><th>Level</th><th>Minor Seasons</th><th>Why eligible</th><th>OVR</th></tr>' +
-        minorsIncluded.map(p => `<tr><td>${p.first} ${p.last}</td><td>${p.pos}</td><td>${p.age}</td><td>${p.level}</td><td>${p.minorSeasons}</td><td class="muted">${p.minorsReason}</td><td>${p.overall.toFixed(2)}</td></tr>`).join('');
+        '<tr><th>Name</th><th>Pos</th><th>Age</th><th>Level</th><th>AAA Seasons</th><th>Why eligible</th><th>OVR</th></tr>' +
+        minorsIncluded.map(p => `<tr><td>${p.first} ${p.last}</td><td>${p.pos}</td><td>${p.age}</td><td>${p.level}</td><td>${p.aaaSeasonsCount}</td><td class="muted">${p.minorsReason}</td><td>${p.overall.toFixed(2)}</td></tr>`).join('');
     } else {
       document.getElementById('minorsSection').style.display = 'none';
     }
