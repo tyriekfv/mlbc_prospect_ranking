@@ -117,6 +117,12 @@
     <div class="upload-hint">Folder of saved FirstLast.htm player-card pages (optional — unlocks minor-league-season eligibility below)</div>
     <div class="upload-status" id="cardsStatus"></div>
   </div>
+  <div class="upload-card optional" id="playersHHCard">
+    <input type="file" id="playersHHFile" accept=".hh">
+    <div class="upload-label">Players.hh</div>
+    <div class="upload-hint">Raw save file, from your &lt;name&gt;Season folder next to the .sea pointer (optional — unlocks the prospect-rating exception below)</div>
+    <div class="upload-status" id="playersHHStatus"></div>
+  </div>
 </div>
 
 <div class="options-row">
@@ -126,7 +132,10 @@
   <label><input type="checkbox" id="includeReassigned" checked> Include players who played for this team in the stats files but show elsewhere in the roster export (pre-season re-signings the export hasn't caught up to yet)</label>
 </div>
 <div class="options-row">
-  <label><input type="checkbox" id="includeMinors" checked> Also make minor-league players eligible if age &ge; <input type="number" id="minAge" value="24" min="18" max="45" style="width:44px"> or they've played &ge; <input type="number" id="minAAASeasons" value="2" min="1" max="15" style="width:44px"> seasons at AAA (needs Player Cards Folder above)</label>
+  <label><input type="checkbox" id="includeMinors" checked> Also make minor-league players eligible if age &ge; <input type="number" id="minAge" value="24" min="18" max="45" style="width:44px"> or they've played &ge; <input type="number" id="minAAASeasons" value="2" min="1" max="15" style="width:44px"> seasons at AAA (needs Player Cards Folder)</label>
+</div>
+<div class="options-row">
+  <label><input type="checkbox" id="includeProspectException" checked> ...or make an exception regardless of age/AAA time if their in-game prospect rating is &ge; <input type="number" id="minProspectRating" value="6.5" min="1" max="15" step="0.1" style="width:52px"> (validated against the league's real under-24 ML call-ups — see log for the reasoning; needs Players.hh above)</label>
 </div>
 
 <button class="run-btn" id="runBtn" onclick="buildLineup()" disabled>BUILD LINEUP &amp; ROTATION</button>
@@ -143,7 +152,7 @@
 
   <section id="minorsSection" style="display:none">
     <h2>Minor-league eligibility</h2>
-    <div class="desc">Not on the active roster, but pulled into the pool because they cleared the age/AAA-experience bar above. AAA seasons counted as distinct years in their player card tagged (AAA) — includes partial seasons and multi-team years, each counted once.</div>
+    <div class="desc">Not on the active roster, but pulled into the pool because they cleared one of the bars above: age, AAA seasons (distinct years in their player card tagged AAA — partial seasons and multi-team years each count once), or a prospect-rating exception (the game's own internal scouting number for this player, read directly from Players.hh, is elite enough to trust despite not clearing the other two).</div>
     <table id="minorsTable"></table>
   </section>
 
@@ -181,6 +190,7 @@
 let rosterCSV = null, proCSV = null, prevWB = null, curWB = null;
 let fullRosterRows = [];
 let cardsByNameKey = null; // normalizedName -> { minorSeasons:Set, mlSeasons:Set, experience }
+let ratingsByNameKey = null; // normalizedName -> { prospectRating, starRating, peakShift }
 
 function log(msg) {
   const el = document.getElementById('log');
@@ -267,6 +277,49 @@ document.getElementById('cardsFolder').addEventListener('change', async function
   cardsByNameKey = map;
   document.getElementById('cardsStatus').textContent = `✓ ${files.length} player cards parsed`;
   document.getElementById('cardsCard').classList.add('loaded');
+});
+
+// Players.hh binary layout, reverse-engineered from the MLBCManager tool's own decompiled
+// source (hhformat/players.py) and verified directly against a real save file — 768-byte
+// fixed records after an 8-byte header (magic + uint32 LE record count). Offsets below are
+// exactly what that module uses; see its own extensive dated-and-cross-validated docstrings
+// for how each one was confirmed. Only the fields this tool actually needs are read here.
+const PHH_RECORD_SIZE = 768, PHH_HEADER_SIZE = 8;
+const PHH_LAST_NAME_OFF = 0, PHH_LAST_NAME_LEN = 16;
+const PHH_FIRST_NAME_OFF = 16, PHH_FIRST_NAME_LEN = 16;
+const PHH_STAR_RATING_OFF = 44, PHH_PEAK_SHIFT_OFF = 56, PHH_PROSPECT_RATING_OFF = 48;
+
+function parsePlayersHH(buf) {
+  const data = new DataView(buf);
+  const bytes = new Uint8Array(buf);
+  const decoder = new TextDecoder('latin1');
+  const count = data.getUint32(4, true);
+  const map = {};
+  for (let i = 0; i < count; i++) {
+    const base = PHH_HEADER_SIZE + i * PHH_RECORD_SIZE;
+    if (base + PHH_RECORD_SIZE > bytes.length) break;
+    const cstr = (off, len) => {
+      const slice = bytes.subarray(base + off, base + off + len);
+      const nul = slice.indexOf(0);
+      return decoder.decode(nul === -1 ? slice : slice.subarray(0, nul)).trim();
+    };
+    const last = cstr(PHH_LAST_NAME_OFF, PHH_LAST_NAME_LEN);
+    const first = cstr(PHH_FIRST_NAME_OFF, PHH_FIRST_NAME_LEN);
+    if (!last && !first) continue;
+    const starRating = data.getFloat32(base + PHH_STAR_RATING_OFF, true);
+    const prospectRating = data.getFloat32(base + PHH_PROSPECT_RATING_OFF, true);
+    const peakShift = data.getInt8(base + PHH_PEAK_SHIFT_OFF);
+    map[normalizeNameKey(first + last)] = { starRating, prospectRating, peakShift };
+  }
+  return map;
+}
+
+document.getElementById('playersHHFile').addEventListener('change', async function(e) {
+  const f = e.target.files[0]; if (!f) return;
+  const buf = await f.arrayBuffer();
+  ratingsByNameKey = parsePlayersHH(buf);
+  document.getElementById('playersHHStatus').textContent = `✓ ${Object.keys(ratingsByNameKey).length} players parsed`;
+  document.getElementById('playersHHCard').classList.add('loaded');
 });
 
 function parseCSVRows(text) {
@@ -459,33 +512,46 @@ async function buildLineup() {
       : pitchers.filter(r => r.level === 'ML');
     log(`Active roster: ${activeHitters.length} hitters, ${activePitchers.length} pitchers (source: ${haveCurH?'Current Year file':'engine Level=ML fallback'}).`);
 
-    // ── Minor-league eligibility (age or AAA experience) ──
-    // Pulls in non-active players who clear the age/AAA-seasons bar, using the parsed
-    // Player Cards folder to count distinct AAA season-years per player — that data
-    // doesn't exist anywhere else we can export in bulk.
-    const includeMinors = document.getElementById('includeMinors').checked && !!cardsByNameKey;
+    // ── Minor-league eligibility (age, AAA experience, or a prospect-rating exception) ──
+    // Pulls in non-active players who clear one of three independent bars. Age/AAA-seasons
+    // is the house rule that covers most cases (Player Cards folder needed to count AAA
+    // seasons — that data doesn't exist anywhere else we can export in bulk). The
+    // prospect-rating exception covers the real cases that rule doesn't — a player the
+    // game's own internal scouting model rates as elite despite being young/unproven
+    // (needs the raw Players.hh save file — see parsePlayersHH above).
+    const includeMinors = document.getElementById('includeMinors').checked;
     const minAge = +document.getElementById('minAge').value || 24;
     const minAAASeasons = +document.getElementById('minAAASeasons').value || 2;
+    const includeProspectException = document.getElementById('includeProspectException').checked;
+    const minProspectRating = +document.getElementById('minProspectRating').value || 6.5;
     let minorsIncluded = [];
-    if (includeMinors) {
+    if (includeMinors || includeProspectException) {
+      if (includeMinors && !cardsByNameKey) log('Age/AAA-seasons eligibility is checked but no Player Cards Folder was uploaded — that path is skipped (prospect-rating exception, if checked, still runs).');
+      if (includeProspectException && !ratingsByNameKey) log('Prospect-rating exception is checked but no Players.hh was uploaded — that path is skipped.');
       const activeKeys = new Set([...activeHitters, ...activePitchers].map(r => keyOf(r.last, r.first)));
       const notYetActive = fullRosterRows.filter(r => !activeKeys.has(keyOf(r.last, r.first)));
       notYetActive.forEach(r => {
-        const card = cardsByNameKey[normalizeNameKey(r.first + r.last)];
-        if (!card) return;
-        const seasons = card.aaaSeasons.size;
-        const eligible = r.age >= minAge || seasons >= minAAASeasons;
-        if (!eligible) return;
-        const reason = r.age >= minAge && seasons >= minAAASeasons ? `age ${r.age}, ${seasons} AAA seasons`
-          : r.age >= minAge ? `age ${r.age}` : `${seasons} AAA seasons`;
-        const flagged = { ...r, minorsEligible: true, minorsReason: reason };
+        const nameKey = normalizeNameKey(r.first + r.last);
+        const card = cardsByNameKey ? cardsByNameKey[nameKey] : null;
+        const seasons = card ? card.aaaSeasons.size : 0;
+        const ratings = ratingsByNameKey ? ratingsByNameKey[nameKey] : null;
+        const prospectRating = ratings ? ratings.prospectRating : null;
+
+        const ageOk = includeMinors && r.age >= minAge;
+        const aaaOk = includeMinors && card && seasons >= minAAASeasons;
+        const prospectOk = includeProspectException && ratings && prospectRating >= minProspectRating;
+        if (!ageOk && !aaaOk && !prospectOk) return;
+
+        const reasons = [];
+        if (ageOk) reasons.push(`age ${r.age}`);
+        if (aaaOk) reasons.push(`${seasons} AAA seasons`);
+        if (prospectOk) reasons.push(`prospect rating ${prospectRating.toFixed(2)} exception`);
+        const flagged = { ...r, minorsEligible: true, minorsReason: reasons.join(', ') };
         const withPerf = { ...flagged, perf: r.type === 'H' ? hitterPerf(r) : pitcherPerf(r), aaaSeasonsCount: seasons };
         minorsIncluded.push(withPerf);
         if (r.type === 'H') activeHitters.push(flagged); else activePitchers.push(flagged);
       });
       if (minorsIncluded.length) log(`Minor-league eligibility: pulled in ${minorsIncluded.length} additional player(s) (${minorsIncluded.map(p=>`${p.first} ${p.last}`).join(', ')}).`);
-    } else if (document.getElementById('includeMinors').checked) {
-      log('Minor-league eligibility is checked but no Player Cards Folder was uploaded — skipped.');
     }
 
     activeHitters = activeHitters.map(r => ({ ...r, perf: r.perf || hitterPerf(r), minorsEligible: r.minorsEligible, minorsReason: r.minorsReason }));
