@@ -403,7 +403,8 @@ async function buildLineup() {
             bat: s.bat, throw: s.throw, isSP: s.isSP||false,
             overall: num(s.overall), rawOverall: num(s.rawOverall),
             hit: num(s.hit), fld: num(s.fld), stuff: num(s.stuff), end: num(s.end),
-            obp: num(s.obp), ops: num(s.ops)
+            obp: num(s.obp), ops: num(s.ops),
+            rawAB: s.type==='H' ? (+row.B_AB||null) : (+row.P_AB||null)
           });
         });
         return JSON.stringify(out);
@@ -469,7 +470,8 @@ async function buildLineup() {
                 bat: s.bat, throw: s.throw, isSP: s.isSP||false,
                 overall: num(s.overall), rawOverall: num(s.rawOverall),
                 hit: num(s.hit), fld: num(s.fld), stuff: num(s.stuff), end: num(s.end),
-                obp: num(s.obp), ops: num(s.ops)
+                obp: num(s.obp), ops: num(s.ops),
+                rawAB: s.type==='H' ? (+r.B_AB||null) : (+r.P_AB||null)
               };
             }
             return { key: k, foundTeam: r.Team, foundLevel: r.Level, scored };
@@ -542,11 +544,22 @@ async function buildLineup() {
         const prospectOk = includeProspectException && ratings && prospectRating >= minProspectRating;
         if (!ageOk && !aaaOk && !prospectOk) return;
 
+        // A real, live case (confirmed the hard way — see chat) turned up players whose
+        // Team tag in the roster export is stale: the game generates a pool of draft-
+        // eligible amateurs tagged to a placeholder team before the live draft runs, and
+        // an export taken before that gets reconciled still shows them as yours. They're
+        // reliably identifiable by never having played a simulated game anywhere yet — the
+        // placeholder AB=600 value — and ONLY clearing eligibility via prospect rating
+        // (a real rookie you already control who genuinely hasn't played yet could also
+        // show AB=600, so this doesn't block them, just flags it for a manual check).
+        const unverifiedPhantomRisk = prospectOk && !ageOk && !aaaOk && r.rawAB === 600;
+
         const reasons = [];
         if (ageOk) reasons.push(`age ${r.age}`);
         if (aaaOk) reasons.push(`${seasons} AAA seasons`);
         if (prospectOk) reasons.push(`prospect rating ${prospectRating.toFixed(2)} exception`);
-        const flagged = { ...r, minorsEligible: true, minorsReason: reasons.join(', ') };
+        if (unverifiedPhantomRisk) reasons.push('⚠ UNVERIFIED — never played a game anywhere; possible pre-draft-pool phantom, confirm they are actually on your roster before trusting this');
+        const flagged = { ...r, minorsEligible: true, minorsReason: reasons.join(', '), unverifiedPhantomRisk };
         const withPerf = { ...flagged, perf: r.type === 'H' ? hitterPerf(r) : pitcherPerf(r), aaaSeasonsCount: seasons };
         minorsIncluded.push(withPerf);
         if (r.type === 'H') activeHitters.push(flagged); else activePitchers.push(flagged);
@@ -694,7 +707,8 @@ async function buildLineup() {
     const nameCell = r => `${r.first} ${r.last}`
       + (r.reassignedFrom ? ` <span class="muted" title="Roster export shows ${r.reassignedFrom} — included from the stats files anyway">↩</span>` : '')
       + (r.minorsEligible ? ` <span class="muted" title="Not on the active roster — included via minor-league eligibility (${r.minorsReason})">★</span>` : '')
-      + (thinPA(r) ? ` <span class="muted" title="Only ${r.perf.ab} real AB in their counted season — FLD grade may be mechanically depressed by the league's under-150-AB fielding penalty, not a true read on their glove">🧤</span>` : '');
+      + (thinPA(r) ? ` <span class="muted" title="Only ${r.perf.ab} real AB in their counted season — FLD grade may be mechanically depressed by the league's under-150-AB fielding penalty, not a true read on their glove">🧤</span>` : '')
+      + (r.unverifiedPhantomRisk ? ` <span style="color:var(--danger)" title="Never played a game anywhere in the save (AB=600 placeholder) and only cleared eligibility via prospect rating — could be a pre-draft-pool player tagged to your team by a stale export rather than someone you actually control. Confirm on your real team page before trusting this.">⚠ UNVERIFIED</span>` : '');
     document.getElementById('lineupTable').innerHTML =
       '<tr><th>#</th><th>Name</th><th>Bat</th><th>Pos</th><th>OBP</th><th>SLG</th><th>OPS</th><th>Source</th><th>Tier</th></tr>' +
       lineup.map((r,i) => !r ? `<tr><td>${i+1}</td><td colspan="8" class="muted">— no eligible player —</td></tr>` : `<tr>
