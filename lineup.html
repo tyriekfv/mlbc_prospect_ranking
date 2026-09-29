@@ -111,6 +111,12 @@
     <div class="upload-hint">players_stats_report_current_year_XXXX_TEAM.xlsx (optional, strongly recommended)</div>
     <div class="upload-status" id="curStatus"></div>
   </div>
+  <div class="upload-card optional" id="cardsCard">
+    <input type="file" id="cardsFolder" webkitdirectory multiple>
+    <div class="upload-label">Player Cards Folder</div>
+    <div class="upload-hint">Folder of saved FirstLast.htm player-card pages (optional — unlocks minor-league-season eligibility below)</div>
+    <div class="upload-status" id="cardsStatus"></div>
+  </div>
 </div>
 
 <div class="options-row">
@@ -118,6 +124,9 @@
   <label>Rotation size <input type="number" id="rotationSize" value="5" min="3" max="6"></label>
   <label><input type="checkbox" id="handTiebreak" checked> Hand tie-break on close position battles (hitters: Switch &gt; Left &gt; Right &nbsp;·&nbsp; pitchers: Right &gt; Left)</label>
   <label><input type="checkbox" id="includeReassigned" checked> Include players who played for this team in the stats files but show elsewhere in the roster export (pre-season re-signings the export hasn't caught up to yet)</label>
+</div>
+<div class="options-row">
+  <label><input type="checkbox" id="includeMinors" checked> Also make minor-league players eligible if age &ge; <input type="number" id="minAge" value="24" min="18" max="45" style="width:44px"> or they've played &ge; <input type="number" id="minMinorSeasons" value="4" min="1" max="15" style="width:44px"> minor-league seasons (needs Player Cards Folder above)</label>
 </div>
 
 <button class="run-btn" id="runBtn" onclick="buildLineup()" disabled>BUILD LINEUP &amp; ROTATION</button>
@@ -130,6 +139,12 @@
     <h2 style="color:var(--danger)">⚠ Needs attention</h2>
     <div class="desc">These players show up in your stats files as having played for this team, but the roster export currently has them elsewhere — a trade, an expiring contract, or (if you're running this pre-season) a re-signing the export hasn't caught up to yet. "Included" means they were scored off their existing ratings row anyway and are in the lineup/rotation below; uncheck the option above to exclude them, or re-export the roster file once it's updated.</div>
     <table id="attentionTable"></table>
+  </section>
+
+  <section id="minorsSection" style="display:none">
+    <h2>Minor-league eligibility</h2>
+    <div class="desc">Not on the active roster, but pulled into the pool because they cleared the age/experience bar above. Minor-league seasons counted as distinct years in their player card where the team isn't tagged (ML) — includes partial seasons and multi-team years, each counted once.</div>
+    <table id="minorsTable"></table>
   </section>
 
   <section>
@@ -165,6 +180,7 @@
 <script>
 let rosterCSV = null, proCSV = null, prevWB = null, curWB = null;
 let fullRosterRows = [];
+let cardsByNameKey = null; // normalizedName -> { minorSeasons:Set, mlSeasons:Set, experience }
 
 function log(msg) {
   const el = document.getElementById('log');
@@ -206,6 +222,51 @@ wireXLSXUpload('curFile', 'curCard', 'curStatus', wb => curWB = wb);
 function checkReady() {
   document.getElementById('runBtn').disabled = !(rosterCSV && proCSV);
 }
+
+// A player-card filename is "FirstLast.htm" (no space) — normalize both sides to
+// letters-only lowercase so "Ahmad O'Connor" and "AhmadOConnor.htm" match.
+function normalizeNameKey(s) { return (s||'').replace(/[^a-zA-Z]/g, '').toLowerCase(); }
+
+// Each card has one or more Year/Team tables (batting, fielding, pitching). A season
+// counts once regardless of how many tables mention it or how many mid-table "Total"
+// rollup rows exist for a multi-team year — using a Set per player collapses that
+// automatically. Skip the final career "Total" row and any "Total (LVL)" rollup row.
+function parsePlayerCardHTML(html) {
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+  const minorSeasons = new Set(), mlSeasons = new Set();
+  const expText = doc.body.textContent.match(/Experience\s*<\/TD>\s*<TD[^>]*>\s*(\d+)/i);
+  doc.querySelectorAll('table').forEach(table => {
+    const rows = [...table.querySelectorAll('tr')];
+    if (!rows.length) return;
+    const headerCells = [...rows[0].querySelectorAll('td,th')].map(td => td.textContent.trim().toLowerCase());
+    const yearIdx = headerCells.indexOf('year'), teamIdx = headerCells.indexOf('team');
+    if (yearIdx === -1 || teamIdx === -1) return;
+    rows.slice(1).forEach(tr => {
+      const cells = [...tr.querySelectorAll('td')];
+      if (!cells[yearIdx] || !cells[teamIdx]) return;
+      const year = cells[yearIdx].textContent.trim();
+      const team = cells[teamIdx].textContent.trim();
+      if (!year || year === 'Total' || /^Total\b/i.test(team)) return;
+      if (/\(\s*ML\s*\)/i.test(team)) mlSeasons.add(year);
+      else if (/\(/.test(team)) minorSeasons.add(year);
+    });
+  });
+  return { minorSeasons, mlSeasons, experience: expText ? +expText[1] : null };
+}
+
+document.getElementById('cardsFolder').addEventListener('change', async function(e) {
+  const files = [...e.target.files].filter(f => /\.html?$/i.test(f.name));
+  if (!files.length) return;
+  const map = {};
+  for (const f of files) {
+    const text = await f.text();
+    const stem = f.name.replace(/\.html?$/i, '');
+    map[normalizeNameKey(stem)] = parsePlayerCardHTML(text);
+  }
+  cardsByNameKey = map;
+  document.getElementById('cardsStatus').textContent = `✓ ${files.length} player cards parsed`;
+  document.getElementById('cardsCard').classList.add('loaded');
+});
 
 function parseCSVRows(text) {
   return Papa.parse(text, { header: true, skipEmptyLines: true }).data;
@@ -397,13 +458,50 @@ async function buildLineup() {
       : pitchers.filter(r => r.level === 'ML');
     log(`Active roster: ${activeHitters.length} hitters, ${activePitchers.length} pitchers (source: ${haveCurH?'Current Year file':'engine Level=ML fallback'}).`);
 
-    activeHitters = activeHitters.map(r => ({ ...r, perf: hitterPerf(r) }));
-    activePitchers = activePitchers.map(r => ({ ...r, perf: pitcherPerf(r) }));
+    // ── Minor-league eligibility (age or experience) ──
+    // Pulls in non-active players who clear the age/season bar, using the parsed
+    // Player Cards folder to count distinct minor-league season-years per player —
+    // that data doesn't exist anywhere else we can export in bulk.
+    const includeMinors = document.getElementById('includeMinors').checked && !!cardsByNameKey;
+    const minAge = +document.getElementById('minAge').value || 24;
+    const minMinorSeasons = +document.getElementById('minMinorSeasons').value || 4;
+    let minorsIncluded = [];
+    if (includeMinors) {
+      const activeKeys = new Set([...activeHitters, ...activePitchers].map(r => keyOf(r.last, r.first)));
+      const notYetActive = fullRosterRows.filter(r => !activeKeys.has(keyOf(r.last, r.first)));
+      notYetActive.forEach(r => {
+        const card = cardsByNameKey[normalizeNameKey(r.first + r.last)];
+        if (!card) return;
+        const seasons = card.minorSeasons.size;
+        const eligible = r.age >= minAge || seasons >= minMinorSeasons;
+        if (!eligible) return;
+        const reason = r.age >= minAge && seasons >= minMinorSeasons ? `age ${r.age}, ${seasons} minor seasons`
+          : r.age >= minAge ? `age ${r.age}` : `${seasons} minor seasons`;
+        const flagged = { ...r, minorsEligible: true, minorsReason: reason };
+        const withPerf = { ...flagged, perf: r.type === 'H' ? hitterPerf(r) : pitcherPerf(r), minorSeasons: seasons };
+        minorsIncluded.push(withPerf);
+        if (r.type === 'H') activeHitters.push(flagged); else activePitchers.push(flagged);
+      });
+      if (minorsIncluded.length) log(`Minor-league eligibility: pulled in ${minorsIncluded.length} additional player(s) (${minorsIncluded.map(p=>`${p.first} ${p.last}`).join(', ')}).`);
+    } else if (document.getElementById('includeMinors').checked) {
+      log('Minor-league eligibility is checked but no Player Cards Folder was uploaded — skipped.');
+    }
+
+    activeHitters = activeHitters.map(r => ({ ...r, perf: r.perf || hitterPerf(r), minorsEligible: r.minorsEligible, minorsReason: r.minorsReason }));
+    activePitchers = activePitchers.map(r => ({ ...r, perf: r.perf || pitcherPerf(r), minorsEligible: r.minorsEligible, minorsReason: r.minorsReason }));
 
     // ── Position battles: best player per position, hand tie-break on close calls ──
+    // A player with no real stats (perf.source === 'Engine (no stats)') is being judged
+    // purely on an untested projection — that must not outrank someone with actual MLB
+    // production just because the projection happens to be higher. Real stats beat a
+    // stats-free projection outright; only compare on OPS/OVR when both sides have the
+    // same kind of evidence (both real, or both projection-only).
+    const hasRealStats = r => r.perf.source !== 'Engine (no stats)';
     const byPos = {};
     activeHitters.forEach(r => { (byPos[r.pos] ??= []).push(r); });
     Object.values(byPos).forEach(arr => arr.sort((a,b) => {
+      const aReal = hasRealStats(a), bReal = hasRealStats(b);
+      if (aReal !== bReal) return aReal ? -1 : 1;
       const opsA = a.perf.ops ?? -1, opsB = b.perf.ops ?? -1;
       const closeOps = Math.abs(opsA - opsB) < 0.020;
       const closeOvr = Math.abs(a.overall - b.overall) < 1.0;
@@ -460,9 +558,14 @@ async function buildLineup() {
     // Starter-eligible: engine isSP flag OR real recent usage shows meaningful starts —
     // catches a starter-grade arm the team has been misusing in relief (a real case we
     // found by hand before building this: starter-caliber endurance, zero actual starts).
+    // Same safeguard as the hitter position battles: a pitcher with zero real MLB innings
+    // is being judged purely on an untested grade and shouldn't leapfrog a proven arm.
+    const pitcherHasRealStats = p => p.perf.source !== 'Engine (no stats)';
     const starterEligible = activePitchers.filter(p => p.isSP || (p.perf.gs != null && p.perf.gs >= 8));
     const relieverPool = activePitchers.filter(p => !starterEligible.includes(p));
     starterEligible.sort((a,b) => {
+      const aReal = pitcherHasRealStats(a), bReal = pitcherHasRealStats(b);
+      if (aReal !== bReal) return aReal ? -1 : 1;
       if (useTiebreak && Math.abs(a.overall-b.overall) < 1.0) {
         const rk = p => PIT_HAND_RANK[p.throw] ?? 2;
         if (rk(a) !== rk(b)) return rk(a) - rk(b);
@@ -471,12 +574,20 @@ async function buildLineup() {
     });
     const rotation = starterEligible.slice(0, rotationSize);
     const leftoverStarters = starterEligible.slice(rotationSize);
-    const bullpenAll = [...relieverPool, ...leftoverStarters].sort((a,b) => b.overall - a.overall);
+    const bullpenAll = [...relieverPool, ...leftoverStarters].sort((a,b) => {
+      const aReal = pitcherHasRealStats(a), bReal = pitcherHasRealStats(b);
+      if (aReal !== bReal) return aReal ? -1 : 1;
+      return b.overall - a.overall;
+    });
     // Closer: best true reliever-profile arm, preferring real save history when it exists.
     let closer = null;
     const trueRelievers = bullpenAll.filter(p => !p.isSP);
     if (trueRelievers.length) {
-      closer = [...trueRelievers].sort((a,b) => (b.perf.sv??0) - (a.perf.sv??0) || b.overall - a.overall)[0];
+      closer = [...trueRelievers].sort((a,b) => {
+        const aReal = pitcherHasRealStats(a), bReal = pitcherHasRealStats(b);
+        if (aReal !== bReal) return aReal ? -1 : 1;
+        return (b.perf.sv??0) - (a.perf.sv??0) || b.overall - a.overall;
+      })[0];
     } else if (bullpenAll.length) {
       closer = bullpenAll[0];
     }
@@ -489,6 +600,15 @@ async function buildLineup() {
       `<div class="stat-card"><div class="label">Active pitchers</div><div class="value">${activePitchers.length}</div></div>`,
       `<div class="stat-card"><div class="label">Rotation size</div><div class="value">${rotationSize}</div></div>`,
     ].join('');
+
+    if (minorsIncluded.length) {
+      document.getElementById('minorsSection').style.display = 'block';
+      document.getElementById('minorsTable').innerHTML =
+        '<tr><th>Name</th><th>Pos</th><th>Age</th><th>Level</th><th>Minor Seasons</th><th>Why eligible</th><th>OVR</th></tr>' +
+        minorsIncluded.map(p => `<tr><td>${p.first} ${p.last}</td><td>${p.pos}</td><td>${p.age}</td><td>${p.level}</td><td>${p.minorSeasons}</td><td class="muted">${p.minorsReason}</td><td>${p.overall.toFixed(2)}</td></tr>`).join('');
+    } else {
+      document.getElementById('minorsSection').style.display = 'none';
+    }
 
     if (needsAttention.length) {
       document.getElementById('attentionSection').style.display = 'block';
@@ -506,7 +626,9 @@ async function buildLineup() {
     // Slot index -> source tier is NOT sequential: 1/2/4 (indices 0,1,3) are Tier A,
     // 3/5 (indices 2,4) are Tier B, 6/7/8 (indices 5,6,7) are Tier C.
     const tierTag = i => [0,1,3].includes(i) ? '<span class="tag tag-tierA">Tier A</span>' : [2,4].includes(i) ? '<span class="tag tag-tierB">Tier B</span>' : '<span class="tag tag-tierC">Tier C</span>';
-    const nameCell = r => `${r.first} ${r.last}` + (r.reassignedFrom ? ` <span class="muted" title="Roster export shows ${r.reassignedFrom} — included from the stats files anyway">↩</span>` : '');
+    const nameCell = r => `${r.first} ${r.last}`
+      + (r.reassignedFrom ? ` <span class="muted" title="Roster export shows ${r.reassignedFrom} — included from the stats files anyway">↩</span>` : '')
+      + (r.minorsEligible ? ` <span class="muted" title="Not on the active roster — included via minor-league eligibility (${r.minorsReason})">★</span>` : '');
     document.getElementById('lineupTable').innerHTML =
       '<tr><th>#</th><th>Name</th><th>Bat</th><th>Pos</th><th>OBP</th><th>SLG</th><th>OPS</th><th>Source</th><th>Tier</th></tr>' +
       lineup.map((r,i) => !r ? `<tr><td>${i+1}</td><td colspan="8" class="muted">— no eligible player —</td></tr>` : `<tr>
