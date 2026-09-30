@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MLBC Prospect Ranker</title>
+<title>MLBC Depth Board</title>
 <link rel="icon" type="image/png" href="./favicon.png">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
@@ -375,19 +375,19 @@
 <body>
 
 <header>
-  <div class="logo">MLBC <span>Prospect Ranker</span></div>
+  <div class="logo">MLBC <span>Depth Board</span></div>
   <nav class="subnav">
-    <a href="./index.html" class="active">Ranker</a>
+    <a href="./index.html">Ranker</a>
     <a href="./validate.html">Validation</a>
     <a href="./progression.html">Progression Tracker</a>
     <a href="./draftboard.html">Draft Board</a>
     <a href="./faboard.html">FA Board</a>
     <a href="./rule5.html">Rule 5 Board</a>
     <a href="./lineup.html">Lineup Builder</a>
-    <a href="./depth.html">Depth Board</a>
+    <a href="./depth.html" class="active">Depth Board</a>
   </nav>
   <div class="header-stats" id="headerStats" style="display:none">
-    <div>Prospects: <strong id="statTotal">—</strong></div>
+    <div>Players: <strong id="statTotal">—</strong></div>
     <div>Hitters: <strong id="statHitters">—</strong></div>
     <div>Pitchers: <strong id="statPitchers">—</strong></div>
     <div>SP-eligible: <strong id="statSP">—</strong></div>
@@ -396,8 +396,8 @@
 
 <!-- UPLOAD SECTION -->
 <div class="upload-zone" id="uploadZone">
-  <div class="upload-title">PROSPECT<br><span>RANKING ENGINE</span></div>
-  <div class="upload-sub">Upload your MLBC league files to generate prospect rankings based on grades, position value, and sim mechanics.</div>
+  <div class="upload-title">ORG<br><span>DEPTH BOARD</span></div>
+  <div class="upload-sub">Ranks every player in your league file — every level, every age, every service-time bracket — not just rookie-eligible prospects. Pick a position from the selector below and it re-grades every hitter who's trained there, so a player who can play multiple spots (like a catcher who's also trained at 1B and SS) shows up in every position list he's actually eligible for, not just his listed primary position.</div>
 
   <div class="upload-grid">
     <div class="upload-card" id="rosterCard">
@@ -463,6 +463,10 @@
         <option value="RF">RF</option>
       </select>
     </div>
+    <div class="filter-group" id="famGroup" style="display:none">
+      <span class="filter-label" id="famLabel" title="A hitter's trained proficiency at the selected position (0 = never trained there, 1.00 = fully trained). Below 1.00 they can still technically play it, just with a bigger fielding-grade penalty — see the FAM column.">Min proficiency</span>
+      <input type="number" id="famThreshold" value="0.5" min="0" max="1" step="0.05" style="width:64px" onchange="applyFilters()">
+    </div>
     <div class="filter-group">
       <input type="text" id="searchBox" placeholder="Search name..." oninput="applyFilters()" style="width:160px">
     </div>
@@ -477,6 +481,7 @@
           <th onclick="sortBy('name')">NAME<span class="sort-arrow">↕</span></th>
           <th onclick="sortBy('type')">TYPE<span class="sort-arrow">↕</span></th>
           <th onclick="sortBy('pos')">POS<span class="sort-arrow">↕</span></th>
+          <th onclick="sortBy('fam')" title="Trained proficiency at the position shown in this row (only meaningful when a specific position is selected above — blank means 'native/all-positions view'). 1.00 = fully trained.">FAM<span class="sort-arrow">↕</span></th>
           <th onclick="sortBy('age')">AGE<span class="sort-arrow">↕</span></th>
           <th onclick="sortBy('team')">TEAM<span class="sort-arrow">↕</span></th>
           <th onclick="sortBy('level')">LVL<span class="sort-arrow">↕</span></th>
@@ -490,7 +495,7 @@
     </table>
     <div class="empty-state" id="emptyState" style="display:none">
       <div class="big">0</div>
-      <div>No prospects match your filters</div>
+      <div>No players match your filters</div>
     </div>
   </div>
 </div>
@@ -640,16 +645,15 @@ function runModel() {
         proMap[key] = +(r['Pro Years']||0);
       });
 
-      // Filter prospects: Pro Years == 0 AND age 26 or younger
-      // Level doesn't matter — broke camp with ML club != ML experience
-      const prospects = rosterData.filter(r => {
-        const key = (r.First||'').trim()+'|'+(r.Last||'').trim();
-        const py = proMap[key] ?? 0;
-        return py === 0 && +(r.Age||0) <= 25 && r.Level !== '';
-      });
+      // Depth Board scores EVERY player, not just rookie-eligible prospects —
+      // the whole point is seeing organizational depth, including established
+      // veterans occupying a roster spot. Only requirement: a valid Level (skips
+      // blank/malformed export rows).
+      const allPlayers = rosterData.filter(r => r.Level !== '');
 
-      // Compute position range means/stds for hitters
-      const hitters = prospects.filter(r => r.Pos !== 'P');
+      // Compute position range means/stds for hitters (off the full population —
+      // a better statistical basis than the old prospects-only subset)
+      const hitters = allPlayers.filter(r => r.Pos !== 'P');
       const ifByPos = {}, ofByPos = {};
       hitters.forEach(r => {
         if (!ifByPos[r.Pos]) ifByPos[r.Pos] = [];
@@ -670,8 +674,15 @@ function runModel() {
         posRangeMeans[pos+'_OF'] = mu; posRangeStds[pos+'_OF'] = sig;
       });
 
-      // Score all prospects
-      const ranked = prospects.map(r => scoreProspect(r)).filter(Boolean);
+      // Score every player at their listed/native position
+      const ranked = allPlayers.map(r => {
+        const s = scoreProspect(r);
+        if (s) {
+          const key = (r.First||'').trim()+'|'+(r.Last||'').trim();
+          s.proYears = proMap[key] ?? 0;
+        }
+        return s;
+      }).filter(Boolean);
       ranked.sort((a,b) => {
         if (b.overall !== a.overall) return b.overall - a.overall;
         // At the 80 cap: hitters first (earned naturally), then by raw, then stuff
@@ -945,20 +956,58 @@ function setTypeFilter(t) {
   applyFilters();
 }
 
+// Position -> the roster CSV's familiarity column for that position.
+// A player's *listed* Pos is just where he plays most; these columns are what
+// actually gate whether he can take reps elsewhere without a big fielding hit.
+const FAM_FIELD = {P:'F_P', C:'F_C', '1B':'F_1B', '2B':'F_2B', '3B':'F_3B', SS:'F_SS', LF:'F_LF', CF:'F_CF', RF:'F_RF'};
+function famAt(row, pos) { return +(row[FAM_FIELD[pos]] || 0); }
+
+// Re-score a raw roster row AS IF the selected position were his listed Pos —
+// this is the real, unmodified scoreHitter()/scorePitcher(), just fed a
+// position override, so the fielding grade and positional bonus/penalty
+// come out exactly as they would if the game itself had him trained there.
+function scoreAtPosition(row, pos) {
+  const s = scoreProspect({ ...row, Pos: pos });
+  if (s) s.fam = famAt(row, pos);
+  return s;
+}
+
 function applyFilters() {
   const level  = document.getElementById('levelFilter').value;
   const team   = document.getElementById('teamFilter').value;
   const pos    = document.getElementById('posFilter').value;
   const search = document.getElementById('searchBox').value.toLowerCase();
+  const minFam = +document.getElementById('famThreshold').value || 0;
 
-  filtered = allRanked.filter(r => {
-    if (typeFilter !== 'all' && r.type !== typeFilter) return false;
-    if (level !== 'all' && r.level !== level) return false;
-    if (team  !== 'all' && r.team  !== team)  return false;
-    if (pos   !== 'all' && r.pos   !== pos)   return false;
-    if (search && !r.name.toLowerCase().includes(search)) return false;
-    return true;
-  });
+  const famGroup = document.getElementById('famGroup');
+  const crossTrainMode = pos !== 'all' && pos !== 'P';
+  famGroup.style.display = crossTrainMode ? 'flex' : 'none';
+  if (crossTrainMode) document.getElementById('famLabel').textContent = `Min proficiency at ${pos}`;
+
+  if (crossTrainMode) {
+    // A specific batting position is selected: re-score EVERY hitter in the
+    // (team/level/search)-filtered pool at that position, not just the ones
+    // whose listed Pos already matches — this is what makes a cross-trained
+    // player (e.g. a catcher also trained at 1B and SS) show up in all three
+    // position lists instead of just his primary one.
+    filtered = (typeFilter === 'P') ? [] : rosterData
+      .filter(row => (row.Pos||'').trim() !== 'P' && row.Level !== '')
+      .filter(row => level === 'all' || row.Level === level)
+      .filter(row => team  === 'all' || row.Team  === team)
+      .filter(row => famAt(row, pos) >= minFam)
+      .filter(row => !search || `${row.First||''} ${row.Last||''}`.toLowerCase().includes(search))
+      .map(row => scoreAtPosition(row, pos))
+      .filter(Boolean);
+  } else {
+    filtered = allRanked.filter(r => {
+      if (typeFilter !== 'all' && r.type !== typeFilter) return false;
+      if (level !== 'all' && r.level !== level) return false;
+      if (team  !== 'all' && r.team  !== team)  return false;
+      if (pos   !== 'all' && r.pos   !== pos)   return false;
+      if (search && !r.name.toLowerCase().includes(search)) return false;
+      return true;
+    });
+  }
 
   // Re-rank within filter
   filtered.forEach((r,i) => r.filteredRank = i+1);
@@ -986,6 +1035,7 @@ function renderTable() {
     hit:     (a,b) => (a.hit||0) - (b.hit||0),
     stuff:   (a,b) => (a.stuff||0) - (b.stuff||0),
     fld:     (a,b) => (a.fld||0) - (b.fld||0),
+    fam:     (a,b) => (a.fam??-1) - (b.fam??-1),
   }[sortCol] || ((a,b)=>a.overall-b.overall);
 
   const rows = [...filtered].sort((a,b)=>sortDir*sortFn(a,b));
@@ -998,7 +1048,10 @@ function renderTable() {
   empty.style.display='none';
 
   tbody.innerHTML = rows.map((r,idx) => {
-    const dispRank = r.rank;
+    // Rank badge reflects position within the CURRENT view (this filter, this
+    // sort) rather than a fixed global rank — for a depth chart "who's my
+    // best 1B" matters more than "where does he sit vs. every player leaguewide".
+    const dispRank = idx+1;
     const rankBadge = dispRank<=3
       ? `<span class="rank-badge rank-${dispRank}">${dispRank}</span>`
       : `<span style="color:var(--text3);font-family:'IBM Plex Mono',monospace;font-size:11px">${dispRank}</span>`;
@@ -1070,6 +1123,7 @@ function renderTable() {
 
     // Bonuses
     let bonuses = '<div class="bonus-pills">';
+    if (r.proYears === 0) bonuses += `<span class="pill pill-bat" title="0 Pro Years on record — hasn't accrued MLB service time yet">ROOKIE</span>`;
     if (r.type==='H') {
       if (r.posBonus>0)  bonuses+=`<span class="pill pill-pos" title="Positional premium">${r.pos}+${r.posBonus}</span>`;
       if (r.posBonus<0)  bonuses+=`<span class="pill pill-pen" title="Positional penalty">${r.pos}${r.posBonus}</span>`;
@@ -1118,6 +1172,7 @@ function renderTable() {
       <td class="td-name"><span class="fname">${r.first}</span>${r.last}</td>
       <td><span class="type-badge ${typeClass}">${r.type==='P'?'PITCHER':'HITTER'}</span></td>
       <td style="font-family:'IBM Plex Mono',monospace;font-weight:600">${r.pos}</td>
+      <td style="font-family:'IBM Plex Mono',monospace;color:var(--text2)">${r.fam!=null?r.fam.toFixed(2):'—'}</td>
       <td style="color:var(--text2)">${r.age}</td>
       <td style="font-family:'IBM Plex Mono',monospace;font-size:12px">${r.team}</td>
       <td><span class="lvl-badge ${lvlClass}">${r.level}</span></td>
@@ -1133,8 +1188,12 @@ function renderTable() {
 // EXPORT
 // ═══════════════════════════════════════════════════════════════
 function exportCSV() {
-  const rows = [...filtered].sort((a,b) => a.rank - b.rank);
-  const cols = ['rank','last','first','type','pos','bat','team','level','age',
+  // Sort by overall grade, not r.rank — in cross-trained-position mode every
+  // row is freshly re-scored on the fly and r.rank is just the leftover
+  // native-position value (meaningless there), so overall is the one field
+  // that's always a fair sort key regardless of view.
+  const rows = [...filtered].sort((a,b) => b.overall - a.overall);
+  const cols = ['rank','last','first','type','pos','fam','team','level','age','proYears',
                 'overall','hit','stuff','fld',
                 'obp','ops','hr','bb','so',
                 'wops','bestOps','end','kbb','p_so','p_gb',
@@ -1147,7 +1206,7 @@ function exportCSV() {
   }).join(',')).join('\n');
   const blob = new Blob([header+'\n'+body], {type:'text/csv'});
   const a = document.createElement('a'); a.href=URL.createObjectURL(blob);
-  a.download='mlbc_prospect_rankings.csv'; a.click();
+  a.download='mlbc_depth_board.csv'; a.click();
 }
 </script>
 </body>
