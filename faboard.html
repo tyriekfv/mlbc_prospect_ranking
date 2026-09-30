@@ -152,6 +152,7 @@
         <option value="CF">CF</option>
         <option value="RF">RF</option>
       </select>
+      <label style="display:flex;align-items:center;gap:4px;color:var(--text2);font-size:12px">Age <input type="number" id="ageMin" placeholder="min" min="16" max="50" style="width:52px" oninput="renderTable()"> to <input type="number" id="ageMax" placeholder="max" min="16" max="50" style="width:52px" oninput="renderTable()"></label>
       <input type="text" id="searchBox" placeholder="Search name..." oninput="renderTable()">
     </div>
     <table id="boardTable"></table>
@@ -537,12 +538,18 @@ function renderTable() {
   const level = document.getElementById('levelFilter').value;
   const pos = document.getElementById('posFilter').value;
   const search = document.getElementById('searchBox').value.toLowerCase();
+  const ageMinVal = document.getElementById('ageMin').value;
+  const ageMaxVal = document.getElementById('ageMax').value;
+  const ageMin = ageMinVal === '' ? null : +ageMinVal;
+  const ageMax = ageMaxVal === '' ? null : +ageMaxVal;
 
   filtered = boardRows.filter(r => {
     if (typeFilter !== 'all' && r.type !== typeFilter) return false;
     if (team !== 'all' && r.team !== team) return false;
     if (level !== 'all' && r.level !== level) return false;
     if (pos !== 'all' && r.pos !== pos) return false;
+    if (ageMin !== null && r.age < ageMin) return false;
+    if (ageMax !== null && r.age > ageMax) return false;
     if (search && !r.name.toLowerCase().includes(search)) return false;
     return true;
   });
