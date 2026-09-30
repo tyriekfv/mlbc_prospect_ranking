@@ -83,7 +83,7 @@
 </nav>
 
 <h1>MLBC <span>LINEUP BUILDER</span></h1>
-<div class="sub">Builds a batting order and pitching rotation for one team from the real engine's grades, cross-checked against actual performance when you provide it — Stats.hh for exact real seasons straight from the save when you provide both it and Players.hh, the "Last 3 Years" export as a fallback, the engine's projected grade only when a player has no track record at all. Batting order follows Tango/Lichtman/Dolphin's tiered method from <em>The Book</em>: your best hitter bats <b>2nd</b> (the "2-hole revolution" — he gets more high-leverage plate appearances there than at cleanup), the better-OBP of the remaining top 3 leads off, the third fills cleanup; the next 2 best split slots 3/5 (the 3-hole is a well-established overrated slot, comparable to 5th rather than clearly above it); the rest fill 6/7/8 by descending quality, except a standout base-stealer bats <b>last</b> — right before the order turns over — as a "second leadoff," not wherever his OPS alone would place him. Assumes a DH lineup (8 hitters, no pitcher at-bat) — adjust manually if your league has pitchers hit. Hitters fully trained (1.00 proficiency) at more than one position are automatically evaluated for all of them — anything under 1.00 is excluded from an alternate position entirely, since partial training is a real fielding liability, not a "can pinch-hit there" situation. Optionally discounts a hitter's batting grade for ranking purposes when Players.hh shows a Star Rating well below his engine grade would suggest — the engine only ever sees edits, never the game's own separate scouting confidence.</div>
+<div class="sub">Builds a batting order and pitching rotation for one team from the real engine's grades, cross-checked against actual performance when you provide it — Stats.hh for exact real seasons straight from the save when you provide both it and Players.hh, the "Last 3 Years" export as a fallback, the engine's projected grade only when a player has no track record at all. Assumes a real AL/DH lineup: the 8 defensive position battles decide your fielders, then the single best remaining bat (by pure hitting ability, not overall — fielding value is meaningless for a bat-only role) fills the 9th spot as DH — adjust manually if your league has pitchers hit instead. Batting order follows Tango/Lichtman/Dolphin's tiered method from <em>The Book</em> across all 9 spots: your best hitter bats <b>2nd</b> (the "2-hole revolution" — he gets more high-leverage plate appearances there than at cleanup), the better-OBP of the remaining top 3 leads off, the third fills cleanup; the next 2 best split slots 3/5 (the 3-hole is a well-established overrated slot, comparable to 5th rather than clearly above it); the rest fill 6/7/8/9 by descending quality, except a standout base-stealer bats <b>last</b> (9th) — right before the order turns over — as a "second leadoff," not wherever his OPS alone would place him. Hitters fully trained (1.00 proficiency) at more than one position are automatically evaluated for all of them — anything under 1.00 is excluded from an alternate position entirely, since partial training is a real fielding liability, not a "can pinch-hit there" situation. Optionally discounts a hitter's batting grade for ranking purposes when Players.hh shows a Star Rating well below his engine grade would suggest — the engine only ever sees edits, never the game's own separate scouting confidence.</div>
 
 <div class="upload-grid">
   <div class="upload-card" id="rosterCard">
@@ -866,8 +866,30 @@ async function buildLineup() {
       const winner = arr.find(p => !usedKeys.has(keyOf(p.last, p.first)));
       if (winner) { starterByPos[pos] = winner; usedKeys.add(keyOf(winner.last, winner.first)); }
     });
-    const starters8 = [], bench = [];
-    STARTING_POS.forEach(pos => { if (starterByPos[pos]) starters8.push(starterByPos[pos]); });
+    const starters9 = [], bench = [];
+    STARTING_POS.forEach(pos => { if (starterByPos[pos]) starters9.push(starterByPos[pos]); });
+
+    // ── DH: the 9th lineup spot in a real AL/DH lineup ──
+    // A DH lineup isn't 8 hitters — it's the 8 fielders PLUS a 9th bat who doesn't play the
+    // field at all (the pitcher never bats; DH fills that spot instead). The 8 position
+    // battles above only ever fill defensive spots, so without this the 9th slot — usually a
+    // prime power bat — was going unused entirely. Picked on pure hitting ability (`hit`,
+    // star-discounted the same way as the position battles), not `overall`, since `overall`
+    // folds in fielding/position value that's meaningless for a bat-only role — whoever's
+    // best glove didn't win a job shouldn't be held against him here.
+    function starAdjustedHit(r) {
+      if (!useStarDiscount || r.type !== 'H' || r.hit == null) return r.hit;
+      const star = starRatingOf(r);
+      if (star == null) return r.hit;
+      const mult = Math.max(STAR_DISCOUNT_FLOOR, Math.min(1.0, star / starBaseline));
+      return r.hit * mult;
+    }
+    const dhCandidates = [];
+    placementsByKey.forEach((list, key) => { if (!usedKeys.has(key)) dhCandidates.push(list[0]); });
+    dhCandidates.sort((a,b) => starAdjustedHit(b) - starAdjustedHit(a));
+    const dh = dhCandidates[0] ? { ...dhCandidates[0], pos: 'DH' } : null;
+    if (dh) { usedKeys.add(keyOf(dh.last, dh.first)); starters9.push(dh); }
+
     // Bench: everyone not starting, one row per player — his best-graded eligible spot,
     // not a duplicate row for every position he happens to be trained at.
     placementsByKey.forEach((list, key) => {
@@ -876,16 +898,16 @@ async function buildLineup() {
     });
 
     // ── Batting order — Tango/Lichtman/Dolphin tiering from The Book ──
-    // Rank the 8 starters by OPS (real if available, engine projection otherwise).
-    // Top 5 get slots 1-5 (the most-PA, highest-leverage spots), split into Tier A (top 3,
-    // -> slots 1/2/4) and Tier B (next 2, -> slots 3/5 — the 3-hole is a well-established
-    // overrated slot, run-value-wise comparable to 5th rather than clearly above it, hence
-    // pairing them instead of just handing 3 to the 4th-best hitter). Tier C (bottom 3) fills
-    // 6/7/8 in descending order.
-    const byOps = [...starters8].sort((a,b) => (b.perf.ops??0) - (a.perf.ops??0));
-    const tierA = byOps.slice(0,3), tierB = byOps.slice(3,5), tierC = byOps.slice(5,8);
+    // Rank the 9 starters (8 fielders + DH) by OPS (real if available, engine projection
+    // otherwise). Top 5 get slots 1-5 (the most-PA, highest-leverage spots), split into Tier
+    // A (top 3, -> slots 1/2/4) and Tier B (next 2, -> slots 3/5 — the 3-hole is a
+    // well-established overrated slot, run-value-wise comparable to 5th rather than clearly
+    // above it, hence pairing them instead of just handing 3 to the 4th-best hitter). Tier C
+    // (bottom 4) fills 6/7/8/9 in descending order.
+    const byOps = [...starters9].sort((a,b) => (b.perf.ops??0) - (a.perf.ops??0));
+    const tierA = byOps.slice(0,3), tierB = byOps.slice(3,5), tierC = byOps.slice(5,9);
 
-    const lineup = new Array(8).fill(null);
+    const lineup = new Array(9).fill(null);
     // Tier A: #2 is the single best hitter of the three, full stop — the "2-hole revolution"
     // is the headline, unambiguous finding from The Book (your best hitter gets more
     // high-leverage PAs there than at cleanup). Leadoff is then the better-OBP of what's
@@ -900,18 +922,18 @@ async function buildLineup() {
     const bSorted = [...tierB].sort((x,y) => (y.perf.ops??0) - (x.perf.ops??0));
     lineup[4] = bSorted[0] || null; lineup[2] = bSorted[1] || null;
 
-    // Tier C: descending OPS for 6/7/8, but a standout base-stealer (not already the best of
-    // the three) bats last — right before the order turns over — as a "second leadoff" that
-    // sets up the top of the lineup, rather than wherever pure OPS ranking would put him.
+    // Tier C: descending OPS for 6/7/8/9, but a standout base-stealer (not already the best
+    // of the four) bats last — right before the order turns over — as a "second leadoff"
+    // that sets up the top of the lineup, rather than wherever pure OPS ranking would put him.
     let cSorted = [...tierC].sort((x,y) => (y.perf.ops??0) - (x.perf.ops??0));
-    if (cSorted.length === 3) {
+    if (cSorted.length >= 2) {
       const bySpeed = [...cSorted].sort((x,y) => (y.perf.sb??0) - (x.perf.sb??0));
       const speedster = bySpeed[0];
       if (speedster && (speedster.perf.sb??0) >= 3 && speedster !== cSorted[cSorted.length-1] && (speedster.perf.sb??0) > (bySpeed[1]?.perf.sb??0)) {
         cSorted = [...cSorted.filter(r => r !== speedster), speedster];
       }
     }
-    lineup[5] = cSorted[0] || null; lineup[6] = cSorted[1] || null; lineup[7] = cSorted[2] || null;
+    lineup[5] = cSorted[0] || null; lineup[6] = cSorted[1] || null; lineup[7] = cSorted[2] || null; lineup[8] = cSorted[3] || null;
 
     // ── Rotation & bullpen ──
     // Starter-eligible: engine isSP flag OR real recent usage shows meaningful starts —
