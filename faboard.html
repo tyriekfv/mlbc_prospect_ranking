@@ -26,8 +26,9 @@
   }
   .subnav a:hover { color: var(--text); background: var(--surface2); }
   .subnav a.active { color: var(--accent); background: rgba(232,160,32,.1); }
-  .upload-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 16px; max-width: 750px; }
+  .upload-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; max-width: 1300px; }
   .upload-card { background: var(--surface); border: 1px dashed var(--border); border-radius: 8px; padding: 18px 14px; text-align: center; cursor: pointer; position: relative; }
+  .upload-card.optional { border-style: dotted; }
   .upload-card.loaded { border-color: var(--accent3); border-style: solid; }
   .upload-card input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
   .upload-label { font-family: 'Bebas Neue', sans-serif; font-size: 14px; letter-spacing: .5px; margin-bottom: 4px; }
@@ -92,19 +93,31 @@
 </nav>
 
 <h1>MLBC <span>FA BOARD</span></h1>
-<div class="sub">The Ranker filters to Pro-Years-0, age-25-and-under prospects only — this doesn't. Upload League Roster + Pro Years Report and it scores and ranks every player in the export, using the real, unmodified engine (scoreProspect() run directly on every row, not just the prospect pool). Filter by team (including FA) to build a free-agent target board, or leave it open to browse the whole league.</div>
+<div class="sub">The Ranker filters to Pro-Years-0, age-25-and-under prospects only — this doesn't. Scores and ranks every player in the league, using the real, unmodified engine (scoreProspect() run directly on every row, not just the prospect pool). Filter by team (including FA) to build a free-agent target board, or leave it open to browse the whole league. Upload just Players.hh and Stats.hh — the two raw save files sitting in your &lt;name&gt;Season folder — and that's it: the roster and Pro Years both get read straight from the save, no CSV exports needed. The CSV uploads below still work as a manual fallback if you don't have the save files handy.</div>
 
 <div class="upload-grid">
-  <div class="upload-card" id="rosterCard">
+  <div class="upload-card" id="playersHHCard">
+    <input type="file" id="playersHHFile" accept=".hh">
+    <div class="upload-label">Players.hh</div>
+    <div class="upload-hint">Raw save file, from your &lt;name&gt;Season folder next to the .sea pointer</div>
+    <div class="upload-status" id="playersHHStatus"></div>
+  </div>
+  <div class="upload-card" id="statsHHCard">
+    <input type="file" id="statsHHFile" accept=".hh">
+    <div class="upload-label">Stats.hh</div>
+    <div class="upload-hint">Raw save file, next to Players.hh — used to compute real Pro Years</div>
+    <div class="upload-status" id="statsHHStatus"></div>
+  </div>
+  <div class="upload-card optional" id="rosterCard">
     <input type="file" id="rosterFile" accept=".csv">
     <div class="upload-label">League Roster</div>
-    <div class="upload-hint">League_Roster_XXXX.csv</div>
+    <div class="upload-hint">League_Roster_XXXX.csv — only needed if you don't have Players.hh</div>
     <div class="upload-status" id="rosterStatus"></div>
   </div>
-  <div class="upload-card" id="proCard">
+  <div class="upload-card optional" id="proCard">
     <input type="file" id="proFile" accept=".csv">
     <div class="upload-label">Pro Years Report</div>
-    <div class="upload-hint">Pro_Years_Report_XXXX.csv (used for display only here, not filtering)</div>
+    <div class="upload-hint">Pro_Years_Report_XXXX.csv — only needed if you don't have Players.hh + Stats.hh</div>
     <div class="upload-status" id="proStatus"></div>
   </div>
 </div>
@@ -147,7 +160,7 @@
 
 <section>
   <h2>Log</h2>
-  <div class="log" id="log">Upload League Roster + Pro Years Report, then click Generate Rankings.</div>
+  <div class="log" id="log">Upload Players.hh + Stats.hh (or League Roster + Pro Years Report as a fallback), then click Generate Rankings.</div>
 </section>
 
 <iframe id="engineFrame" src="./index.html"></iframe>
@@ -179,7 +192,205 @@ function wireUpload(inputId, cardId, statusId, onLoaded) {
 wireUpload('rosterFile', 'rosterCard', 'rosterStatus', t => rosterCSV = t);
 wireUpload('proFile', 'proCard', 'proStatus', t => proCSV = t);
 function checkReady() {
-  document.getElementById('runBtn').disabled = !(rosterCSV && proCSV);
+  const haveCSVs = rosterCSV && proCSV;
+  const haveSaveFiles = playersHHRosterRows && statsHHByPlayerId;
+  document.getElementById('runBtn').disabled = !(haveCSVs || haveSaveFiles);
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// Players.hh / Stats.hh direct read — same reverse-engineered layout as the
+// Lineup Builder, ported verbatim (see its commit history for the full
+// field-by-field validation against a real 3,203-player roster export).
+// ═══════════════════════════════════════════════════════════════════════
+function normalizeNameKey(s) { return (s||'').replace(/[^a-zA-Z]/g, '').toLowerCase(); }
+
+const PHH_RECORD_SIZE = 768, PHH_HEADER_SIZE = 8;
+const PHH_LAST_NAME_OFF = 0, PHH_LAST_NAME_LEN = 16;
+const PHH_FIRST_NAME_OFF = 16, PHH_FIRST_NAME_LEN = 16;
+const PHH_PLAYER_ID_OFF = 34;
+const PHH_STAR_RATING_OFF = 44, PHH_PEAK_SHIFT_OFF = 56, PHH_PROSPECT_RATING_OFF = 48;
+const PH_POS_NUM = {1:'P',2:'C',3:'1B',4:'2B',5:'3B',6:'SS',7:'LF',8:'CF',9:'RF'};
+const PH_HAND_NUM = {0:'L',1:'R',2:'S'};
+const PH_LEVEL_NUM = {0:'ML',1:'AAA',2:'AA',3:'A'}; // byte 7 = "DL" status, not a real level
+const PH_TEAM_IDX = {0:'RICH',1:'DAY',2:'BANG',3:'NORW',4:'ROME',5:'MIDL',6:'ERIE',7:'AUCK',8:'PEOR',9:'SUGR',
+  10:'OMA',11:'SF',12:'LAKE',13:'OKC',14:'LV',15:'MAIN',16:'MAHO',17:'SCRN',18:'LOUI',19:'CHES',
+  20:'ELP',21:'ROCK',22:'EDMO',23:'ALTO',24:'WISC',25:'IDA',26:'TEX',27:'PORT',28:'CASP',29:'FRIS',255:'FA'};
+const PH_PITCH_NAMES = {1:'Fastball',2:'Curve',3:'Slider',4:'Changeup',5:'Knuckleball',6:'Split Finger',7:'Sinker',8:'Cutter',9:'Screwball'};
+const PH_OFF = {
+  teamIdx:38, age:40, level:77, pos:86, throws:88, bats:89,
+  arm:96, run:100,
+  batGB:236, batPull:240, batMiddle:244, batOppo:248,
+  splitAvgLH:252, splitAvgRH:256, splitObpLH:260, splitObpRH:264, splitSlgLH:268, splitSlgRH:272,
+  batAB:280, batH:284, bat2B:288, bat3B:292, batHR:296, batBB:300, batSO:304,
+  pitGB:372, pitEnd:376,
+  pitAB:404, pitH:408, pit2B:412, pit3B:416, pitHR:420, pitBB:424, pitSO:428,
+  ofRng:692, ifRng:696, fldPct:700,
+  famP:704, famC:708, fam1B:712, fam2B:716, fam3B:720, famSS:724, famLF:728, famCF:732, famRF:736,
+};
+const PH_PITCH_BLOCK_OFF = 484, PH_PITCH_BLOCK_SIZE = 32, PH_PITCH_BLOCK_COUNT = 6;
+
+function parsePlayersHHFull(buf) {
+  const data = new DataView(buf);
+  const bytes = new Uint8Array(buf);
+  const decoder = new TextDecoder('latin1');
+  const count = data.getUint32(4, true);
+  const ratings = {};
+  const rosterRows = [];
+  for (let i = 0; i < count; i++) {
+    const base = PHH_HEADER_SIZE + i * PHH_RECORD_SIZE;
+    if (base + PHH_RECORD_SIZE > bytes.length) break;
+    const cstr = (off, len) => {
+      const slice = bytes.subarray(base + off, base + off + len);
+      const nul = slice.indexOf(0);
+      return decoder.decode(nul === -1 ? slice : slice.subarray(0, nul)).trim();
+    };
+    const last = cstr(PHH_LAST_NAME_OFF, PHH_LAST_NAME_LEN);
+    const first = cstr(PHH_FIRST_NAME_OFF, PHH_FIRST_NAME_LEN);
+    if (!last && !first) continue;
+    const id = data.getUint16(base + PHH_PLAYER_ID_OFF, true);
+    const starRating = data.getFloat32(base + PHH_STAR_RATING_OFF, true);
+    const prospectRating = data.getFloat32(base + PHH_PROSPECT_RATING_OFF, true);
+    const peakShift = data.getInt8(base + PHH_PEAK_SHIFT_OFF);
+    ratings[normalizeNameKey(first + last)] = { id, starRating, prospectRating, peakShift };
+
+    const fl = off => data.getFloat32(base + off, true);
+    const byte = off => bytes[base + off];
+    const row = {
+      Last: last, First: first,
+      Age: byte(PH_OFF.age), Level: PH_LEVEL_NUM[byte(PH_OFF.level)] || '',
+      Pos: PH_POS_NUM[byte(PH_OFF.pos)] || '', Team: PH_TEAM_IDX[byte(PH_OFF.teamIdx)] || '',
+      Bat: PH_HAND_NUM[byte(PH_OFF.bats)] || '', Throw: PH_HAND_NUM[byte(PH_OFF.throws)] || '',
+      Run: fl(PH_OFF.run), Arm: fl(PH_OFF.arm), IF_Rng: fl(PH_OFF.ifRng), OF_Rng: fl(PH_OFF.ofRng), Fld: fl(PH_OFF.fldPct),
+      F_P: fl(PH_OFF.famP), F_C: fl(PH_OFF.famC), F_1B: fl(PH_OFF.fam1B), F_2B: fl(PH_OFF.fam2B),
+      F_3B: fl(PH_OFF.fam3B), F_SS: fl(PH_OFF.famSS), F_LF: fl(PH_OFF.famLF), F_CF: fl(PH_OFF.famCF), F_RF: fl(PH_OFF.famRF),
+      B_AB: fl(PH_OFF.batAB), B_H: fl(PH_OFF.batH), B_B2: fl(PH_OFF.bat2B), B_B3: fl(PH_OFF.bat3B),
+      B_HR: fl(PH_OFF.batHR), B_BB: fl(PH_OFF.batBB), B_SO: fl(PH_OFF.batSO),
+      vL_AVG: fl(PH_OFF.splitAvgLH), vL_OBP: fl(PH_OFF.splitObpLH), vL_SLG: fl(PH_OFF.splitSlgLH),
+      vR_AVG: fl(PH_OFF.splitAvgRH), vR_OBP: fl(PH_OFF.splitObpRH), vR_SLG: fl(PH_OFF.splitSlgRH),
+      Pull: fl(PH_OFF.batPull), Middle: fl(PH_OFF.batMiddle), Opp: fl(PH_OFF.batOppo), B_GB: fl(PH_OFF.batGB),
+      END: fl(PH_OFF.pitEnd),
+      P_AB: fl(PH_OFF.pitAB), P_H: fl(PH_OFF.pitH), P_B2: fl(PH_OFF.pit2B), P_B3: fl(PH_OFF.pit3B),
+      P_HR: fl(PH_OFF.pitHR), P_BB: fl(PH_OFF.pitBB), P_SO: fl(PH_OFF.pitSO),
+      P_GB: fl(PH_OFF.pitGB) * 100,
+    };
+    for (let slot = 0; slot < PH_PITCH_BLOCK_COUNT; slot++) {
+      const pb = PH_PITCH_BLOCK_OFF + slot * PH_PITCH_BLOCK_SIZE;
+      const typeId = byte(pb);
+      const n = slot + 1;
+      row[`P${n}`] = typeId ? (PH_PITCH_NAMES[typeId] || 'NA') : 'NA';
+      row[`P${n}_Qual`] = data.getFloat32(base + pb + 4, true);
+      row[`P${n}_vL_AVG`] = data.getFloat32(base + pb + 8, true);  row[`P${n}_vR_AVG`] = data.getFloat32(base + pb + 12, true);
+      row[`P${n}_vL_OBP`] = data.getFloat32(base + pb + 16, true); row[`P${n}_vR_OBP`] = data.getFloat32(base + pb + 20, true);
+      row[`P${n}_vL_SLG`] = data.getFloat32(base + pb + 24, true); row[`P${n}_vR_SLG`] = data.getFloat32(base + pb + 28, true);
+    }
+    rosterRows.push(row);
+  }
+  return { ratings, rosterRows };
+}
+
+let ratingsByNameKey = null;
+let playersHHRosterRows = null;
+document.getElementById('playersHHFile').addEventListener('change', async function(e) {
+  const f = e.target.files[0]; if (!f) return;
+  const buf = await f.arrayBuffer();
+  const parsed = parsePlayersHHFull(buf);
+  ratingsByNameKey = parsed.ratings;
+  playersHHRosterRows = parsed.rosterRows;
+  document.getElementById('playersHHStatus').textContent = `✓ ${playersHHRosterRows.length} players parsed`;
+  document.getElementById('playersHHCard').classList.add('loaded');
+  checkReady();
+});
+
+const STATS_HEADER_SIZE = 8, BATTING_ROW_SIZE = 28, PITCHING_ROW_SIZE = 36, FIELDING_ROW_SIZE = 16;
+const PITCH_LEVEL_BYTE_TO_INT = { 7: 0, 15: 1, 23: 2, 31: 3 };
+
+function isValidBatRow(row) {
+  if (row.length < 27) return false;
+  const year = row[4] + 1792;
+  return year >= 1900 && year <= 2100 && row[26] >= 0 && row[26] <= 3;
+}
+function isValidPitchRow(row) {
+  if (row.length < 2) return false;
+  const year = row[0] + 1792;
+  return year >= 1900 && year <= 2100 && (row[1] in PITCH_LEVEL_BYTE_TO_INT);
+}
+function battingSeasonFromBytes(row) {
+  const year = row[4] + 1792;
+  const level = row[26];
+  const ab = (((row[2] << 8) | row[1]) >> 4);
+  const g = row[0];
+  return { year, level, g, ab };
+}
+function pitchingSeasonFromBytes(row) {
+  const year = row[0] + 1792;
+  const level = PITCH_LEVEL_BYTE_TO_INT[row[1]];
+  const ip_outs = row[4] + 256 * (row[5] & 31);
+  const gs = row[22] >> 2;
+  const g = (row[15] << 2) | (row[14] >> 6);
+  return { year, level, ip_outs, g, gs };
+}
+function parseStatsHH(buf) {
+  const bytes = new Uint8Array(buf);
+  const view = new DataView(buf);
+  const total = bytes.length;
+  const headerCount = view.getUint32(4, true);
+  let pos = STATS_HEADER_SIZE, n = 0;
+  const byId = {};
+  while (pos + 8 <= total && n < headerCount) {
+    const playerId = view.getUint32(pos, true); pos += 4;
+    const batCount = view.getUint32(pos, true); pos += 4;
+    const batting = [];
+    for (let i = 0; i < batCount; i++) {
+      if (pos + BATTING_ROW_SIZE > total) break;
+      const row = bytes.subarray(pos, pos + BATTING_ROW_SIZE);
+      if (isValidBatRow(row)) batting.push(battingSeasonFromBytes(row));
+      pos += BATTING_ROW_SIZE;
+    }
+    if (pos + 4 > total) break;
+    const pitchCount = view.getUint32(pos, true); pos += 4;
+    const pitching = [];
+    for (let i = 0; i < pitchCount; i++) {
+      if (pos + PITCHING_ROW_SIZE > total) break;
+      const row = bytes.subarray(pos, pos + PITCHING_ROW_SIZE);
+      if (isValidPitchRow(row)) pitching.push(pitchingSeasonFromBytes(row));
+      pos += PITCHING_ROW_SIZE;
+    }
+    if (pos + 4 > total) break;
+    const fldCount = view.getUint32(pos, true); pos += 4;
+    pos += fldCount * FIELDING_ROW_SIZE;
+    byId[playerId] = { batting, pitching };
+    n++;
+  }
+  return byId;
+}
+
+let statsHHByPlayerId = null;
+document.getElementById('statsHHFile').addEventListener('change', async function(e) {
+  const f = e.target.files[0]; if (!f) return;
+  const buf = await f.arrayBuffer();
+  statsHHByPlayerId = parseStatsHH(buf);
+  document.getElementById('statsHHStatus').textContent = `✓ ${Object.keys(statsHHByPlayerId).length} players parsed`;
+  document.getElementById('statsHHCard').classList.add('loaded');
+  checkReady();
+});
+
+// Pro Years — the league's own rule: a season counts as a "pro year" if a hitter reaches
+// 150 AB, or a pitcher reaches 15 G or 55 IP (165 outs), at the ML level.
+function computeProYears(player) {
+  if (!player) return 0;
+  const batAB = {}, pitG = {}, pitOuts = {};
+  player.batting.forEach(s => { if (s.level === 0) batAB[s.year] = (batAB[s.year]||0) + s.ab; });
+  player.pitching.forEach(s => {
+    if (s.level !== 0) return;
+    pitG[s.year] = (pitG[s.year]||0) + s.g;
+    pitOuts[s.year] = (pitOuts[s.year]||0) + s.ip_outs;
+  });
+  const years = new Set();
+  Object.entries(batAB).forEach(([y,ab]) => { if (ab >= 150) years.add(+y); });
+  new Set([...Object.keys(pitG), ...Object.keys(pitOuts)]).forEach(y => {
+    if ((pitG[y]||0) >= 15 || (pitOuts[y]||0) >= 165) years.add(+y);
+  });
+  return years.size;
 }
 
 function parseCSVRows(text) {
@@ -194,13 +405,33 @@ async function runBoard() {
   document.getElementById('exportBtn').disabled = true;
 
   try {
-    log('Parsing Pro Years Report (for display — not used to filter here)...');
-    const proRows = parseCSVRows(proCSV);
+    // Players.hh + Stats.hh together fully replace the League Roster + Pro Years CSVs (same
+    // synthesis the Lineup Builder uses — see its commit history for the field-by-field
+    // validation). Falls back to the manually-uploaded CSVs when either save file is missing.
+    let effectiveRosterCSV = rosterCSV, effectiveProCSV = proCSV, sourceNote = 'League Roster + Pro Years CSVs';
     const proMap = {};
-    proRows.forEach(r => {
-      const key = ((r.Firstname||r.First||'').trim() + '|' + (r.Lastname||r.Last||'').trim()).toLowerCase();
-      proMap[key] = +(r['Pro Years'] || 0);
-    });
+    if (playersHHRosterRows && statsHHByPlayerId) {
+      log(`Synthesizing roster & pro-years data directly from Players.hh + Stats.hh (${playersHHRosterRows.length} players, no CSV export needed)...`);
+      effectiveRosterCSV = Papa.unparse(playersHHRosterRows);
+      const proRows = playersHHRosterRows.map(r => {
+        const ratings = ratingsByNameKey[normalizeNameKey(r.First + r.Last)];
+        const player = ratings ? statsHHByPlayerId[ratings.id] : null;
+        const py = computeProYears(player);
+        proMap[(r.First.trim()+'|'+r.Last.trim()).toLowerCase()] = py;
+        return { First: r.First, Last: r.Last, 'Pro Years': py };
+      });
+      effectiveProCSV = Papa.unparse(proRows);
+      sourceNote = 'Players.hh + Stats.hh';
+    } else if (!rosterCSV || !proCSV) {
+      throw new Error('Need either League Roster + Pro Years CSVs, or Players.hh + Stats.hh.');
+    } else {
+      log('Parsing Pro Years Report (for display — not used to filter here)...');
+      const proRows = parseCSVRows(proCSV);
+      proRows.forEach(r => {
+        const key = ((r.Firstname||r.First||'').trim() + '|' + (r.Lastname||r.Last||'').trim()).toLowerCase();
+        proMap[key] = +(r['Pro Years'] || 0);
+      });
+    }
 
     log('Waiting for engine iframe (real, unmodified index.html)...');
     const frame = document.getElementById('engineFrame');
@@ -210,9 +441,9 @@ async function runBoard() {
     });
     const win = frame.contentWindow, doc = frame.contentDocument;
 
-    log('Uploading roster/pro-years through the app\'s real code path...');
-    const rosterFile = new win.File([rosterCSV], 'roster.csv', { type: 'text/csv' });
-    const proFile = new win.File([proCSV], 'proyears.csv', { type: 'text/csv' });
+    log(`Uploading roster/pro-years through the app's real code path (source: ${sourceNote})...`);
+    const rosterFile = new win.File([effectiveRosterCSV], 'roster.csv', { type: 'text/csv' });
+    const proFile = new win.File([effectiveProCSV], 'proyears.csv', { type: 'text/csv' });
     const dt1 = new win.DataTransfer(); dt1.items.add(rosterFile);
     doc.getElementById('rosterFile').files = dt1.files;
     doc.getElementById('rosterFile').dispatchEvent(new win.Event('change'));
@@ -252,7 +483,7 @@ async function runBoard() {
       })();
     `);
     const scored = JSON.parse(resultJSON);
-    log(`Scored ${scored.length} players (out of ${parseCSVRows(rosterCSV).length} roster rows).`);
+    log(`Scored ${scored.length} players (out of ${parseCSVRows(effectiveRosterCSV).length} roster rows).`);
 
     scored.forEach(r => {
       const key = (r.first.trim() + '|' + r.last.trim()).toLowerCase();
