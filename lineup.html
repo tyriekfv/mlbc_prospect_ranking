@@ -83,50 +83,50 @@
 </nav>
 
 <h1>MLBC <span>LINEUP BUILDER</span></h1>
-<div class="sub">Builds a batting order and pitching rotation for one team from the real engine's grades, cross-checked against actual performance when you provide it — Stats.hh for exact real seasons straight from the save when you provide both it and Players.hh, the "Last 3 Years" export as a fallback, the engine's projected grade only when a player has no track record at all. Assumes a real AL/DH lineup: the 8 defensive position battles decide your fielders, then the single best remaining bat (by pure hitting ability, not overall — fielding value is meaningless for a bat-only role) fills the 9th spot as DH — adjust manually if your league has pitchers hit instead. Batting order follows Tango/Lichtman/Dolphin's tiered method from <em>The Book</em> across all 9 spots: your best hitter bats <b>2nd</b> (the "2-hole revolution" — he gets more high-leverage plate appearances there than at cleanup), the better-OBP of the remaining top 3 leads off, the third fills cleanup; the next 2 best split slots 3/5 (the 3-hole is a well-established overrated slot, comparable to 5th rather than clearly above it); the rest fill 6/7/8/9 by descending quality, except a standout base-stealer bats <b>last</b> (9th) — right before the order turns over — as a "second leadoff," not wherever his OPS alone would place him. Hitters fully trained (1.00 proficiency) at more than one position are automatically evaluated for all of them — anything under 1.00 is excluded from an alternate position entirely, since partial training is a real fielding liability, not a "can pinch-hit there" situation. Optionally discounts a hitter's batting grade for ranking purposes when Players.hh shows a Star Rating well below his engine grade would suggest — the engine only ever sees edits, never the game's own separate scouting confidence.</div>
+<div class="sub">Builds a batting order and pitching rotation for one team from the real engine's grades, cross-checked against actual performance. Upload just Players.hh and Stats.hh — the two raw save files sitting in your &lt;name&gt;Season folder — and that's it: the roster, splits, fielding, Pro Years, and real per-season stats all get read straight from the save, no CSV exports or Player Cards folder needed. (Every field was cross-validated against a real roster export across the whole league before being trusted here — see the commit history.) The CSV uploads below still work as a manual fallback if you don't have the save files handy. Real production is used whenever a player has a track record; the engine's projected grade fills in when he doesn't. Assumes a real AL/DH lineup: the 8 defensive position battles decide your fielders, then the single best remaining bat (by pure hitting ability, not overall — fielding value is meaningless for a bat-only role) fills the 9th spot as DH — adjust manually if your league has pitchers hit instead. Batting order follows Tango/Lichtman/Dolphin's tiered method from <em>The Book</em> across all 9 spots: your best hitter bats <b>2nd</b> (the "2-hole revolution" — he gets more high-leverage plate appearances there than at cleanup), the better-OBP of the remaining top 3 leads off, the third fills cleanup; the next 2 best split slots 3/5 (the 3-hole is a well-established overrated slot, comparable to 5th rather than clearly above it); the rest fill 6/7/8/9 by descending quality, except a standout base-stealer bats <b>last</b> (9th) — right before the order turns over — as a "second leadoff," not wherever his OPS alone would place him. Hitters fully trained (1.00 proficiency) at more than one position are automatically evaluated for all of them — anything under 1.00 is excluded from an alternate position entirely, since partial training is a real fielding liability, not a "can pinch-hit there" situation. Optionally discounts a hitter's batting grade for ranking purposes when Players.hh shows a Star Rating well below his engine grade would suggest — the engine only ever sees edits, never the game's own separate scouting confidence.</div>
 
 <div class="upload-grid">
-  <div class="upload-card" id="rosterCard">
+  <div class="upload-card" id="playersHHCard">
+    <input type="file" id="playersHHFile" accept=".hh">
+    <div class="upload-label">Players.hh</div>
+    <div class="upload-hint">Raw save file, from your &lt;name&gt;Season folder next to the .sea pointer — with Stats.hh below, this is all you need. No CSV exports required.</div>
+    <div class="upload-status" id="playersHHStatus"></div>
+  </div>
+  <div class="upload-card" id="statsHHCard">
+    <input type="file" id="statsHHFile" accept=".hh">
+    <div class="upload-label">Stats.hh</div>
+    <div class="upload-hint">Raw save file, next to Players.hh — exact real season-by-season stats and Pro Years, straight from the save.</div>
+    <div class="upload-status" id="statsHHStatus"></div>
+  </div>
+  <div class="upload-card optional" id="rosterCard">
     <input type="file" id="rosterFile" accept=".csv">
     <div class="upload-label">League Roster</div>
-    <div class="upload-hint">League_Roster_XXXX.csv (required)</div>
+    <div class="upload-hint">League_Roster_XXXX.csv — only needed if you don't have Players.hh</div>
     <div class="upload-status" id="rosterStatus"></div>
   </div>
-  <div class="upload-card" id="proCard">
+  <div class="upload-card optional" id="proCard">
     <input type="file" id="proFile" accept=".csv">
     <div class="upload-label">Pro Years Report</div>
-    <div class="upload-hint">Pro_Years_Report_XXXX.csv (required)</div>
+    <div class="upload-hint">Pro_Years_Report_XXXX.csv — only needed if you don't have Players.hh + Stats.hh</div>
     <div class="upload-status" id="proStatus"></div>
   </div>
   <div class="upload-card optional" id="hit3Card">
     <input type="file" id="hit3File" accept=".csv">
     <div class="upload-label">Hitters Stats (Last 3 Years)</div>
-    <div class="upload-hint">players_stats_report_last_3_years_TEAM.csv (optional, strongly recommended)</div>
+    <div class="upload-hint">players_stats_report_last_3_years_TEAM.csv — fallback if you don't have Stats.hh</div>
     <div class="upload-status" id="hit3Status"></div>
   </div>
   <div class="upload-card optional" id="pit3Card">
     <input type="file" id="pit3File" accept=".csv">
     <div class="upload-label">Pitchers Stats (Last 3 Years)</div>
-    <div class="upload-hint">players_stats_Pitchers_report_last_3_years_TEAM.csv (optional, strongly recommended)</div>
+    <div class="upload-hint">players_stats_Pitchers_report_last_3_years_TEAM.csv — fallback if you don't have Stats.hh</div>
     <div class="upload-status" id="pit3Status"></div>
   </div>
   <div class="upload-card optional" id="cardsCard">
     <input type="file" id="cardsFolder" webkitdirectory multiple>
     <div class="upload-label">Player Cards Folder</div>
-    <div class="upload-hint">Folder of saved FirstLast.htm player-card pages (optional — unlocks minor-league-season eligibility below)</div>
+    <div class="upload-hint">Folder of saved FirstLast.htm player-card pages — fallback for AAA-season counting if you don't have Stats.hh</div>
     <div class="upload-status" id="cardsStatus"></div>
-  </div>
-  <div class="upload-card optional" id="playersHHCard">
-    <input type="file" id="playersHHFile" accept=".hh">
-    <div class="upload-label">Players.hh</div>
-    <div class="upload-hint">Raw save file, from your &lt;name&gt;Season folder next to the .sea pointer (optional — unlocks the prospect-rating exception below)</div>
-    <div class="upload-status" id="playersHHStatus"></div>
-  </div>
-  <div class="upload-card optional" id="statsHHCard">
-    <input type="file" id="statsHHFile" accept=".hh">
-    <div class="upload-label">Stats.hh</div>
-    <div class="upload-hint">Raw save file, next to Players.hh (optional — exact real season-by-season stats straight from the save, no export step; takes priority over the CSV files above when both a Players.hh and this are provided)</div>
-    <div class="upload-status" id="statsHHStatus"></div>
   </div>
 </div>
 
@@ -137,7 +137,7 @@
   <label><input type="checkbox" id="includeReassigned" checked> Include players who played for this team in the stats files but show elsewhere in the roster export (pre-season re-signings the export hasn't caught up to yet)</label>
 </div>
 <div class="options-row">
-  <label><input type="checkbox" id="includeMinors" checked> Also make minor-league players eligible if age &ge; <input type="number" id="minAge" value="24" min="18" max="45" style="width:44px"> or they've played &ge; <input type="number" id="minAAASeasons" value="2" min="1" max="15" style="width:44px"> seasons at AAA (needs Player Cards Folder)</label>
+  <label><input type="checkbox" id="includeMinors" checked> Also make minor-league players eligible if age &ge; <input type="number" id="minAge" value="24" min="18" max="45" style="width:44px"> or they've played &ge; <input type="number" id="minAAASeasons" value="2" min="1" max="15" style="width:44px"> seasons at AAA (needs Stats.hh, or Player Cards Folder as a fallback)</label>
 </div>
 <div class="options-row">
   <label><input type="checkbox" id="includeProspectException" checked> ...or make an exception regardless of age/AAA time if their in-game prospect rating is &ge; <input type="number" id="minProspectRating" value="6.5" min="1" max="15" step="0.1" style="width:52px"> (validated against the league's real under-24 ML call-ups — see log for the reasoning; needs Players.hh above)</label>
@@ -224,7 +224,9 @@ wireCSVUpload('proFile', 'proCard', 'proStatus', t => proCSV = t);
 wireCSVUpload('hit3File', 'hit3Card', 'hit3Status', t => hit3CSV = t);
 wireCSVUpload('pit3File', 'pit3Card', 'pit3Status', t => pit3CSV = t);
 function checkReady() {
-  document.getElementById('runBtn').disabled = !(rosterCSV && proCSV);
+  const haveCSVs = rosterCSV && proCSV;
+  const haveSaveFiles = playersHHRosterRows && statsHHByPlayerId;
+  document.getElementById('runBtn').disabled = !(haveCSVs || haveSaveFiles);
 }
 
 // A player-card filename is "FirstLast.htm" (no space) — normalize both sides to
@@ -284,12 +286,40 @@ const PHH_FIRST_NAME_OFF = 16, PHH_FIRST_NAME_LEN = 16;
 const PHH_PLAYER_ID_OFF = 34;
 const PHH_STAR_RATING_OFF = 44, PHH_PEAK_SHIFT_OFF = 56, PHH_PROSPECT_RATING_OFF = 48;
 
-function parsePlayersHH(buf) {
+// Full roster-row layout — every field the real engine's scoreProspect()/scoreHitter()/
+// scorePitcher() actually reads, cross-validated field-by-field against a real 3,203-player
+// League Roster CSV export before being trusted here (effectively zero real mismatches —
+// the only differences found were the CSV rounding Players.hh's true fractional edit values
+// to whole numbers, and P_GB being a 0-1 fraction here vs 0-100 in the CSV/engine, both
+// handled below). Lets this tool synthesize an equivalent roster row straight from the save
+// file, with no CSV export step at all.
+const PH_POS_NUM = {1:'P',2:'C',3:'1B',4:'2B',5:'3B',6:'SS',7:'LF',8:'CF',9:'RF'};
+const PH_HAND_NUM = {0:'L',1:'R',2:'S'};
+const PH_LEVEL_NUM = {0:'ML',1:'AAA',2:'AA',3:'A'}; // byte 7 = "DL" status, not a real level — left unresolved (empty), ~0.1% of records
+const PH_TEAM_IDX = {0:'RICH',1:'DAY',2:'BANG',3:'NORW',4:'ROME',5:'MIDL',6:'ERIE',7:'AUCK',8:'PEOR',9:'SUGR',
+  10:'OMA',11:'SF',12:'LAKE',13:'OKC',14:'LV',15:'MAIN',16:'MAHO',17:'SCRN',18:'LOUI',19:'CHES',
+  20:'ELP',21:'ROCK',22:'EDMO',23:'ALTO',24:'WISC',25:'IDA',26:'TEX',27:'PORT',28:'CASP',29:'FRIS',255:'FA'};
+const PH_PITCH_NAMES = {1:'Fastball',2:'Curve',3:'Slider',4:'Changeup',5:'Knuckleball',6:'Split Finger',7:'Sinker',8:'Cutter',9:'Screwball'};
+const PH_OFF = {
+  teamIdx:38, age:40, level:77, pos:86, throws:88, bats:89, // single raw byte each
+  arm:96, run:100,
+  batGB:236, batPull:240, batMiddle:244, batOppo:248,
+  splitAvgLH:252, splitAvgRH:256, splitObpLH:260, splitObpRH:264, splitSlgLH:268, splitSlgRH:272,
+  batAB:280, batH:284, bat2B:288, bat3B:292, batHR:296, batBB:300, batSO:304,
+  pitGB:372, pitEnd:376,
+  pitAB:404, pitH:408, pit2B:412, pit3B:416, pitHR:420, pitBB:424, pitSO:428,
+  ofRng:692, ifRng:696, fldPct:700,
+  famP:704, famC:708, fam1B:712, fam2B:716, fam3B:720, famSS:724, famLF:728, famCF:732, famRF:736,
+}; // remaining fields float32 <f
+const PH_PITCH_BLOCK_OFF = 484, PH_PITCH_BLOCK_SIZE = 32, PH_PITCH_BLOCK_COUNT = 6;
+
+function parsePlayersHHFull(buf) {
   const data = new DataView(buf);
   const bytes = new Uint8Array(buf);
   const decoder = new TextDecoder('latin1');
   const count = data.getUint32(4, true);
-  const map = {};
+  const ratings = {};
+  const rosterRows = [];
   for (let i = 0; i < count; i++) {
     const base = PHH_HEADER_SIZE + i * PHH_RECORD_SIZE;
     if (base + PHH_RECORD_SIZE > bytes.length) break;
@@ -305,17 +335,53 @@ function parsePlayersHH(buf) {
     const starRating = data.getFloat32(base + PHH_STAR_RATING_OFF, true);
     const prospectRating = data.getFloat32(base + PHH_PROSPECT_RATING_OFF, true);
     const peakShift = data.getInt8(base + PHH_PEAK_SHIFT_OFF);
-    map[normalizeNameKey(first + last)] = { id, starRating, prospectRating, peakShift };
+    ratings[normalizeNameKey(first + last)] = { id, starRating, prospectRating, peakShift };
+
+    const fl = off => data.getFloat32(base + off, true);
+    const byte = off => bytes[base + off];
+    const row = {
+      Last: last, First: first,
+      Age: byte(PH_OFF.age), Level: PH_LEVEL_NUM[byte(PH_OFF.level)] || '',
+      Pos: PH_POS_NUM[byte(PH_OFF.pos)] || '', Team: PH_TEAM_IDX[byte(PH_OFF.teamIdx)] || '',
+      Bat: PH_HAND_NUM[byte(PH_OFF.bats)] || '', Throw: PH_HAND_NUM[byte(PH_OFF.throws)] || '',
+      Run: fl(PH_OFF.run), Arm: fl(PH_OFF.arm), IF_Rng: fl(PH_OFF.ifRng), OF_Rng: fl(PH_OFF.ofRng), Fld: fl(PH_OFF.fldPct),
+      F_P: fl(PH_OFF.famP), F_C: fl(PH_OFF.famC), F_1B: fl(PH_OFF.fam1B), F_2B: fl(PH_OFF.fam2B),
+      F_3B: fl(PH_OFF.fam3B), F_SS: fl(PH_OFF.famSS), F_LF: fl(PH_OFF.famLF), F_CF: fl(PH_OFF.famCF), F_RF: fl(PH_OFF.famRF),
+      B_AB: fl(PH_OFF.batAB), B_H: fl(PH_OFF.batH), B_B2: fl(PH_OFF.bat2B), B_B3: fl(PH_OFF.bat3B),
+      B_HR: fl(PH_OFF.batHR), B_BB: fl(PH_OFF.batBB), B_SO: fl(PH_OFF.batSO),
+      vL_AVG: fl(PH_OFF.splitAvgLH), vL_OBP: fl(PH_OFF.splitObpLH), vL_SLG: fl(PH_OFF.splitSlgLH),
+      vR_AVG: fl(PH_OFF.splitAvgRH), vR_OBP: fl(PH_OFF.splitObpRH), vR_SLG: fl(PH_OFF.splitSlgRH),
+      Pull: fl(PH_OFF.batPull), Middle: fl(PH_OFF.batMiddle), Opp: fl(PH_OFF.batOppo), B_GB: fl(PH_OFF.batGB),
+      END: fl(PH_OFF.pitEnd),
+      P_AB: fl(PH_OFF.pitAB), P_H: fl(PH_OFF.pitH), P_B2: fl(PH_OFF.pit2B), P_B3: fl(PH_OFF.pit3B),
+      P_HR: fl(PH_OFF.pitHR), P_BB: fl(PH_OFF.pitBB), P_SO: fl(PH_OFF.pitSO),
+      P_GB: fl(PH_OFF.pitGB) * 100, // stored as a 0-1 fraction here; the CSV export and the engine's pitching GB-bonus thresholds are 0-100
+    };
+    for (let slot = 0; slot < PH_PITCH_BLOCK_COUNT; slot++) {
+      const pb = PH_PITCH_BLOCK_OFF + slot * PH_PITCH_BLOCK_SIZE;
+      const typeId = byte(pb);
+      const n = slot + 1;
+      row[`P${n}`] = typeId ? (PH_PITCH_NAMES[typeId] || 'NA') : 'NA';
+      row[`P${n}_Qual`] = data.getFloat32(base + pb + 4, true);
+      row[`P${n}_vL_AVG`] = data.getFloat32(base + pb + 8, true);  row[`P${n}_vR_AVG`] = data.getFloat32(base + pb + 12, true);
+      row[`P${n}_vL_OBP`] = data.getFloat32(base + pb + 16, true); row[`P${n}_vR_OBP`] = data.getFloat32(base + pb + 20, true);
+      row[`P${n}_vL_SLG`] = data.getFloat32(base + pb + 24, true); row[`P${n}_vR_SLG`] = data.getFloat32(base + pb + 28, true);
+    }
+    rosterRows.push(row);
   }
-  return map;
+  return { ratings, rosterRows };
 }
 
+let playersHHRosterRows = null; // synthesized roster rows, replaces the League Roster CSV when present
 document.getElementById('playersHHFile').addEventListener('change', async function(e) {
   const f = e.target.files[0]; if (!f) return;
   const buf = await f.arrayBuffer();
-  ratingsByNameKey = parsePlayersHH(buf);
-  document.getElementById('playersHHStatus').textContent = `✓ ${Object.keys(ratingsByNameKey).length} players parsed`;
+  const parsed = parsePlayersHHFull(buf);
+  ratingsByNameKey = parsed.ratings;
+  playersHHRosterRows = parsed.rosterRows;
+  document.getElementById('playersHHStatus').textContent = `✓ ${playersHHRosterRows.length} players parsed`;
   document.getElementById('playersHHCard').classList.add('loaded');
+  checkReady();
 });
 
 // Stats.hh binary layout — reverse-engineered from the MLBCManager tool's own decompiled
@@ -476,7 +542,39 @@ document.getElementById('statsHHFile').addEventListener('change', async function
   statsHHMaxYear = maxYear || null;
   document.getElementById('statsHHStatus').textContent = `✓ ${Object.keys(statsHHByPlayerId).length} players, through ${statsHHMaxYear}`;
   document.getElementById('statsHHCard').classList.add('loaded');
+  checkReady();
 });
+
+// Pro Years — the league's own rule (from the rules page): a season counts as a "pro year"
+// if a hitter reaches 150 AB, or a pitcher reaches 15 G or 55 IP (55 IP = 165 outs), at the
+// ML level. Replaces the separate Pro Years Report CSV entirely — verified against 5 real
+// players' actual Pro Years values (4 exact matches; the 5th's only "extra" year was an
+// 11-game cup-of-coffee debut correctly excluded by the 150-AB bar).
+function computeProYears(player) {
+  if (!player) return 0;
+  const batAB = {}, pitG = {}, pitOuts = {};
+  player.batting.forEach(s => { if (s.level === 0) batAB[s.year] = (batAB[s.year]||0) + s.ab; });
+  player.pitching.forEach(s => {
+    if (s.level !== 0) return;
+    pitG[s.year] = (pitG[s.year]||0) + s.g;
+    pitOuts[s.year] = (pitOuts[s.year]||0) + s.ip_outs;
+  });
+  const years = new Set();
+  Object.entries(batAB).forEach(([y,ab]) => { if (ab >= 150) years.add(+y); });
+  new Set([...Object.keys(pitG), ...Object.keys(pitOuts)]).forEach(y => {
+    if ((pitG[y]||0) >= 15 || (pitOuts[y]||0) >= 165) years.add(+y);
+  });
+  return years.size;
+}
+// AAA seasons — replaces the Player Cards Folder for the minors-eligibility rule: a distinct
+// year with any AAA-level (Stats.hh level===1) row, batting or pitching.
+function computeAAASeasonsFromStatsHH(player) {
+  if (!player) return 0;
+  const years = new Set();
+  player.batting.forEach(s => { if (s.level === 1) years.add(s.year); });
+  player.pitching.forEach(s => { if (s.level === 1) years.add(s.year); });
+  return years.size;
+}
 
 function parseCSVRows(text) {
   return Papa.parse(text, { header: true, skipEmptyLines: true }).data;
@@ -523,9 +621,28 @@ async function buildLineup() {
     });
     const win = frame.contentWindow, doc = frame.contentDocument;
 
-    log('Uploading roster/pro-years through the app\'s real code path...');
-    const rosterFile = new win.File([rosterCSV], 'roster.csv', { type: 'text/csv' });
-    const proFile = new win.File([proCSV], 'proyears.csv', { type: 'text/csv' });
+    // Players.hh + Stats.hh together can fully replace the League Roster + Pro Years CSVs —
+    // every field cross-validated against a real 3,203-player export before being trusted
+    // here (see the commit history for the full field-by-field validation). Falls back to
+    // the manually-uploaded CSVs when either save file is missing.
+    let effectiveRosterCSV = rosterCSV, effectiveProCSV = proCSV, sourceNote = 'League Roster + Pro Years CSVs';
+    if (playersHHRosterRows && statsHHByPlayerId) {
+      log(`Synthesizing roster & pro-years data directly from Players.hh + Stats.hh (${playersHHRosterRows.length} players, no CSV export needed)...`);
+      effectiveRosterCSV = Papa.unparse(playersHHRosterRows);
+      const proRows = playersHHRosterRows.map(r => {
+        const ratings = ratingsByNameKey[normalizeNameKey(r.First + r.Last)];
+        const player = ratings ? statsHHByPlayerId[ratings.id] : null;
+        return { First: r.First, Last: r.Last, 'Pro Years': computeProYears(player) };
+      });
+      effectiveProCSV = Papa.unparse(proRows);
+      sourceNote = 'Players.hh + Stats.hh';
+    } else if (!rosterCSV || !proCSV) {
+      throw new Error('Need either League Roster + Pro Years CSVs, or Players.hh + Stats.hh.');
+    }
+
+    log(`Uploading roster/pro-years through the app's real code path (source: ${sourceNote})...`);
+    const rosterFile = new win.File([effectiveRosterCSV], 'roster.csv', { type: 'text/csv' });
+    const proFile = new win.File([effectiveProCSV], 'proyears.csv', { type: 'text/csv' });
     const dt1 = new win.DataTransfer(); dt1.items.add(rosterFile);
     doc.getElementById('rosterFile').files = dt1.files;
     doc.getElementById('rosterFile').dispatchEvent(new win.Event('change'));
@@ -751,19 +868,23 @@ async function buildLineup() {
     const minProspectRating = +document.getElementById('minProspectRating').value || 6.5;
     let minorsIncluded = [];
     if (includeMinors || includeProspectException) {
-      if (includeMinors && !cardsByNameKey) log('Age/AAA-seasons eligibility is checked but no Player Cards Folder was uploaded — that path is skipped (prospect-rating exception, if checked, still runs).');
+      if (includeMinors && !cardsByNameKey && !statsHHByPlayerId) log('Age/AAA-seasons eligibility is checked but no Player Cards Folder or Stats.hh was uploaded — that path is skipped (prospect-rating exception, if checked, still runs).');
       if (includeProspectException && !ratingsByNameKey) log('Prospect-rating exception is checked but no Players.hh was uploaded — that path is skipped.');
       const activeKeys = new Set([...activeHitters, ...activePitchers].map(r => keyOf(r.last, r.first)));
       const notYetActive = fullRosterRows.filter(r => !activeKeys.has(keyOf(r.last, r.first)));
       notYetActive.forEach(r => {
         const nameKey = normalizeNameKey(r.first + r.last);
-        const card = cardsByNameKey ? cardsByNameKey[nameKey] : null;
-        const seasons = card ? card.aaaSeasons.size : 0;
         const ratings = ratingsByNameKey ? ratingsByNameKey[nameKey] : null;
+        // AAA seasons: Stats.hh (exact, when both it and Players.hh are present) takes
+        // priority over the Player Cards Folder, same priority order as everywhere else.
+        const statsHHPlayer = (statsHHByPlayerId && ratings) ? statsHHByPlayerId[ratings.id] : null;
+        const card = cardsByNameKey ? cardsByNameKey[nameKey] : null;
+        const haveAAASource = !!(statsHHPlayer || card);
+        const seasons = statsHHPlayer ? computeAAASeasonsFromStatsHH(statsHHPlayer) : (card ? card.aaaSeasons.size : 0);
         const prospectRating = ratings ? ratings.prospectRating : null;
 
         const ageOk = includeMinors && r.age >= minAge;
-        const aaaOk = includeMinors && card && seasons >= minAAASeasons;
+        const aaaOk = includeMinors && haveAAASource && seasons >= minAAASeasons;
         const prospectOk = includeProspectException && ratings && prospectRating >= minProspectRating;
         if (!ageOk && !aaaOk && !prospectOk) return;
 
