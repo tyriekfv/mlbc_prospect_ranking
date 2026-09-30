@@ -122,6 +122,12 @@
     <div class="upload-hint">Raw save file, from your &lt;name&gt;Season folder next to the .sea pointer (optional — unlocks the prospect-rating exception below)</div>
     <div class="upload-status" id="playersHHStatus"></div>
   </div>
+  <div class="upload-card optional" id="statsHHCard">
+    <input type="file" id="statsHHFile" accept=".hh">
+    <div class="upload-label">Stats.hh</div>
+    <div class="upload-hint">Raw save file, next to Players.hh (optional — exact real season-by-season stats straight from the save, no export step; takes priority over the CSV files above when both a Players.hh and this are provided)</div>
+    <div class="upload-status" id="statsHHStatus"></div>
+  </div>
 </div>
 
 <div class="options-row">
@@ -272,6 +278,7 @@ document.getElementById('cardsFolder').addEventListener('change', async function
 const PHH_RECORD_SIZE = 768, PHH_HEADER_SIZE = 8;
 const PHH_LAST_NAME_OFF = 0, PHH_LAST_NAME_LEN = 16;
 const PHH_FIRST_NAME_OFF = 16, PHH_FIRST_NAME_LEN = 16;
+const PHH_PLAYER_ID_OFF = 34;
 const PHH_STAR_RATING_OFF = 44, PHH_PEAK_SHIFT_OFF = 56, PHH_PROSPECT_RATING_OFF = 48;
 
 function parsePlayersHH(buf) {
@@ -291,10 +298,11 @@ function parsePlayersHH(buf) {
     const last = cstr(PHH_LAST_NAME_OFF, PHH_LAST_NAME_LEN);
     const first = cstr(PHH_FIRST_NAME_OFF, PHH_FIRST_NAME_LEN);
     if (!last && !first) continue;
+    const id = data.getUint16(base + PHH_PLAYER_ID_OFF, true);
     const starRating = data.getFloat32(base + PHH_STAR_RATING_OFF, true);
     const prospectRating = data.getFloat32(base + PHH_PROSPECT_RATING_OFF, true);
     const peakShift = data.getInt8(base + PHH_PEAK_SHIFT_OFF);
-    map[normalizeNameKey(first + last)] = { starRating, prospectRating, peakShift };
+    map[normalizeNameKey(first + last)] = { id, starRating, prospectRating, peakShift };
   }
   return map;
 }
@@ -305,6 +313,166 @@ document.getElementById('playersHHFile').addEventListener('change', async functi
   ratingsByNameKey = parsePlayersHH(buf);
   document.getElementById('playersHHStatus').textContent = `✓ ${Object.keys(ratingsByNameKey).length} players parsed`;
   document.getElementById('playersHHCard').classList.add('loaded');
+});
+
+// Stats.hh binary layout — reverse-engineered from the MLBCManager tool's own decompiled
+// hhformat/stats.py (extensively dated/cross-validated docstrings by the original developer,
+// including a real box-score cross-reference that confirmed and fixed an IP/K overflow bug).
+// Container: 8-byte header (magic + uint32 LE record count), then per player: uint32 LE
+// player_id, uint32 LE batting-row count, that many 28-byte batting rows, uint32 LE
+// pitching-row count, that many 36-byte pitching rows, uint32 LE fielding-row count, that
+// many 16-byte fielding rows (skipped — this tool has no use for fielding history). Row
+// counts always advance the read position regardless of whether a given row decodes as
+// valid — some slots are documented padding (a fixed template, not real data).
+const STATS_HEADER_SIZE = 8, BATTING_ROW_SIZE = 28, PITCHING_ROW_SIZE = 36, FIELDING_ROW_SIZE = 16;
+const PITCH_LEVEL_BYTE_TO_INT = { 7: 0, 15: 1, 23: 2, 31: 3 }; // -> ML/AAA/AA/A, matches LEVEL_NAMES below
+const STATS_LEVEL_NAMES = ['ML', 'AAA', 'AA', 'A'];
+
+function isValidBatRow(row) {
+  if (row.length < 27) return false;
+  const year = row[4] + 1792;
+  return year >= 1900 && year <= 2100 && row[26] >= 0 && row[26] <= 3;
+}
+function isValidPitchRow(row) {
+  if (row.length < 2) return false;
+  const year = row[0] + 1792;
+  return year >= 1900 && year <= 2100 && (row[1] in PITCH_LEVEL_BYTE_TO_INT);
+}
+
+// HR and RBI are 5-bit-plus-carry fields (mod-32 base + a carry bit/nibble elsewhere in the
+// row) — the carry recovery below is the original developer's own confirmed-correct decode,
+// not a guess. AB is a shared 16-bit word with 4 unrelated low bits masked off.
+function battingSeasonFromBytes(row) {
+  const year = row[4] + 1792;
+  const level = row[26];
+  const g = row[0];
+  const ab = (((row[2] << 8) | row[1]) >> 4);
+  const h = (row[6] << 2) | (row[5] >> 6);
+  const b2 = row[8];
+  const b3 = row[14];
+  const hr = (row[9] >> 3) + 32 * (row[10] & 1);
+  const bb = (row[11] << 3) | (row[10] >> 5);
+  const so = row[16];
+  const rbi = (row[17] >> 3) + 32 * (row[18] & 7);
+  const sb = row[12];
+  const cs = row[13];
+  const r = row[20];
+  const hbp = row[7] >> 1;
+  const gidp = (row[19] << 2) | (row[18] >> 6);
+  const ibb = row[21] >> 3;
+  const sf = row[22] >> 2;
+  const sh = row[23] >> 1;
+  const pab = row[25];
+  const phit = row[15];
+  const team = row[24];
+  return { year, level, g, ab, h, b2, b3, hr, bb, so, rbi, sb, cs, r, hbp, gidp, ibb, sf, sh, pab, phit, team };
+}
+
+// ip_outs/k are the carry-corrected fields the original developer's docstring describes as
+// "fully SOLVED" via real box-score cross-reference (was an overflow bug before that fix).
+function pitchingSeasonFromBytes(row) {
+  const year = row[0] + 1792;
+  const level = PITCH_LEVEL_BYTE_TO_INT[row[1]];
+  const ip_outs = row[4] + 256 * (row[5] & 31);
+  const b3_allowed = row[8];
+  const hr_allowed = row[9];
+  const sb_allowed = row[10];
+  const bb_allowed = row[12];
+  const k = (row[13] >> 3) + 32 * (row[14] & 63);
+  const er = row[16];
+  const r = row[20];
+  const gs = row[22] >> 2;
+  const cs_allowed = row[24];
+  const w = row[25];
+  const l = row[26];
+  const sv = row[27];
+  const hld = row[28];
+  const qs = row[29];
+  const pn16 = (row[31] << 8) | row[30];
+  const pitch_num = pn16 >= 0x8000 ? pn16 - 0x10000 : pn16;
+  const team = row[32];
+  const h_allowed = (row[6] << 3) | (row[5] >> 5);
+  const b2_allowed = (row[3] << 3) | (row[2] >> 5);
+  const bs = row[7] >> 1;
+  const cg = row[11] >> 1;
+  const hb = row[17] >> 3;
+  const wp = row[18] >> 2;
+  const sho = row[21] >> 3;
+  const bk = row[23] >> 2;
+  const g = (row[15] << 2) | (row[14] >> 6);
+  return { year, level, ip_outs, b3_allowed, hr_allowed, sb_allowed, bb_allowed, k, er, r, gs, cs_allowed, w, l, sv, hld, qs, pitch_num, team, h_allowed, b2_allowed, bs, cg, hb, wp, sho, bk, g };
+}
+
+// player_id (uint32 in Stats.hh) is the same id space as Players.hh's own uint16 id field
+// (PHH_PLAYER_ID_OFF above) — confirmed by successful cross-reference earlier in this
+// project (the league-wide direct-to-ML draft research joined the two files on exactly
+// this id and produced correct, sane real-name matches).
+function parseStatsHH(buf) {
+  const bytes = new Uint8Array(buf);
+  const view = new DataView(buf);
+  const total = bytes.length;
+  const headerCount = view.getUint32(4, true);
+  let pos = STATS_HEADER_SIZE, n = 0;
+  const byId = {};
+  while (pos + 8 <= total && n < headerCount) {
+    const playerId = view.getUint32(pos, true); pos += 4;
+    const batCount = view.getUint32(pos, true); pos += 4;
+    const batting = [];
+    for (let i = 0; i < batCount; i++) {
+      if (pos + BATTING_ROW_SIZE > total) break;
+      const row = bytes.subarray(pos, pos + BATTING_ROW_SIZE);
+      if (isValidBatRow(row)) batting.push(battingSeasonFromBytes(row));
+      pos += BATTING_ROW_SIZE;
+    }
+    if (pos + 4 > total) break;
+    const pitchCount = view.getUint32(pos, true); pos += 4;
+    const pitching = [];
+    for (let i = 0; i < pitchCount; i++) {
+      if (pos + PITCHING_ROW_SIZE > total) break;
+      const row = bytes.subarray(pos, pos + PITCHING_ROW_SIZE);
+      if (isValidPitchRow(row)) pitching.push(pitchingSeasonFromBytes(row));
+      pos += PITCHING_ROW_SIZE;
+    }
+    if (pos + 4 > total) break;
+    const fldCount = view.getUint32(pos, true); pos += 4;
+    pos += fldCount * FIELDING_ROW_SIZE; // fielding history unused by this tool
+    byId[playerId] = { batting, pitching };
+    n++;
+  }
+  return byId;
+}
+
+// Sums whatever season rows are handed to it (a year's Hand=0/Hand=1 split pair, several
+// years, both at once — the fields are plain counting stats, so summing is always valid
+// regardless of how the rows are grouped) into one totals line, the same fields the
+// original developer's own sum_batting()/sum_pitching() helpers use.
+function sumBattingSeasons(seasons) {
+  const f = ['g','ab','h','b2','b3','hr','bb','so','rbi','sb','cs','r','hbp','gidp','ibb','sf','sh','pab','phit'];
+  const out = {};
+  f.forEach(k => out[k] = seasons.reduce((s,r) => s + (r[k]||0), 0));
+  return out;
+}
+function sumPitchingSeasons(seasons) {
+  const f = ['ip_outs','b3_allowed','hr_allowed','sb_allowed','bb_allowed','k','er','r','gs','cs_allowed','w','l','sv','hld','qs','h_allowed','b2_allowed','cg','sho','bk','hb','wp','bs','pitch_num','g'];
+  const out = {};
+  f.forEach(k => out[k] = seasons.reduce((s,r) => s + (r[k]||0), 0));
+  return out;
+}
+
+let statsHHByPlayerId = null; // uint32 player_id -> { batting: BattingSeason[], pitching: PitchingSeason[] }
+let statsHHMaxYear = null;    // latest year seen anywhere in the file — this save's "current year"
+document.getElementById('statsHHFile').addEventListener('change', async function(e) {
+  const f = e.target.files[0]; if (!f) return;
+  const buf = await f.arrayBuffer();
+  statsHHByPlayerId = parseStatsHH(buf);
+  let maxYear = 0;
+  Object.values(statsHHByPlayerId).forEach(p => {
+    p.batting.forEach(s => { if (s.year > maxYear) maxYear = s.year; });
+    p.pitching.forEach(s => { if (s.year > maxYear) maxYear = s.year; });
+  });
+  statsHHMaxYear = maxYear || null;
+  document.getElementById('statsHHStatus').textContent = `✓ ${Object.keys(statsHHByPlayerId).length} players, through ${statsHHMaxYear}`;
+  document.getElementById('statsHHCard').classList.add('loaded');
 });
 
 function parseCSVRows(text) {
@@ -419,26 +587,64 @@ async function buildLineup() {
     // on this end, unlike the single-season files this tool used to take.
     const hit3 = mapByKey(statRows(hit3CSV));
     const pit3 = mapByKey(statRows(pit3CSV));
-    log(`Actual stats loaded — Last 3 Years: ${Object.keys(hit3).length}H/${Object.keys(pit3).length}P.`);
+    log(`Actual stats loaded — Last 3 Years CSV: ${Object.keys(hit3).length}H/${Object.keys(pit3).length}P.` +
+        (statsHHByPlayerId ? ` Stats.hh: ${Object.keys(statsHHByPlayerId).length} players through ${statsHHMaxYear} (takes priority over the CSV above when a player has real ML seasons there).` : ''));
 
     // A hitter/pitcher's real hand-reliability biases aren't corrected here (that's the
-    // Progression Tracker's job) — this tool only decides WHO plays and WHERE. Real
-    // production is used whenever the player has ANY games on record over the last 3
-    // years (AB>0 / IP>0 — a zero-games row, like a player who just signed here, means
-    // nothing to average in), falling back to the engine's projected grade only when
-    // there's truly no track record at all.
+    // Progression Tracker's job) — this tool only decides WHO plays and WHERE. Priority:
+    // (1) Stats.hh, when both it and Players.hh are uploaded — exact real seasons straight
+    // from the save, no export step, no windowing surprises; (2) the Last 3 Years CSV
+    // export; (3) the engine's projected grade when there's no track record anywhere.
+    //
+    // Stats.hh tier: ML-level seasons only, over whichever of the last 3 calendar
+    // year-slots this save actually has (the most recent slot can be an in-progress/empty
+    // current season, same real-world limitation the CSV export has — nothing to fix here,
+    // it just means "3 years" is sometimes really 2).
+    function statsHHHitterLine(row) {
+      if (!statsHHByPlayerId || !statsHHMaxYear || !ratingsByNameKey) return null;
+      const ratings = ratingsByNameKey[normalizeNameKey(row.first + row.last)];
+      const player = ratings ? statsHHByPlayerId[ratings.id] : null;
+      if (!player) return null;
+      const cutoff = statsHHMaxYear - 2;
+      const seasons = player.batting.filter(s => s.level === 0 && s.year >= cutoff && s.year <= statsHHMaxYear);
+      if (!seasons.length) return null;
+      const t = sumBattingSeasons(seasons);
+      if (!t.ab) return null;
+      const denom = t.ab + t.bb + t.hbp + t.sf;
+      const obp = denom > 0 ? (t.h + t.bb + t.hbp) / denom : 0;
+      const slg = (t.h + t.b2 + 2*t.b3 + 3*t.hr) / t.ab;
+      const yrs = [...new Set(seasons.map(s=>s.year))];
+      return { obp, slg, ops: obp+slg, sb: t.sb, ab: t.ab, source: `Stats.hh (${yrs.length} season${yrs.length>1?'s':''}, ${cutoff}-${statsHHMaxYear})` };
+    }
+    function statsHHPitcherLine(row) {
+      if (!statsHHByPlayerId || !statsHHMaxYear || !ratingsByNameKey) return null;
+      const ratings = ratingsByNameKey[normalizeNameKey(row.first + row.last)];
+      const player = ratings ? statsHHByPlayerId[ratings.id] : null;
+      if (!player) return null;
+      const cutoff = statsHHMaxYear - 2;
+      const seasons = player.pitching.filter(s => s.level === 0 && s.year >= cutoff && s.year <= statsHHMaxYear);
+      if (!seasons.length) return null;
+      const t = sumPitchingSeasons(seasons);
+      if (!t.ip_outs) return null;
+      const yrs = [...new Set(seasons.map(s=>s.year))];
+      return { era: t.er * 27 / t.ip_outs, ip: t.ip_outs / 3, gs: t.gs, g: t.g, sv: t.sv, source: `Stats.hh (${yrs.length} season${yrs.length>1?'s':''}, ${cutoff}-${statsHHMaxYear})` };
+    }
     function hitterPerf(row) {
+      const hh = statsHHHitterLine(row);
+      if (hh) return hh;
       const s = hit3[keyOf(row.last, row.first)];
       if (s && +s.AB > 0) {
         const obp = +s.OBP, slg = +s.SLG;
-        return { obp, slg, ops: obp+slg, sb: +(s.SB||0), ab: +s.AB, source: 'Last 3 Years' };
+        return { obp, slg, ops: obp+slg, sb: +(s.SB||0), ab: +s.AB, source: 'Last 3 Years (CSV)' };
       }
       return { obp:row.obp, slg:(row.ops!=null&&row.obp!=null)?+(row.ops-row.obp).toFixed(4):null, ops:row.ops, sb:null, ab:null, source:'Engine (no stats)' };
     }
     function pitcherPerf(row) {
+      const hh = statsHHPitcherLine(row);
+      if (hh) return hh;
       const s = pit3[keyOf(row.last, row.first)];
       if (s && +s.IP > 0) {
-        return { era:+s.ERA, ip:+s.IP, gs:+s.GS, g:+s.G, sv:+s.SV||0, source:'Last 3 Years' };
+        return { era:+s.ERA, ip:+s.IP, gs:+s.GS, g:+s.G, sv:+s.SV||0, source:'Last 3 Years (CSV)' };
       }
       return { era:null, ip:null, gs:null, g:null, sv:0, source:'Engine (no stats)' };
     }
@@ -732,7 +938,8 @@ async function buildLineup() {
     }
 
     document.getElementById('lineupSourceNote').textContent =
-      Object.keys(hit3).length ? 'OBP/SLG/OPS/SB drawn from the Last 3 Years stats file where a player has any games on record there, engine projection otherwise — shown per player below.'
+      statsHHByPlayerId ? 'OBP/SLG/OPS/SB drawn from Stats.hh (exact real seasons) where available, the Last 3 Years CSV next, engine projection otherwise — shown per player below.'
+      : Object.keys(hit3).length ? 'OBP/SLG/OPS/SB drawn from the Last 3 Years stats file where a player has any games on record there, engine projection otherwise — shown per player below.'
                 : 'No performance file provided — ordered on engine-projected OBP/OPS only.';
 
     // Slot index -> source tier is NOT sequential: 1/2/4 (indices 0,1,3) are Tier A,
