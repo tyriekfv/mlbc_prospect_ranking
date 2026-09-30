@@ -6,9 +6,7 @@
 <title>MLBC Lineup Builder</title>
 <link rel="icon" type="image/png" href="./favicon.png">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script><style>
   :root {
     --bg: #0a0c0f; --surface: #111418; --surface2: #1a1f26; --border: #252b35;
     --accent: #e8a020; --accent2: #4a9eff; --accent3: #3ddc84; --text: #e8ecf0;
@@ -85,7 +83,7 @@
 </nav>
 
 <h1>MLBC <span>LINEUP BUILDER</span></h1>
-<div class="sub">Builds a batting order and pitching rotation for one team from the real engine's grades, cross-checked against actual performance when you provide it. A hitter's OBP/SLG/OPS are a recency-weighted blend of up to the last 3 years of real stats (whichever years clear a minimum sample — thin partial seasons don't count), falling back to the engine's projected grade only when a player has no qualifying real season on file at all. Batting order follows Tango/Lichtman/Dolphin's tiered method from <em>The Book</em>: your 3 best hitters go to slots 1/2/4 (best OBP leads off, best power cleans up, the third fills #2), the next 2 best go to 3/5 (the stronger of the pair at #5, per the slot-importance ranking), and the rest fill 6/7/8 by descending quality — with a fast, lower-OBP runner preferred at #6 when one stands out. Assumes a DH lineup (8 hitters, no pitcher at-bat) — adjust manually if your league has pitchers hit. Hitters fully trained (1.00 proficiency) at more than one position are automatically evaluated for all of them — anything under 1.00 is excluded from an alternate position entirely, since partial training is a real fielding liability, not a "can pinch-hit there" situation.</div>
+<div class="sub">Builds a batting order and pitching rotation for one team from the real engine's grades, cross-checked against actual performance when you provide it. A hitter/pitcher's real production comes straight from the game's own "Last 3 Years" export — no reconstruction on this end — falling back to the engine's projected grade only when a player has zero games on record there at all (a true rookie/unproven case). Batting order follows Tango/Lichtman/Dolphin's tiered method from <em>The Book</em>: your 3 best hitters go to slots 1/2/4 (best OBP leads off, best power cleans up, the third fills #2), the next 2 best go to 3/5 (the stronger of the pair at #5, per the slot-importance ranking), and the rest fill 6/7/8 by descending quality — with a fast, lower-OBP runner preferred at #6 when one stands out. Assumes a DH lineup (8 hitters, no pitcher at-bat) — adjust manually if your league has pitchers hit. Hitters fully trained (1.00 proficiency) at more than one position are automatically evaluated for all of them — anything under 1.00 is excluded from an alternate position entirely, since partial training is a real fielding liability, not a "can pinch-hit there" situation.</div>
 
 <div class="upload-grid">
   <div class="upload-card" id="rosterCard">
@@ -100,23 +98,17 @@
     <div class="upload-hint">Pro_Years_Report_XXXX.csv (required)</div>
     <div class="upload-status" id="proStatus"></div>
   </div>
-  <div class="upload-card optional" id="prev2Card">
-    <input type="file" id="prev2File" accept=".xlsx">
-    <div class="upload-label">Two Years Ago Stats</div>
-    <div class="upload-hint">players_stats_report_XXXX-2_TEAM.xlsx (optional — completes the 3-year blend)</div>
-    <div class="upload-status" id="prev2Status"></div>
+  <div class="upload-card optional" id="hit3Card">
+    <input type="file" id="hit3File" accept=".csv">
+    <div class="upload-label">Hitters Stats (Last 3 Years)</div>
+    <div class="upload-hint">players_stats_report_last_3_years_TEAM.csv (optional, strongly recommended)</div>
+    <div class="upload-status" id="hit3Status"></div>
   </div>
-  <div class="upload-card optional" id="prevCard">
-    <input type="file" id="prevFile" accept=".xlsx">
-    <div class="upload-label">Previous Year Stats</div>
-    <div class="upload-hint">players_stats_report_previous_year_XXXX_TEAM.xlsx (optional)</div>
-    <div class="upload-status" id="prevStatus"></div>
-  </div>
-  <div class="upload-card optional" id="curCard">
-    <input type="file" id="curFile" accept=".xlsx">
-    <div class="upload-label">Current Year Stats</div>
-    <div class="upload-hint">players_stats_report_current_year_XXXX_TEAM.xlsx (optional, strongly recommended)</div>
-    <div class="upload-status" id="curStatus"></div>
+  <div class="upload-card optional" id="pit3Card">
+    <input type="file" id="pit3File" accept=".csv">
+    <div class="upload-label">Pitchers Stats (Last 3 Years)</div>
+    <div class="upload-hint">players_stats_Pitchers_report_last_3_years_TEAM.csv (optional, strongly recommended)</div>
+    <div class="upload-status" id="pit3Status"></div>
   </div>
   <div class="upload-card optional" id="cardsCard">
     <input type="file" id="cardsFolder" webkitdirectory multiple>
@@ -194,7 +186,7 @@
 <iframe id="engineFrame" src="./index.html"></iframe>
 
 <script>
-let rosterCSV = null, proCSV = null, prev2WB = null, prevWB = null, curWB = null;
+let rosterCSV = null, proCSV = null, hit3CSV = null, pit3CSV = null;
 let fullRosterRows = [];
 let cardsByNameKey = null; // normalizedName -> { minorSeasons:Set, mlSeasons:Set, experience }
 let ratingsByNameKey = null; // normalizedName -> { prospectRating, starRating, peakShift }
@@ -218,25 +210,10 @@ function wireCSVUpload(inputId, cardId, statusId, onLoaded) {
     reader.readAsText(f);
   });
 }
-function wireXLSXUpload(inputId, cardId, statusId, onLoaded) {
-  document.getElementById(inputId).addEventListener('change', function(e) {
-    const f = e.target.files[0]; if (!f) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      const wb = XLSX.read(reader.result, { type: 'array' });
-      onLoaded(wb, f.name);
-      document.getElementById(statusId).textContent = `✓ ${f.name}`;
-      document.getElementById(cardId).classList.add('loaded');
-      checkReady();
-    };
-    reader.readAsArrayBuffer(f);
-  });
-}
 wireCSVUpload('rosterFile', 'rosterCard', 'rosterStatus', t => rosterCSV = t);
 wireCSVUpload('proFile', 'proCard', 'proStatus', t => proCSV = t);
-wireXLSXUpload('prev2File', 'prev2Card', 'prev2Status', wb => prev2WB = wb);
-wireXLSXUpload('prevFile', 'prevCard', 'prevStatus', wb => prevWB = wb);
-wireXLSXUpload('curFile', 'curCard', 'curStatus', wb => curWB = wb);
+wireCSVUpload('hit3File', 'hit3Card', 'hit3Status', t => hit3CSV = t);
+wireCSVUpload('pit3File', 'pit3Card', 'pit3Status', t => pit3CSV = t);
 function checkReady() {
   document.getElementById('runBtn').disabled = !(rosterCSV && proCSV);
 }
@@ -334,20 +311,16 @@ function parseCSVRows(text) {
   return Papa.parse(text, { header: true, skipEmptyLines: true }).data;
 }
 
-// The two-sheet actual-stats workbooks have trailing blank/note rows after the real
-// data (a fully-empty divider row, then long disclaimer sentences in column A). SheetJS
-// skips the empty divider row entirely rather than emitting a blank object, so it lands
-// straight on a note row next — which still has text in "Last", so checking Last alone
-// doesn't catch it. The note rows have nothing in "First" though, so require both.
-function sheetRows(wb, sheetName) {
-  if (!wb || !wb.Sheets[sheetName]) return [];
-  const rows = XLSX.utils.sheet_to_json(wb.Sheets[sheetName], { defval: null });
-  const out = [];
-  for (const r of rows) {
-    if (!r.Last || !r.First) break;
-    out.push(r);
-  }
-  return out;
+// The "Last 3 Years" stat exports are plain CSVs with one "Name" column formatted
+// as "Last, First" (quoted, since it contains a comma) instead of separate Last/First
+// columns — split it here so mapByKey/keyOf below can work the same way they do for
+// the roster and pro-years files.
+function statRows(csvText) {
+  if (!csvText) return [];
+  return parseCSVRows(csvText).map(r => {
+    const [last, first] = (r.Name||'').split(',').map(s => (s||'').trim());
+    return { ...r, Last: last, First: first };
+  }).filter(r => r.Last && r.First);
 }
 function keyOf(last, first) { return `${(last||'').trim()}|${(first||'').trim()}`.toLowerCase(); }
 function mapByKey(rows) {
@@ -442,50 +415,31 @@ async function buildLineup() {
     if (!fullRosterRows.length) throw new Error(`No roster rows matched Team="${teamCode}". Check the team code and roster file.`);
 
     // ── Actual performance maps (optional) ──
-    const prev2H = mapByKey(sheetRows(prev2WB, 'Hitters'));
-    const prevH  = mapByKey(sheetRows(prevWB,  'Hitters'));
-    const curH   = mapByKey(sheetRows(curWB,   'Hitters'));
-    const prev2P = mapByKey(sheetRows(prev2WB, 'Pitchers'));
-    const prevP  = mapByKey(sheetRows(prevWB,  'Pitchers'));
-    const curP   = mapByKey(sheetRows(curWB,   'Pitchers'));
-    log(`Actual stats loaded — Two Years Ago: ${Object.keys(prev2H).length}H/${Object.keys(prev2P).length}P, Previous Year: ${Object.keys(prevH).length}H/${Object.keys(prevP).length}P, Current Year: ${Object.keys(curH).length}H/${Object.keys(curP).length}P.`);
+    // "Last 3 Years" is the game's own pre-aggregated export — no reconstruction needed
+    // on this end, unlike the single-season files this tool used to take.
+    const hit3 = mapByKey(statRows(hit3CSV));
+    const pit3 = mapByKey(statRows(pit3CSV));
+    log(`Actual stats loaded — Last 3 Years: ${Object.keys(hit3).length}H/${Object.keys(pit3).length}P.`);
 
     // A hitter/pitcher's real hand-reliability biases aren't corrected here (that's the
-    // Progression Tracker's job) — this tool only decides WHO plays and WHERE.
-    //
-    // Hitters: a recency-weighted blend of whichever of the last 3 years clear a real
-    // sample (AB>=100 — a thin partial season doesn't count at all, not even diluted in),
-    // Marcel-style weights (5/4/3, newest heaviest), renormalized to whichever years are
-    // actually present. Falls back to the engine's projected OBP/SLG/OPS only when NO
-    // year on file clears the bar — i.e. a real prospect with no qualifying track record.
+    // Progression Tracker's job) — this tool only decides WHO plays and WHERE. Real
+    // production is used whenever the player has ANY games on record over the last 3
+    // years (AB>0 / IP>0 — a zero-games row, like a player who just signed here, means
+    // nothing to average in), falling back to the engine's projected grade only when
+    // there's truly no track record at all.
     function hitterPerf(row) {
-      const key = keyOf(row.last, row.first);
-      const cur = curH[key], prev = prevH[key], prev2 = prev2H[key];
-      const years = [];
-      if (cur   && +cur.AB   >= 100) years.push({ stats: cur,   w: 5, label: 'Cur' });
-      if (prev  && +prev.AB  >= 100) years.push({ stats: prev,  w: 4, label: 'Prev' });
-      if (prev2 && +prev2.AB >= 100) years.push({ stats: prev2, w: 3, label: 'Prev2' });
-      if (!years.length) {
-        return { obp:row.obp, slg:(row.ops!=null&&row.obp!=null)?+(row.ops-row.obp).toFixed(4):null, ops:row.ops, sb:null, ab:null, source:'Engine (no stats)' };
+      const s = hit3[keyOf(row.last, row.first)];
+      if (s && +s.AB > 0) {
+        const obp = +s.OBP, slg = +s.SLG;
+        return { obp, slg, ops: obp+slg, sb: +(s.SB||0), ab: +s.AB, source: 'Last 3 Years' };
       }
-      const totalW = years.reduce((s,y) => s+y.w, 0);
-      const blend = f => years.reduce((s,y) => s + f(y.stats)*y.w, 0) / totalW;
-      const obp = blend(s => +s.OBP), slg = blend(s => +s.SLG), sb = blend(s => +(s.SB||0));
-      return {
-        obp, slg, ops: obp+slg, sb,
-        ab: +years[0].stats.AB, // most recent qualifying year's own sample — what the thin-PA fielding-penalty check cares about, not a blended total
-        source: years.length > 1 ? `${years.length}-yr blend (${years.map(y=>y.label).join('/')})` : years[0].label
-      };
+      return { obp:row.obp, slg:(row.ops!=null&&row.obp!=null)?+(row.ops-row.obp).toFixed(4):null, ops:row.ops, sb:null, ab:null, source:'Engine (no stats)' };
     }
-    // Pitchers: role signals (starts, saves) don't blend the way rate stats do, so this
-    // stays a cascade — most recent year that clears a real sample (IP>=20) wins outright,
-    // checking up to 2 years back before falling to the engine grade alone.
     function pitcherPerf(row) {
-      const key = keyOf(row.last, row.first);
-      const cur = curP[key], prev = prevP[key], prev2 = prev2P[key];
-      if (cur   && +cur.IP   >= 20) return { era:+cur.ERA,   ip:+cur.IP,   gs:+cur.GS,   g:+cur.G,   sv:+cur.SV||0,   source:'Current' };
-      if (prev  && +prev.IP  >= 20) return { era:+prev.ERA,  ip:+prev.IP,  gs:+prev.GS,  g:+prev.G,  sv:+prev.SV||0,  source:'Previous' };
-      if (prev2 && +prev2.IP >= 20) return { era:+prev2.ERA, ip:+prev2.IP, gs:+prev2.GS, g:+prev2.G, sv:+prev2.SV||0, source:'Two Years Ago' };
+      const s = pit3[keyOf(row.last, row.first)];
+      if (s && +s.IP > 0) {
+        return { era:+s.ERA, ip:+s.IP, gs:+s.GS, g:+s.G, sv:+s.SV||0, source:'Last 3 Years' };
+      }
       return { era:null, ip:null, gs:null, g:null, sv:0, source:'Engine (no stats)' };
     }
 
@@ -499,7 +453,7 @@ async function buildLineup() {
     // the pool with a visible "reassigned" flag rather than silently merging them in.
     const includeReassigned = document.getElementById('includeReassigned').checked;
     const scoredKeys = new Set(fullRosterRows.map(r => keyOf(r.last, r.first)));
-    const statKeys = new Set([...Object.keys(prev2H), ...Object.keys(prevH), ...Object.keys(curH), ...Object.keys(prev2P), ...Object.keys(prevP), ...Object.keys(curP)]);
+    const statKeys = new Set([...Object.keys(hit3), ...Object.keys(pit3)]);
     const missingKeys = [...statKeys].filter(k => !scoredKeys.has(k));
     let needsAttention = [];
     if (missingKeys.length) {
@@ -564,21 +518,15 @@ async function buildLineup() {
     }
 
     // ── Determine the active roster ──
-    // The ratings export's own Level field can lag behind reality (a player can be
-    // tagged at an affiliate level while actually playing a full ML season) — actual
-    // box-score participation in the Current Year file is the reliable signal. Fall
-    // back to engine Level==='ML' only when no Current Year file was provided.
+    // The engine's Level field (from the roster export) decides who's active — the
+    // "Last 3 Years" file isn't a reliable substitute for this: a player can have real
+    // rows there from a stint on this team a year or two ago and not be here anymore,
+    // or be active now with too little history yet to show up at all.
     const hitters = fullRosterRows.filter(r => r.type === 'H');
     const pitchers = fullRosterRows.filter(r => r.type === 'P');
-    const haveCurH = Object.keys(curH).length > 0;
-    const haveCurP = Object.keys(curP).length > 0;
-    let activeHitters = haveCurH
-      ? hitters.filter(r => curH[keyOf(r.last, r.first)])
-      : hitters.filter(r => r.level === 'ML');
-    let activePitchers = haveCurP
-      ? pitchers.filter(r => curP[keyOf(r.last, r.first)])
-      : pitchers.filter(r => r.level === 'ML');
-    log(`Active roster: ${activeHitters.length} hitters, ${activePitchers.length} pitchers (source: ${haveCurH?'Current Year file':'engine Level=ML fallback'}).`);
+    let activeHitters = hitters.filter(r => r.level === 'ML');
+    let activePitchers = pitchers.filter(r => r.level === 'ML');
+    log(`Active roster: ${activeHitters.length} hitters, ${activePitchers.length} pitchers (engine Level=ML).`);
 
     // ── Minor-league eligibility (age, AAA experience, or a prospect-rating exception) ──
     // Pulls in non-active players who clear one of three independent bars. Age/AAA-seasons
@@ -732,7 +680,10 @@ async function buildLineup() {
     // Primary signal is engine grade here too, same reasoning as the hitter position
     // battles above — real usage/ERA is shown alongside in the UI as a sanity check,
     // not used to override a legitimately-graded arm just because it's unproven.
-    const starterEligible = activePitchers.filter(p => p.isSP || (p.perf.gs != null && p.perf.gs >= 8));
+    // GS is now a multi-year cumulative total (Last 3 Years file) rather than one season,
+    // so the bar scales up from the old single-season 8 to catch the same "meaningful
+    // starter usage" signal rather than nearly every arm with a single spot start.
+    const starterEligible = activePitchers.filter(p => p.isSP || (p.perf.gs != null && p.perf.gs >= 20));
     const relieverPool = activePitchers.filter(p => !starterEligible.includes(p));
     starterEligible.sort((a,b) => {
       if (useTiebreak && Math.abs(a.overall-b.overall) < 1.0) {
@@ -781,23 +732,16 @@ async function buildLineup() {
     }
 
     document.getElementById('lineupSourceNote').textContent =
-      haveCurH ? 'OPS/OBP/SLG/SB drawn from actual Current (or Previous) Year stats where available, engine projection otherwise — shown per player below.'
+      Object.keys(hit3).length ? 'OBP/SLG/OPS/SB drawn from the Last 3 Years stats file where a player has any games on record there, engine projection otherwise — shown per player below.'
                 : 'No performance file provided — ordered on engine-projected OBP/OPS only.';
 
     // Slot index -> source tier is NOT sequential: 1/2/4 (indices 0,1,3) are Tier A,
     // 3/5 (indices 2,4) are Tier B, 6/7/8 (indices 5,6,7) are Tier C.
     const tierTag = i => [0,1,3].includes(i) ? '<span class="tag tag-tierA">Tier A</span>' : [2,4].includes(i) ? '<span class="tag tag-tierB">Tier B</span>' : '<span class="tag tag-tierC">Tier C</span>';
-    // A hitter under ~150 real AB in their most recent counted season can have a
-    // mechanically depressed fielding rating (confirmed league mechanic: falling short
-    // of the PA threshold at a level tanks displayed FP by up to .070, unrelated to true
-    // skill, recovering the next year with full playing time) — flag it rather than
-    // silently trusting the FLD grade at face value for these players.
-    const thinPA = r => r.type === 'H' && r.perf && r.perf.ab != null && r.perf.ab < 150;
     const nameCell = r => `${r.first} ${r.last}`
       + (r.reassignedFrom ? ` <span class="muted" title="Roster export shows ${r.reassignedFrom} — included from the stats files anyway">↩</span>` : '')
       + (r.minorsEligible ? ` <span class="muted" title="Not on the active roster — included via minor-league eligibility (${r.minorsReason})">★</span>` : '')
-      + (r.crossTrained ? ` <span class="muted" title="Listed at ${r.nativePos} in the roster export, but fully trained (1.00) at ${r.pos} too — playing him here instead">⇄</span>` : '')
-      + (thinPA(r) ? ` <span class="muted" title="Only ${r.perf.ab} real AB in their counted season — FLD grade may be mechanically depressed by the league's under-150-AB fielding penalty, not a true read on their glove">🧤</span>` : '');
+      + (r.crossTrained ? ` <span class="muted" title="Listed at ${r.nativePos} in the roster export, but fully trained (1.00) at ${r.pos} too — playing him here instead">⇄</span>` : '');
     document.getElementById('lineupTable').innerHTML =
       '<tr><th>#</th><th>Name</th><th>Bat</th><th>Pos</th><th>OBP</th><th>SLG</th><th>OPS</th><th>Source</th><th>Tier</th></tr>' +
       lineup.map((r,i) => !r ? `<tr><td>${i+1}</td><td colspan="8" class="muted">— no eligible player —</td></tr>` : `<tr>
