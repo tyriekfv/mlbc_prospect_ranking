@@ -83,7 +83,7 @@
 </nav>
 
 <h1>MLBC <span>LINEUP BUILDER</span></h1>
-<div class="sub">Builds a batting order and pitching rotation for one team from the real engine's grades, cross-checked against actual performance when you provide it. A hitter/pitcher's real production comes straight from the game's own "Last 3 Years" export — no reconstruction on this end — falling back to the engine's projected grade only when a player has zero games on record there at all (a true rookie/unproven case). Batting order follows Tango/Lichtman/Dolphin's tiered method from <em>The Book</em>: your 3 best hitters go to slots 1/2/4 (best OBP leads off, best power cleans up, the third fills #2), the next 2 best go to 3/5 (the stronger of the pair at #5, per the slot-importance ranking), and the rest fill 6/7/8 by descending quality — with a fast, lower-OBP runner preferred at #6 when one stands out. Assumes a DH lineup (8 hitters, no pitcher at-bat) — adjust manually if your league has pitchers hit. Hitters fully trained (1.00 proficiency) at more than one position are automatically evaluated for all of them — anything under 1.00 is excluded from an alternate position entirely, since partial training is a real fielding liability, not a "can pinch-hit there" situation.</div>
+<div class="sub">Builds a batting order and pitching rotation for one team from the real engine's grades, cross-checked against actual performance when you provide it — Stats.hh for exact real seasons straight from the save when you provide both it and Players.hh, the "Last 3 Years" export as a fallback, the engine's projected grade only when a player has no track record at all. Batting order follows Tango/Lichtman/Dolphin's tiered method from <em>The Book</em>: your best hitter bats <b>2nd</b> (the "2-hole revolution" — he gets more high-leverage plate appearances there than at cleanup), the better-OBP of the remaining top 3 leads off, the third fills cleanup; the next 2 best split slots 3/5 (the 3-hole is a well-established overrated slot, comparable to 5th rather than clearly above it); the rest fill 6/7/8 by descending quality, except a standout base-stealer bats <b>last</b> — right before the order turns over — as a "second leadoff," not wherever his OPS alone would place him. Assumes a DH lineup (8 hitters, no pitcher at-bat) — adjust manually if your league has pitchers hit. Hitters fully trained (1.00 proficiency) at more than one position are automatically evaluated for all of them — anything under 1.00 is excluded from an alternate position entirely, since partial training is a real fielding liability, not a "can pinch-hit there" situation. Optionally discounts a hitter's batting grade for ranking purposes when Players.hh shows a Star Rating well below his engine grade would suggest — the engine only ever sees edits, never the game's own separate scouting confidence.</div>
 
 <div class="upload-grid">
   <div class="upload-card" id="rosterCard">
@@ -141,6 +141,9 @@
 </div>
 <div class="options-row">
   <label><input type="checkbox" id="includeProspectException" checked> ...or make an exception regardless of age/AAA time if their in-game prospect rating is &ge; <input type="number" id="minProspectRating" value="6.5" min="1" max="15" step="0.1" style="width:52px"> (validated against the league's real under-24 ML call-ups — see log for the reasoning; needs Players.hh above)</label>
+</div>
+<div class="options-row">
+  <label><input type="checkbox" id="useStarDiscount" checked> Discount a hitter's batting grade for position-battle/bench ranking when Players.hh shows a Star Rating below <input type="number" id="starBaseline" value="4.0" min="0" max="10" step="0.5" style="width:52px"> (the game's own scouting confidence, separate from his edits — floored so it never docks more than half the batting grade; needs Players.hh above, displayed OVR is always his true undiscounted engine grade)</label>
 </div>
 
 <button class="run-btn" id="runBtn" onclick="buildLineup()" disabled>BUILD LINEUP &amp; ROTATION</button>
@@ -790,6 +793,31 @@ async function buildLineup() {
     // tiebreak/nudge when two players are close on grade, not as a gate that overrides it.
     const STARTING_POS = ['C','1B','2B','3B','SS','LF','CF','RF'];
 
+    // Star-rating confidence discount (optional, needs Players.hh) — the engine's overall
+    // grade is built purely from a player's batting/fielding edits and has no way to know
+    // the game's own separate scouting confidence in him (Players.hh's Star Rating). When
+    // the two disagree hard, this scales down just the batting (HIT) share of his grade —
+    // not fielding/position bonuses, which reflect real physical tools like arm strength —
+    // by how far below a baseline star rating he falls, floored so it never docks more than
+    // half his batting grade. Used only for position-battle/bench ranking here; the OVR
+    // shown in every table is always his true, undiscounted engine grade.
+    const useStarDiscount = document.getElementById('useStarDiscount').checked;
+    const starBaseline = +document.getElementById('starBaseline').value || 4.0;
+    const STAR_DISCOUNT_FLOOR = 0.5;
+    function starRatingOf(r) {
+      if (!ratingsByNameKey) return null;
+      const ratings = ratingsByNameKey[normalizeNameKey(r.first + r.last)];
+      return ratings ? ratings.starRating : null;
+    }
+    function starAdjustedOverall(r) {
+      if (!useStarDiscount || r.type !== 'H' || r.hit == null) return r.overall;
+      const star = starRatingOf(r);
+      if (star == null) return r.overall;
+      const mult = Math.max(STAR_DISCOUNT_FLOOR, Math.min(1.0, star / starBaseline));
+      if (mult >= 1.0) return r.overall;
+      return Math.max(20, r.overall - r.hit * 0.90 * (1 - mult));
+    }
+
     // Multi-position eligibility: each hitter competes at his native position AND at any
     // other starting position where he's trained to a flat 1.00 (from `entry.alt`, computed
     // above via the real engine with Pos overridden — a position-correct grade, not his
@@ -812,7 +840,7 @@ async function buildLineup() {
     const byPos = {};
     placementsByKey.forEach(list => list.forEach(p => { (byPos[p.pos] ??= []).push(p); }));
     Object.values(byPos).forEach(arr => arr.sort((a,b) => {
-      const ovrA = a.overall, ovrB = b.overall;
+      const ovrA = starAdjustedOverall(a), ovrB = starAdjustedOverall(b);
       const closeOvr = Math.abs(ovrA - ovrB) < 2.0;
       if (closeOvr) {
         const opsA = a.perf.ops ?? -1, opsB = b.perf.ops ?? -1;
@@ -844,37 +872,43 @@ async function buildLineup() {
     // not a duplicate row for every position he happens to be trained at.
     placementsByKey.forEach((list, key) => {
       if (usedKeys.has(key)) return;
-      bench.push(list.reduce((best,p) => p.overall > best.overall ? p : best, list[0]));
+      bench.push(list.reduce((best,p) => starAdjustedOverall(p) > starAdjustedOverall(best) ? p : best, list[0]));
     });
 
     // ── Batting order — Tango/Lichtman/Dolphin tiering from The Book ──
     // Rank the 8 starters by OPS (real if available, engine projection otherwise).
-    // Tier A (top 3 by OPS) -> slots 1, 2, 4. Tier B (next 2) -> slots 3, 5. Tier C (bottom 3) -> slots 6, 7, 8.
+    // Top 5 get slots 1-5 (the most-PA, highest-leverage spots), split into Tier A (top 3,
+    // -> slots 1/2/4) and Tier B (next 2, -> slots 3/5 — the 3-hole is a well-established
+    // overrated slot, run-value-wise comparable to 5th rather than clearly above it, hence
+    // pairing them instead of just handing 3 to the 4th-best hitter). Tier C (bottom 3) fills
+    // 6/7/8 in descending order.
     const byOps = [...starters8].sort((a,b) => (b.perf.ops??0) - (a.perf.ops??0));
     const tierA = byOps.slice(0,3), tierB = byOps.slice(3,5), tierC = byOps.slice(5,8);
 
     const lineup = new Array(8).fill(null);
-    // Tier A: leadoff = best OBP, cleanup = best SLG of the remaining two, #2 = the last one left.
-    let a = [...tierA];
+    // Tier A: #2 is the single best hitter of the three, full stop — the "2-hole revolution"
+    // is the headline, unambiguous finding from The Book (your best hitter gets more
+    // high-leverage PAs there than at cleanup). Leadoff is then the better-OBP of what's
+    // left, cleanup the other.
+    const bestOfA = tierA[0]; // tierA is already OPS-sorted descending
+    let a = tierA.filter(r => r !== bestOfA);
     const leadoff = a.reduce((best,r) => (r.perf.obp??0) > (best.perf.obp??0) ? r : best, a[0]);
-    a = a.filter(r => r !== leadoff);
-    const cleanup = a.reduce((best,r) => (r.perf.slg??0) > (best.perf.slg??0) ? r : best, a[0]);
-    a = a.filter(r => r !== cleanup);
-    const twoHole = a[0];
-    lineup[0] = leadoff; lineup[1] = twoHole; lineup[3] = cleanup;
+    const cleanup = a.find(r => r !== leadoff);
+    lineup[0] = leadoff; lineup[1] = bestOfA; lineup[3] = cleanup;
 
     // Tier B: #5 (more important slot) gets the higher-OPS of the pair, #3 gets the other.
     const bSorted = [...tierB].sort((x,y) => (y.perf.ops??0) - (x.perf.ops??0));
     lineup[4] = bSorted[0] || null; lineup[2] = bSorted[1] || null;
 
-    // Tier C: descending OPS for 6/7/8, but a standout base-stealer with a clearly lower
-    // OBP profile (not already the best of the three) is preferred at #6.
+    // Tier C: descending OPS for 6/7/8, but a standout base-stealer (not already the best of
+    // the three) bats last — right before the order turns over — as a "second leadoff" that
+    // sets up the top of the lineup, rather than wherever pure OPS ranking would put him.
     let cSorted = [...tierC].sort((x,y) => (y.perf.ops??0) - (x.perf.ops??0));
     if (cSorted.length === 3) {
       const bySpeed = [...cSorted].sort((x,y) => (y.perf.sb??0) - (x.perf.sb??0));
       const speedster = bySpeed[0];
-      if (speedster && (speedster.perf.sb??0) >= 3 && speedster !== cSorted[0] && (speedster.perf.sb??0) > (bySpeed[1]?.perf.sb??0)) {
-        cSorted = [speedster, ...cSorted.filter(r => r !== speedster)];
+      if (speedster && (speedster.perf.sb??0) >= 3 && speedster !== cSorted[cSorted.length-1] && (speedster.perf.sb??0) > (bySpeed[1]?.perf.sb??0)) {
+        cSorted = [...cSorted.filter(r => r !== speedster), speedster];
       }
     }
     lineup[5] = cSorted[0] || null; lineup[6] = cSorted[1] || null; lineup[7] = cSorted[2] || null;
@@ -945,10 +979,19 @@ async function buildLineup() {
     // Slot index -> source tier is NOT sequential: 1/2/4 (indices 0,1,3) are Tier A,
     // 3/5 (indices 2,4) are Tier B, 6/7/8 (indices 5,6,7) are Tier C.
     const tierTag = i => [0,1,3].includes(i) ? '<span class="tag tag-tierA">Tier A</span>' : [2,4].includes(i) ? '<span class="tag tag-tierB">Tier B</span>' : '<span class="tag tag-tierC">Tier C</span>';
+    const starBadge = r => {
+      if (!useStarDiscount || r.type !== 'H') return '';
+      const star = starRatingOf(r);
+      if (star == null) return '';
+      const mult = Math.max(STAR_DISCOUNT_FLOOR, Math.min(1.0, star / starBaseline));
+      if (mult >= 1.0) return '';
+      return ` <span class="muted" title="Star Rating ${star.toFixed(2)} (baseline ${starBaseline}) — docked ${((1-mult)*100).toFixed(0)}% off his batting grade for position-battle/bench ranking, since the game's own scouting doesn't back up his edits this strongly. OVR shown is still his true, undiscounted engine grade.">☆${star.toFixed(1)}</span>`;
+    };
     const nameCell = r => `${r.first} ${r.last}`
       + (r.reassignedFrom ? ` <span class="muted" title="Roster export shows ${r.reassignedFrom} — included from the stats files anyway">↩</span>` : '')
       + (r.minorsEligible ? ` <span class="muted" title="Not on the active roster — included via minor-league eligibility (${r.minorsReason})">★</span>` : '')
-      + (r.crossTrained ? ` <span class="muted" title="Listed at ${r.nativePos} in the roster export, but fully trained (1.00) at ${r.pos} too — playing him here instead">⇄</span>` : '');
+      + (r.crossTrained ? ` <span class="muted" title="Listed at ${r.nativePos} in the roster export, but fully trained (1.00) at ${r.pos} too — playing him here instead">⇄</span>` : '')
+      + starBadge(r);
     document.getElementById('lineupTable').innerHTML =
       '<tr><th>#</th><th>Name</th><th>Bat</th><th>Pos</th><th>OBP</th><th>SLG</th><th>OPS</th><th>Source</th><th>Tier</th></tr>' +
       lineup.map((r,i) => !r ? `<tr><td>${i+1}</td><td colspan="8" class="muted">— no eligible player —</td></tr>` : `<tr>
